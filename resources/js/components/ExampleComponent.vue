@@ -13,7 +13,8 @@
         </div>
 
         <b-button v-b-modal.modal-1>Pokazi modal</b-button>
-        <b-modal id="modal-1" title="BootstrapVue">
+        <b-modal id="modal-1" title="Ovo je naslov" header-bg-variant="dark" header-text-variant="light">
+            <template #modal-header>Ovo je naslov novi</template>
             <p class="my-4">Hello from Modal!!!</p>
         </b-modal>
     </div>
