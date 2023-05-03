@@ -11,6 +11,11 @@
                 </div>
             </div>
         </div>
+
+        <b-button v-b-modal.modal-1>Pokazi modal</b-button>
+        <b-modal id="modal-1" title="BootstrapVue">
+            <p class="my-4">Hello from Modal!!!</p>
+        </b-modal>
     </div>
 </template>
 
