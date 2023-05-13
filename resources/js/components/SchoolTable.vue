@@ -1,17 +1,12 @@
 <template>
     <div >
-        <div v-if="data.length > 0"  class="d-flex align-items-center justify-content-center flex-column w-100">
+        <div class="d-flex align-items-center justify-content-center flex-column w-100">
             <b-table small striped bordered hover :items="data" :fields="fields" head-variant="dark">
                 <template #cell(action)="data">
                     <a :href="'/schools/edit/' + data.item.id" @click.prevent="onEditClicked(data.item.id)"><b-icon icon="pencil-square"></b-icon></a>
                 </template>
             </b-table>
             <b-button variant="primary" @click="onNewClicked">Dodaj</b-button>
-        </div>
-
-        <div v-else class="d-flex align-items-center flex-column w-100">
-            <img src="/images/noschool.jpg" class="m-4" alt="No schools in the list" title="No schools in the list"/>
-            <b-button variant="success" @click="openForm">Dodaj</b-button>
         </div>
 
         <b-modal id="createSchoolDialog" ref="createSchoolDialog" header-bg-variant="dark" header-text-variant="light">
@@ -57,11 +52,6 @@ export default {
                     label: "Škola"
                 },
                 {
-                    key: "school",
-                    sortable: true,
-                    label: "Škola"
-                },
-                {
                     key: "action",
                     label: ""
                 }
@@ -71,6 +61,7 @@ export default {
             dialogTitle: "DODAJ ŠKOLU",
             dialogDataAction: '/schools/create',
             selectedSchoolId: 0,
+            hasData: true
         };
     },
 
@@ -82,8 +73,11 @@ export default {
         async getData() {
             await axios.get('/schools/getSchools')
             .then(response => {
-                console.log(response.data);
+                console.log(response.data.length);
                 this.data = response.data;
+                if(this.data.length == 0) {
+                    this.hasData = false;
+                }
             });
         },
         openForm() {
@@ -105,11 +99,13 @@ export default {
         onEditClicked(id) {
             this.selectedSchoolId = id;
             this.dialogDataAction = '/schools/edit';
+            this.dialogTitle = "Promeni podatke o školi"
             this.openForm();
         },
         onNewClicked() {
             this.selectedSchoolId = 0;
             this.dialogDataAction = '/schools/create';
+            this.dialogTitle = "Dodaj novu školu"
             this.openForm();
         }
     },

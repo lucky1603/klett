@@ -69,19 +69,11 @@ export default {
     },
 
     methods: {
-        async getData() {
-            if(this.schoolId != 0) {
-                await axios.get('/schools/getSchool/' + this.schoolId)
-                .then(response => {
-                    this.form.municipality = response.data['municipality_id'];
-                    this.form.institution_type = response.data['institution_type_id'];
-                    this.form.name = response.data['name'];
-                });
-            }
+        getData() {
 
-            await axios.get('/schools/getMunicipalities')
+
+            axios.get('/schools/getMunicipalities')
             .then(response => {
-                console.log(response.data);
                 for(let property in response.data) {
                     var entry = response.data[property];
                     this.municipalities.push({
@@ -92,9 +84,8 @@ export default {
 
             });
 
-            await axios.get('/schools/getInstitutionTypes')
+            axios.get('/schools/getInstitutionTypes')
             .then(response => {
-                console.log(response.data);
                 for(let property in response.data) {
                     var entry = response.data[property];
                     this.institutionTypes.push({
@@ -103,6 +94,15 @@ export default {
                     });
                 }
             });
+
+            if(this.schoolId != 0) {
+                axios.get('/schools/getSchool/' + this.schoolId)
+                .then(response => {
+                    this.form.municipality = response.data['municipality_id'];
+                    this.form.institution_type = response.data['institution_type_id'];
+                    this.form.name = response.data['name'];
+                });
+            }
 
         },
         onSubmit() {
