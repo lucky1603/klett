@@ -17,6 +17,10 @@ class SchoolController extends Controller
         return view('schools.create');
     }
 
+    public function edit($shoolId) {
+        return view('schools.edit', ['id' => $shoolId]);
+    }
+
     public function store(Request $request) {
         $request->validate([
             'municipality' => 'integer|gt:0',
@@ -35,15 +39,50 @@ class SchoolController extends Controller
         return $data;
     }
 
+    public function update(Request $request) {
+        $request->validate([
+            'municipality' => 'integer|gt:0',
+            'institution_type' => 'integer|gt:0',
+            'name' => 'required'
+        ]);
+
+        $data = $request->post();
+
+        $school = School::find($data['id']);
+
+        $school->municipality_id = $data['municipality'];
+        $school->institution_type_id = $data['institution_type'];
+        $school->name = $data['name'];
+
+        $school->save();
+
+        return 0;
+    }
+
     public function getSchools() {
         return School::all()->load('institution_type', 'municipality')
         ->map(function($school) {
             return [
-                "type" => $school->institution_type->name,
+                "id" => $school->id,
+                "institution_type" => $school->institution_type->name,
                 "municipality" => $school->municipality->name,
                 "school" => $school->name
             ];
         });
+    }
+
+    public function getSchool($schoolId) {
+        $school = School::find($schoolId);
+        if($school != null) {
+            return [
+                "id" => $school->id,
+                "municipality_id" => $school->municipality_id,
+                "institution_type_id" => $school->institution_type_id,
+                "name" => $school->name
+            ];
+        }
+
+        return null;
     }
 
     public function getMunicipalities() {

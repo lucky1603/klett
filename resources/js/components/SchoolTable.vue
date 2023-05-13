@@ -1,8 +1,12 @@
 <template>
     <div >
         <div v-if="data.length > 0"  class="d-flex align-items-center justify-content-center flex-column w-100">
-            <b-table striped hover :items="data"></b-table>
-            <b-button variant="success" @click="openForm">Dodaj</b-button>
+            <b-table small striped bordered hover :items="data" :fields="fields" head-variant="dark">
+                <template #cell(action)="data">
+                    <a :href="'/schools/edit/' + data.item.id" @click.prevent="onEditClicked(data.item.id)"><b-icon icon="pencil-square"></b-icon></a>
+                </template>
+            </b-table>
+            <b-button variant="primary" @click="onNewClicked">Dodaj</b-button>
         </div>
 
         <div v-else class="d-flex align-items-center flex-column w-100">
@@ -12,7 +16,7 @@
 
         <b-modal id="createSchoolDialog" ref="createSchoolDialog" header-bg-variant="dark" header-text-variant="light">
             <template #modal-title>{{ dialogTitle }}</template>
-            <school-form ref="schoolForm"></school-form>
+            <school-form ref="schoolForm" :school-id="selectedSchoolId" :action="dialogDataAction"></school-form>
             <template #modal-footer>
                 <b-button type="button" variant="primary" @click.prevent="onOk" >Prihvati</b-button>
                 <b-button type="button" variant="light" @click="onCancel" >Zatvori</b-button>
@@ -36,8 +40,37 @@ export default {
                 { value: 1, text: "Drugi"},
                 { value: 2, text: "Treci"},
             ],
+            fields: [
+                {
+                    key: "institution_type",
+                    sortable: true,
+                    label: "Tip ustanove"
+                },
+                {
+                    key: "municipality",
+                    sortable: true,
+                    label: "Opština"
+                },
+                {
+                    key: "school",
+                    sortable: true,
+                    label: "Škola"
+                },
+                {
+                    key: "school",
+                    sortable: true,
+                    label: "Škola"
+                },
+                {
+                    key: "action",
+                    label: ""
+                }
+
+            ],
             test: 1,
-            dialogTitle: "DODAJ ŠKOLU"
+            dialogTitle: "DODAJ ŠKOLU",
+            dialogDataAction: '/schools/create',
+            selectedSchoolId: 0,
         };
     },
 
@@ -68,6 +101,16 @@ export default {
         },
         onCancel() {
             this.$refs['createSchoolDialog'].hide();
+        },
+        onEditClicked(id) {
+            this.selectedSchoolId = id;
+            this.dialogDataAction = '/schools/edit';
+            this.openForm();
+        },
+        onNewClicked() {
+            this.selectedSchoolId = 0;
+            this.dialogDataAction = '/schools/create';
+            this.openForm();
         }
     },
 };

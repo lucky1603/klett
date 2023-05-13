@@ -26,7 +26,10 @@ Route::get('/home',[ HomeController::class, 'index'])->name('home');
 // Schools.
 Route::get('schools', [SchoolController::class, 'index'])->name('schools');
 Route::get('schools/create', [SchoolController::class, 'create'])->name('schools.create');
+Route::get('schools/edit/{school}', [SchoolController::class, 'edit'])->name('schools.edit');
 Route::get('schools/getSchools', [SchoolController::class, 'getSchools'])->name('schools.getSchools');
 Route::get('schools/getMunicipalities', [SchoolController::class, 'getMunicipalities'])->name('schools.getMunicipalities');
 Route::get('schools/getInstitutionTypes', [SchoolController::class, 'getInstitutionTypes'])->name('schools.getInstitutionTypes');
+Route::get('schools/getSchool/{school}', [SchoolController::class, 'getSchool'])->name('schools.getSchool');
 Route::post('schools/create', [SchoolController::class, 'store'])->name('schools.store');
+Route::post('schools/edit', [SchoolController::class, 'update'])->name('schools.update');

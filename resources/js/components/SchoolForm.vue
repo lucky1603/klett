@@ -44,7 +44,8 @@ export default {
     name: 'SchoolForm',
     props: {
         token: { typeof: String, default: ''},
-        action: { typeof: String, default: '/schools/create'}
+        action: { typeof: String, default: '/schools/create'},
+        schoolId: { typeof: Number, default: 0 },
     },
     data() {
         return {
@@ -69,6 +70,15 @@ export default {
 
     methods: {
         async getData() {
+            if(this.schoolId != 0) {
+                await axios.get('/schools/getSchool/' + this.schoolId)
+                .then(response => {
+                    this.form.municipality = response.data['municipality_id'];
+                    this.form.institution_type = response.data['institution_type_id'];
+                    this.form.name = response.data['name'];
+                });
+            }
+
             await axios.get('/schools/getMunicipalities')
             .then(response => {
                 console.log(response.data);
@@ -93,12 +103,17 @@ export default {
                     });
                 }
             });
+
         },
         onSubmit() {
             let formData = new FormData();
             formData.append("_token", this.token);
             for(let property in this.form) {
                 formData.append(property, this.form[property]);
+            }
+
+            if(this.schoolId != 0) {
+                formData.append('id', this.schoolId);
             }
 
             return new Promise((resolve, reject) => {
