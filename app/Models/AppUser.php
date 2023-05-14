@@ -43,5 +43,12 @@ class AppUser extends Model
         return $this->professional_statuses()->detach();
     }
 
+    public function school() {
+        return $this->belongsTo(School::class);
+    }
+
+    public function country() {
+        return $this->belongsTo(Country::class);
+    }
 
 }

@@ -1,8 +1,14 @@
 <?php
 
+use App\Http\Controllers\AppUserController;
+use App\Http\Controllers\CountryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InstitutionTypeController;
+use App\Http\Controllers\MunicipalityController;
+use App\Http\Controllers\ProfessionalStatusController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\SubjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,3 +39,23 @@ Route::get('schools/getInstitutionTypes', [SchoolController::class, 'getInstitut
 Route::get('schools/getSchool/{school}', [SchoolController::class, 'getSchool'])->name('schools.getSchool');
 Route::post('schools/create', [SchoolController::class, 'store'])->name('schools.store');
 Route::post('schools/edit', [SchoolController::class, 'update'])->name('schools.update');
+Route::post('schools', [SchoolController::class, 'filterSchools'])->name('schools.filter');
+
+Route::get('appusers', [AppUserController::class, 'index'])->name('appusers');
+Route::get('appusers/data', [AppUserController::class, 'getAppUsers'])->name('appusers.data');
+
+// Professional statuses.
+Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");
+
+// Countries.
+Route::get("countries", [CountryController::class, 'data'])->name("countries");
+
+// Subjects.
+Route::get('subjects', [SubjectController::class, 'data'])->name('subjects');
+
+// Municipalities.
+Route::get('municipalities', [MunicipalityController::class, 'data'])->name('municipalities');
+
+// Institution types.
+Route::get('institution_types', [InstitutionTypeController::class, 'data'])->name('institution_types');
+

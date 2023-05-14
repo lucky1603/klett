@@ -34,4 +34,8 @@ class School extends Model
     public function removeInstitutionType() {
         $this->institution_type()->dissociate();
     }
+
+    public function app_users() {
+        return $this->hasMany(AppUser::class);
+    }
 }

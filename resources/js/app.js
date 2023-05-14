@@ -30,7 +30,8 @@ window.Vue = require('vue').default;
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('school-table', require('./components/SchoolTable.vue').default);
 Vue.component('school-form', require('./components/SchoolForm.vue').default);
-
+Vue.component('user-list', require('./components/UserList.vue').default);
+Vue.component('user-form', require('./components/UserForm.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -56,7 +56,7 @@ class SchoolController extends Controller
 
         $school->save();
 
-        return 0;
+        return $request->ip();
     }
 
     public function getSchools() {
@@ -99,6 +99,20 @@ class SchoolController extends Controller
             return [
                 "id" => $institutionType->id,
                 "name" => $institutionType->name
+            ];
+        });
+    }
+
+    public function filterSchools(Request $request) {
+        $data = $request->post();
+        $municipalityId = $data['municipalityId'];
+        $institutionTypeId = $data['institutionTypeId'];
+        $schools = School::where(['institution_type_id' => $institutionTypeId, 'municipality_id' => $municipalityId])->get();
+
+        return $schools->map(function($school) {
+            return [
+                "id" => $school->id,
+                "name" => $school->name
             ];
         });
     }
