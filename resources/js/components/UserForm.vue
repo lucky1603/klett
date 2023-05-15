@@ -1,56 +1,87 @@
 <template>
     <div>
-        <b-form size="sm">
+        <b-form size="sm" @submit.prevent="sendData" autocomplete="nope">
             <b-row>
                 <b-col>
-                    <b-form-group label="Ime" label-for="ime" description="Unesite ime">
+                    <b-form-group label="Imejl adresa" label-for="email" autocomplete="nope">
+                        <b-input id="email" type="email" v-model="form.email"></b-input>
+                        <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
+                    </b-form-group>
+                </b-col>
+                <b-col>
+                    <b-form-group label="Ponovite imejl adresu" label-for="email-repeat">
+                        <b-input id="email-repeat" type="email" v-model="form.repeated_email"></b-input>
+                        <span v-if="errors.repeated_email" class="text-danger">{{ errors.repeated_email}}</span>
+                    </b-form-group>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col>
+                    <b-form-group label="Lozinka" label-for="password" autocomplete="newhope">
+                        <b-input id="password" type="password" v-model="form.password"></b-input>
+                        <span v-if="errors.password" class="text-danger">{{ errors.password}}</span>
+                    </b-form-group>
+                </b-col>
+                <b-col>
+                    <b-form-group label="Ponovite lozinku" label-for="password-repeat">
+                        <b-input id="password-repeat" type="password" v-model="form.repeated_password"></b-input>
+                        <span v-if="errors.repeated_password" class="text-danger">{{ errors.repeated_password}}</span>
+                    </b-form-group>
+                </b-col>
+            </b-row>
+
+            <b-row>
+                <b-col>
+                    <b-form-group label="Ime" label-for="ime" >
                         <b-input id="ime" type="text" v-model="form.ime"></b-input>
+                        <span v-if="errors.ime" class="text-danger">{{ errors.ime}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Prezime" label-for="prezime" description="Unesite prezime">
+                    <b-form-group label="Prezime" label-for="prezime" >
                         <b-input id="prezime" type="text" v-model="form.prezime"></b-input>
+                        <span v-if="errors.prezime" class="text-danger">{{ errors.prezime}}</span>
                     </b-form-group>
                 </b-col>
             </b-row>
+            <b-form-group label="Država" label-for="country">
+                <b-form-select id="country" v-model="form.country" :options="countries"></b-form-select>
+                <span v-if="errors.country" class="text-danger">{{ errors.country}}</span>
+            </b-form-group>
+            <b-form-group label="Adresa i broj" label-for="adresa">
+                <b-form-input id="adresa" v-model="form.adresa"></b-form-input>
+                <span v-if="errors.adresa" class="text-danger">{{ errors.adresa}}</span>
+            </b-form-group>
             <b-row>
                 <b-col>
-                    <b-form-group label="E-Mail" label-for="email" description="Unesite email">
-                        <b-input id="email" type="text" v-model="form.email"></b-input>
-                    </b-form-group>
-                </b-col>
-                <b-col>
-                    <b-form-group label="Država" label-for="country" description="Izaberite jednu državu">
-                        <b-form-select id="country" v-model="form.country" :options="countries"></b-form-select>
-                    </b-form-group>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <b-form-group label="Poštanski broj" label-for="pb" description="Unesite poštanski broj">
+                    <b-form-group label="Poštanski broj" label-for="pb">
                         <b-input id="pb" type="text" v-model="form.pb"></b-input>
+                        <span v-if="errors.pb" class="text-danger">{{ errors.pb}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Mesto" label-for="mesto" description="Unesite mesto boravka">
+                    <b-form-group label="Mesto" label-for="mesto">
                         <b-input id="mesto" type="text" v-model="form.mesto"></b-input>
+                        <span v-if="errors.mesto" class="text-danger">{{ errors.mesto}}</span>
                     </b-form-group>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col>
-                    <b-form-group label="Broj telefona 1" label-for="tel1" description="Unesite glavni broj telefona">
+                    <b-form-group label="Broj telefona 1" label-for="tel1">
                         <b-input id="tel1" type="text" v-model="form.tel1"></b-input>
+                        <span v-if="errors.tel1" class="text-danger">{{ errors.tel1}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Broj telefona 2" label-for="tel2" description="Unesite drugi broj telefona (opciono)">
+                    <b-form-group label="Broj telefona 2" label-for="tel2">
                         <b-input id="tel2" type="text" v-model="form.tel2"></b-input>
                     </b-form-group>
                 </b-col>
             </b-row>
             <b-form-checkbox v-model="form.isTeacher" :value="true">Da li je nastavnik?</b-form-checkbox>
-            <div v-if="form.isTeacher">
+            <div v-if="form.isTeacher" class="mt-3">
                 <b-row>
                     <b-col>
                         <b-form-group label="Tip ustanove" label-for="institution_type">
@@ -66,8 +97,35 @@
 
                 <b-form-group label="Škola" label-for="school">
                     <b-form-select v-model="form.school" id="school" :options="schools"></b-form-select>
+                    <span v-if="errors.school" class="text-danger">{{ errors.school}}</span>
                 </b-form-group>
 
+
+                <h5 class="mb-0">Predmeti</h5>
+                <small class="text-secondary mt-0">(Možete izabrati i više od jednog odgovora)</small>
+                <div class="d-flex flex-column flex-wrap" style="height:300px">
+                    <b-form-checkbox
+                        v-for="subject in subjects"
+                        :key="subject.id"
+                        v-model="form.subjects"
+                        :value="subject.id">
+                        {{ subject.name }}
+                    </b-form-checkbox>
+                </div>
+                <span v-if="errors.subjects" class="text-danger">{{ errors.subjects}}</span>
+
+                <h5 class="mt-3 mb-0">Profesionalni status</h5>
+                <small class="text-secondary mt-0">(Možete izabrati i više od jednog odgovora)</small>
+                <div class="d-flex flex-column flex-wrap" style="height:150px">
+                    <b-form-checkbox
+                        v-for="professionalStatus in professionalStatuses"
+                        :key="professionalStatus.id"
+                        v-model="form.professionalStatuses"
+                        :value="professionalStatus.id">
+                        {{ professionalStatus.name }}
+                    </b-form-checkbox>
+                </div>
+                <span v-if="errors.professionalStatuses" class="text-danger">{{ errors.professionalStatuses}}</span>
             </div>
         </b-form>
     </div>
@@ -78,7 +136,6 @@ import axios from 'axios';
 
 export default {
     name: 'UserForm',
-
     data() {
         return {
             form: {
@@ -86,6 +143,9 @@ export default {
                 ime: '',
                 prezime: '',
                 email: '',
+                repeated_email: '',
+                password: '',
+                repeated_password: '',
                 country: 0,
                 adresa: '',
                 pb: '',
@@ -98,17 +158,25 @@ export default {
                 professionalStatuses: []
             },
             subjects: [],
+            selectedSubjects: [],
             professionalStatuses: [],
             countries: [],
-            institutionType: 0,
             municipality: 0,
             institutionTypes: [],
+            institutionType: 0,
+            selectedProfessionalStatuses: [],
             municipalities: [],
-            schools: []
+            schools: [],
+            passDontMatch: false,
+            emailDontMatch: false,
+            errors: {}
         };
     },
 
     async mounted() {
+        this.form.email = '';
+        this.form.password = '';
+
         await this.getData();
     },
 
@@ -192,6 +260,42 @@ export default {
                     this.schools.push({ value: item.id, text: item.name});
                 }
             });
+        },
+        sendData() {
+            return new Promise((resolve, reject) => {
+                let formData = new FormData();
+                for(let property in this.form) {
+                    if(property == 'subjects') {
+                        let subjects = this.form[property];
+                        for(let idx in subjects) {
+                            formData.append('subjects[]', subjects[idx]);
+                        }
+                    }
+                    else if(property == 'professionalStatuses') {
+                        let statuses = this.form[property];
+                        for(let idx in statuses) {
+                            formData.append('professionalStatuses[]', statuses[idx]);
+                        }
+                    }
+                    else {
+                        formData.append(property, this.form[property]);
+                    }
+                }
+
+                axios.post('/appusers/create', formData)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(error => {
+                    this.errors = {};
+                    for(let err in error.response.data.errors) {
+                        this.errors[err] = error.response.data.errors[err][0];
+                    }
+                    reject(error);
+                });
+
+            });
+
         }
 
     },

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUserRequest;
 use App\Models\AppUser;
 use Illuminate\Http\Request;
 
@@ -32,5 +33,9 @@ class AppUserController extends Controller
                     "updatedAt" => $appUser->updated_at,
                 ];
             });
+    }
+
+    public function store(CreateUserRequest $request) {
+        return $request->post();
     }
 }

@@ -6,7 +6,11 @@
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
-            <user-form></user-form>
+            <user-form ref="userForm"></user-form>
+            <template #modal-footer>
+                <b-button type="button" variant="primary" @click="onOk">Prihvati</b-button>
+                <b-button type="button" @click="onCancel">Odustani</b-button>
+            </template>
         </b-modal>
     </div>
 </template>
@@ -94,6 +98,19 @@ export default {
         },
         showForm() {
             this.$refs.userFormDialog.show();
+        },
+        onOk() {
+            this.$refs.userForm.sendData()
+            .then(response => {
+                console.log(response.data);
+                this.$refs.userFormDialog.hide();
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        },
+        onCancel() {
+            this.$refs.userFormDialog.hide();
         }
     },
 };
