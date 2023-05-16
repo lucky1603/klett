@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
-            <b-table small striped bordered hover :items="items" :fields="fields" head-variant="dark"></b-table>
+            <b-table :sticky-header="true" small striped bordered hover :items="items" :fields="fields" head-variant="dark" class="w-100"></b-table>
             <b-button variant="primary" @click="showForm">Dodaj</b-button>
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
@@ -29,52 +29,76 @@ export default {
                 {
                     key: "ime",
                     sortable: true,
-                    label: "Ime"
+                    label: "Ime",
+                    thStyle: {
+                        width: "15%"
+                    }
                 },
                 {
                     key: "prezime",
                     sortable: true,
-                    label: "Prezime"
+                    label: "Prezime",
+                    thStyle: {
+                        width: "15%"
+                    }
                 },
                 {
                     key: "email",
                     sortable: true,
-                    label: "E-Mail"
+                    label: "E-Mail",
+                    thStyle: {
+                        width: "20%"
+                    }
+                },
+
+                {
+                    key: "tel1",
+                    label: "Kontakt telefon",
+                    sortable: true,
+                    thStyle: {
+                        width: "15%"
+                    }
+                },
+
+                // {
+                //     key: "adresa",
+                //     sortable: true,
+                //     label: "Adrese"
+                // },
+                // {
+                //     key: "pb",
+                //     sortable: true,
+                //     label: "Poštanski broj"
+                // },
+                {
+                    key: "mesto",
+                    label: "Mesto",
+                    sortable: true,
+                    thStyle: {
+                        width: "15%"
+                    }
                 },
                 {
                     key: "country",
                     label: "Država",
-                    sortable: true
-                },
-                {
-                    key: "adresa",
                     sortable: true,
-                    label: "Adrese"
+                    thStyle: {
+                        width: "15%"
+                    }
                 },
-                {
-                    key: "pb",
-                    sortable: true,
-                    label: "Poštanski broj"
-                },
-                {
-                    key: "mesto",
-                    label: "Mesto",
-                    sortable: true
-                },
-                {
-                    key: "tel1",
-                    label: "Telefon 1",
-                    sortable: true
-                },
-                {
-                    key: "tel2",
-                    label: "Telefon 2",
-                    sortable: true
-                },
+
+                // {
+                //     key: "tel2",
+                //     label: "Telefon 2",
+                //     sortable: true
+                // },
                 {
                     key: "isTeacher",
                     label: "Nastavnik",
-                    sortable: true
+                    sortable: true,
+                    thStyle: {
+                        width: "5%"
+                    }
                 },
 
             ],
@@ -103,6 +127,7 @@ export default {
             this.$refs.userForm.sendData()
             .then(response => {
                 console.log(response.data);
+                this.getData();
                 this.$refs.userFormDialog.hide();
             })
             .catch(error => {

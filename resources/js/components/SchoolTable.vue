@@ -1,7 +1,7 @@
 <template>
     <div >
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
-            <b-table small striped bordered hover :items="data" :fields="fields" head-variant="dark">
+            <b-table sticky-header small striped bordered hover :items="data" :fields="fields" head-variant="dark" class="w-100">
                 <template #cell(action)="data">
                     <a :href="'/schools/edit/' + data.item.id" @click.prevent="onEditClicked(data.item.id)"><b-icon icon="pencil-square"></b-icon></a>
                 </template>
