@@ -2,12 +2,14 @@
     <div class="container">
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
             <b-table
-                :sticky-header="true"
+                sticky-header
+                responsive
                 small striped bordered hover
                 :items="items"
                 :fields="fields"
                 head-variant="dark"
-                class="w-100" @row-clicked="tableClick">
+                class="w-100"
+                @row-clicked="tableClick">
             </b-table>
             <b-button variant="primary" @click="createUser">Dodaj</b-button>
         </div>

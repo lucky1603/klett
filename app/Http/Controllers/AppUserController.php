@@ -112,7 +112,6 @@ class AppUserController extends Controller
             'tel2' => $data['tel2'],
             'is_teacher' => $data['isTeacher'] == "true" ? true : false,
             'password' => $data['password'],
-            'school_id' => $data['school']
         ]);
 
         if($appUser->is_teacher == true) {

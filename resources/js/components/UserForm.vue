@@ -271,7 +271,6 @@ export default {
                 let userObject = response.data;
                 console.log(userObject);
 
-                this.form = {};
                 this.form.email = this.form.repeated_email = userObject.email;
                 this.form.password = this.form.repeated_password = userObject.password;
                 this.form.ime = userObject.ime;
@@ -282,24 +281,27 @@ export default {
                 this.form.country = userObject.country["id"];
                 this.form.tel1 = userObject.tel1;
                 this.form.tel2 = userObject.tel2;
+
+                if(userObject.isTeacher) {
+                    this.municipality = userObject.school["municipality"];
+                    this.institutionType = userObject.school["institutionType"];
+                    this.filterSchools();
+                    this.form.school = userObject.school["id"];
+
+                    this.form.subjects = [];
+                    for(var i = 0; i < userObject.subjects.length; i++) {
+                        let subject = userObject.subjects[i];
+                        this.form.subjects.push(subject.id);
+                    }
+
+                    this.form.professionalStatuses = [];
+                    for(var i = 0; i < userObject.professionalStatuses.length; i++) {
+                        let status = userObject.professionalStatuses[i];
+                        this.form.professionalStatuses.push(status.id);
+                    }
+                }
+
                 this.form.isTeacher = userObject.isTeacher;
-                this.municipality = userObject.school["municipality"];
-                this.institutionType = userObject.school["institutionType"];
-                this.filterSchools();
-                this.form.school = userObject.school["id"];
-
-                this.form.subjects = [];
-                for(var i = 0; i < userObject.subjects.length; i++) {
-                    let subject = userObject.subjects[i];
-                    this.form.subjects.push(subject.id);
-                }
-
-                this.form.professionalStatuses = [];
-                for(var i = 0; i < userObject.professionalStatuses.length; i++) {
-                    let status = userObject.professionalStatuses[i];
-                    this.form.professionalStatuses.push(status.id);
-                }
-
             });
         },
         async getData() {
