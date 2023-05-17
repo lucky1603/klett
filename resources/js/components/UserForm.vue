@@ -1,10 +1,14 @@
 <template>
     <div>
+        <div v-if="showSpinner" class="d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
+            <b-spinner></b-spinner>
+        </div>
+
         <b-form size="sm" @submit.prevent="sendData" autocomplete="nope">
-            <b-row>
+            <b-row v-if="userId == 0">
                 <b-col>
                     <b-form-group label="Imejl adresa" label-for="email" autocomplete="nope">
-                        <b-input id="email" type="email" v-model="form.email"></b-input>
+                        <b-input ref="email" id="email" type="email" v-model="form.email"></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </b-form-group>
                 </b-col>
@@ -16,10 +20,10 @@
                 </b-col>
             </b-row>
 
-            <b-row>
+            <b-row v-if="userId == 0">
                 <b-col>
                     <b-form-group label="Lozinka" label-for="password" autocomplete="newhope">
-                        <b-input id="password" type="password" v-model="form.password"></b-input>
+                        <b-input ref="password" id="password" type="password" v-model="form.password"></b-input>
                         <span v-if="errors.password" class="text-danger">{{ errors.password}}</span>
                     </b-form-group>
                 </b-col>
@@ -30,6 +34,11 @@
                     </b-form-group>
                 </b-col>
             </b-row>
+
+            <b-form-group v-if="userId != 0" label="Imejl adresa" label-for="email" autocomplete="nope">
+                <b-input id="email" type="email" v-model="form.email"></b-input>
+                <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
+            </b-form-group>
 
             <b-row>
                 <b-col>
@@ -136,6 +145,18 @@ import axios from 'axios';
 
 export default {
     name: 'UserForm',
+    props: {
+        userId: { typeof: Number, default: 0 }
+    },
+    computed : {
+        action() {
+            if(this.userId != 0) {
+                return '/appusers/edit';
+            } else {
+                return '/appusers/create';
+            }
+        }
+    },
     data() {
         return {
             form: {
@@ -169,7 +190,8 @@ export default {
             schools: [],
             passDontMatch: false,
             emailDontMatch: false,
-            errors: {}
+            errors: {},
+            showSpinner: false,
         };
     },
 
@@ -241,12 +263,65 @@ export default {
                 }
             });
         },
+        async getUserData() {
+            let formData = new FormData();
+            formData.append("id", this.userId);
+            await axios.post('/appusers/user', formData)
+            .then(response => {
+                let userObject = response.data;
+                console.log(userObject);
+
+                this.form = {};
+                this.form.email = this.form.repeated_email = userObject.email;
+                this.form.password = this.form.repeated_password = userObject.password;
+                this.form.ime = userObject.ime;
+                this.form.prezime = userObject.prezime;
+                this.form.adresa = userObject.adresa;
+                this.form.pb = userObject.pb;
+                this.form.mesto = userObject.mesto;
+                this.form.country = userObject.country["id"];
+                this.form.tel1 = userObject.tel1;
+                this.form.tel2 = userObject.tel2;
+                this.form.isTeacher = userObject.isTeacher;
+                this.municipality = userObject.school["municipality"];
+                this.institutionType = userObject.school["institutionType"];
+                this.filterSchools();
+                this.form.school = userObject.school["id"];
+
+                this.form.subjects = [];
+                for(var i = 0; i < userObject.subjects.length; i++) {
+                    let subject = userObject.subjects[i];
+                    this.form.subjects.push(subject.id);
+                }
+
+                this.form.professionalStatuses = [];
+                for(var i = 0; i < userObject.professionalStatuses.length; i++) {
+                    let status = userObject.professionalStatuses[i];
+                    this.form.professionalStatuses.push(status.id);
+                }
+
+            });
+        },
         async getData() {
+            if(this.userId != 0) {
+                this.showSpinner = true;
+            }
+
+
             await this.getCountries();
             await this.getSubjects();
             await this.getProfessionalStatuses();
             await this.getInstitutionTypes();
             await this.getMunicipalities();
+
+            if(this.userId != 0) {
+                await this.getUserData();
+                this.showSpinner = false;
+            } else {
+                this.form.email = null;
+                this.form.password = null;
+            }
+
         },
         async filterSchools() {
             let formData = new FormData();
@@ -264,6 +339,7 @@ export default {
         sendData() {
             return new Promise((resolve, reject) => {
                 let formData = new FormData();
+                this.form.id = this.userId;
                 for(let property in this.form) {
                     if(property == 'subjects') {
                         let subjects = this.form[property];
@@ -282,7 +358,7 @@ export default {
                     }
                 }
 
-                axios.post('/appusers/create', formData)
+                axios.post(this.action, formData)
                 .then(response => {
                     resolve(response);
                 })

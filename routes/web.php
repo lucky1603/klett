@@ -44,6 +44,8 @@ Route::post('schools', [SchoolController::class, 'filterSchools'])->name('school
 Route::get('appusers', [AppUserController::class, 'index'])->name('appusers');
 Route::get('appusers/data', [AppUserController::class, 'getAppUsers'])->name('appusers.data');
 Route::post('appusers/create', [AppUserController::class, 'store'])->name('appusers.store');
+Route::post('appusers/edit', [AppUserController::class, 'update'])->name('appusers.update');
+Route::post('appusers/user', [AppUserController::class, 'getAppUser'])->name('appusers.user');
 
 // Professional statuses.
 Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");

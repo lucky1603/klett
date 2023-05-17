@@ -1,12 +1,19 @@
 <template>
     <div class="container">
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
-            <b-table :sticky-header="true" small striped bordered hover :items="items" :fields="fields" head-variant="dark" class="w-100"></b-table>
-            <b-button variant="primary" @click="showForm">Dodaj</b-button>
+            <b-table
+                :sticky-header="true"
+                small striped bordered hover
+                :items="items"
+                :fields="fields"
+                head-variant="dark"
+                class="w-100" @row-clicked="tableClick">
+            </b-table>
+            <b-button variant="primary" @click="createUser">Dodaj</b-button>
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
-            <user-form ref="userForm"></user-form>
+            <user-form ref="userForm" :user-id="selectedUserId"></user-form>
             <template #modal-footer>
                 <b-button type="button" variant="primary" @click="onOk">Prihvati</b-button>
                 <b-button type="button" @click="onCancel">Odustani</b-button>
@@ -23,6 +30,7 @@ export default {
 
     data() {
         return {
+            selectedUserId: 0,
             userDialogTitle: "Dodaj korisnika",
             items: [],
             fields: [
@@ -123,19 +131,32 @@ export default {
         showForm() {
             this.$refs.userFormDialog.show();
         },
+        closeForm() {
+            this.$refs.userFormDialog.hide();
+            this.selectedUserId = 0;
+        },
         onOk() {
             this.$refs.userForm.sendData()
             .then(response => {
                 console.log(response.data);
                 this.getData();
-                this.$refs.userFormDialog.hide();
+                this.closeForm();
             })
             .catch(error => {
                 console.log(error);
             });
         },
+        createUser() {
+            this.userDialogTitle = "Kreiraj novog korisniika";
+            this.showForm();
+        },
         onCancel() {
-            this.$refs.userFormDialog.hide();
+            this.closeForm();
+        },
+        tableClick(item, index) {
+            this.selectedUserId = item.id;
+            this.userDialogTitle = "Promeni podatke korisnika";
+            this.showForm();
         }
     },
 };
