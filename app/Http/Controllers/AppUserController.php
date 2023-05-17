@@ -118,6 +118,7 @@ class AppUserController extends Controller
             $appUser->school()->associate($data['school']);
             $appUser->subjects()->sync($data['subjects']);
             $appUser->professional_statuses()->sync($data['professionalStatuses']);
+            $appUser->save();
         }
 
         return $appUser->id;

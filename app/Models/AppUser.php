@@ -51,4 +51,9 @@ class AppUser extends Model
         return $this->belongsTo(Country::class);
     }
 
+    public function setSchool($schoolId) {
+        $this->schools()->associate($schoolId);
+        $this->save();
+    }
+
 }
