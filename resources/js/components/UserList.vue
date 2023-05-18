@@ -2,15 +2,24 @@
     <div class="container">
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
             <b-table
-                sticky-header
                 responsive
                 small striped bordered hover
                 :items="items"
                 :fields="fields"
+                :current-page="currentPage"
                 head-variant="dark"
-                class="w-100"
-                @row-clicked="tableClick">
+                class="w-100 h-100"
+                @row-clicked="tableClick"
+                :per-page="pageSize"
+                @context-changed="pageChanged">
             </b-table>
+            <b-pagination
+                v-model="currentPage"
+                :total-rows="items.length"
+                :per-page="pageSize"
+                aria-controls="profileTable"
+                align="right"
+                ></b-pagination>
             <b-button variant="primary" @click="createUser">Dodaj</b-button>
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
@@ -32,6 +41,8 @@ export default {
 
     data() {
         return {
+            currentPage: 1,
+            pageSize: 15,
             selectedUserId: 0,
             userDialogTitle: "Dodaj korisnika",
             items: [],
@@ -120,6 +131,9 @@ export default {
     },
 
     methods: {
+        pageChanged(ctx) {
+            console.log("Page changed " + this.currentPage);
+        },
         async getData() {
             await axios.get('/appusers/data')
             .then(response => {

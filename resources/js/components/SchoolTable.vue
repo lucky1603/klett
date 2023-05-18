@@ -1,11 +1,29 @@
 <template>
     <div >
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
-            <b-table :sticky-header="true" responsive small striped bordered hover :items="data" :fields="fields" head-variant="dark" class="w-100">
+            <b-table
+                responsive
+                small
+                striped
+                bordered
+                hover
+                :items="data"
+                :fields="fields"
+                :current-page="currentPage"
+                :per-page="perPage"
+                head-variant="dark"
+                class="w-100 h-100">
                 <template #cell(action)="data">
                     <a :href="'/schools/edit/' + data.item.id" @click.prevent="onEditClicked(data.item.id)"><b-icon icon="pencil-square"></b-icon></a>
                 </template>
             </b-table>
+            <b-pagination
+                v-model="currentPage"
+                :total-rows="data.length"
+                :per-page="pageSize"
+                aria-controls="profileTable"
+                align="right"
+                ></b-pagination>
             <b-button variant="primary" @click="onNewClicked">Dodaj</b-button>
         </div>
 
@@ -29,6 +47,8 @@ export default {
 
     data() {
         return {
+            currentPage: 1,
+            perPage: 15,
             data: [],
             entries: [
                 { value: 0, text: "Prvi"},

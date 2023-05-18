@@ -31,7 +31,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route("home") }}">Početna</a>
+                            <a class="nav-link" href="{{ route("home") }}">Statistika</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route("appusers") }}">Korisnici</a>
