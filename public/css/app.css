@@ -17077,3 +17077,20 @@ a.text-dark:hover, a.text-dark:focus {
 .bi-wikipedia::before {
   content: "\f8cc";
 }
+
+.mainframe {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+.mainframe .login-frame {
+  display: flex;
+  height: 100%;
+}
+.mainframe .login-frame .left-pane {
+  width: 400px;
+}
+.mainframe .login-frame .right-pane {
+  background-image: url("/images/background1.png");
+  width: 100%;
+}

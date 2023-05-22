@@ -1,0 +1,21 @@
+.mainframe {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    .login-frame {
+        display: flex;
+        height: 100%;
+
+        .left-pane {
+            width: 400px;
+        }
+
+        .right-pane {
+            background-image: url('/images/background1.png');
+            width: 100%;
+        }
+    }
+}
+
+
