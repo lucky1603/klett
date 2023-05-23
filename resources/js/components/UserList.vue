@@ -20,14 +20,14 @@
                 aria-controls="profileTable"
                 align="right"
                 ></b-pagination>
-            <b-button variant="primary" @click="createUser">Dodaj</b-button>
+            <b-button variant="primary" @click="createUser">{{ _('gui.Add')}}</b-button>
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
             <user-form ref="userForm" :user-id="selectedUserId"></user-form>
             <template #modal-footer>
-                <b-button type="button" variant="primary" @click="onOk">Prihvati</b-button>
-                <b-button type="button" @click="onCancel">Odustani</b-button>
+                <b-button type="button" variant="primary" @click="onOk">{{ _('gui.Accept')}}</b-button>
+                <b-button type="button" @click="onCancel">{{ _('gui.Cancel')}}</b-button>
             </template>
         </b-modal>
     </div>
@@ -44,13 +44,13 @@ export default {
             currentPage: 1,
             pageSize: 15,
             selectedUserId: 0,
-            userDialogTitle: "Dodaj korisnika",
+            userDialogTitle: window.i18n.gui.addUser,
             items: [],
             fields: [
                 {
                     key: "ime",
                     sortable: true,
-                    label: "Ime",
+                    label: window.i18n.gui.firstName,
                     thStyle: {
                         width: "15%"
                     }
@@ -58,7 +58,7 @@ export default {
                 {
                     key: "prezime",
                     sortable: true,
-                    label: "Prezime",
+                    label: window.i18n.gui.lastName,
                     thStyle: {
                         width: "15%"
                     }
@@ -66,7 +66,7 @@ export default {
                 {
                     key: "email",
                     sortable: true,
-                    label: "E-Mail",
+                    label: window.i18n.gui.email,
                     thStyle: {
                         width: "20%"
                     }
@@ -74,7 +74,7 @@ export default {
 
                 {
                     key: "tel1",
-                    label: "Kontakt telefon",
+                    label: window.i18n.contactPhone,
                     sortable: true,
                     thStyle: {
                         width: "15%"
@@ -93,7 +93,7 @@ export default {
                 // },
                 {
                     key: "mesto",
-                    label: "Mesto",
+                    label: window.i18n.gui.city,
                     sortable: true,
                     thStyle: {
                         width: "15%"
@@ -101,7 +101,7 @@ export default {
                 },
                 {
                     key: "country",
-                    label: "Država",
+                    label: window.i18n.gui.country,
                     sortable: true,
                     thStyle: {
                         width: "15%"
@@ -115,7 +115,7 @@ export default {
                 // },
                 {
                     key: "isTeacher",
-                    label: "Nastavnik",
+                    label: window.i18n.gui.teacher,
                     sortable: true,
                     thStyle: {
                         width: "5%"
@@ -163,7 +163,7 @@ export default {
             });
         },
         createUser() {
-            this.userDialogTitle = "Kreiraj novog korisniika";
+            this.userDialogTitle = window.i18n.gui.addUser;
             this.showForm();
         },
         onCancel() {
@@ -171,7 +171,7 @@ export default {
         },
         tableClick(item, index) {
             this.selectedUserId = item.id;
-            this.userDialogTitle = "Promeni podatke korisnika";
+            this.userDialogTitle = window.i18n.gui.changeUser;
             this.showForm();
         }
     },

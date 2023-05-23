@@ -1,0 +1,72 @@
+<?php
+
+return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | GUI Language Lines
+    |--------------------------------------------------------------------------
+    |
+    | The following language lines are used for labels of GUI elements. You are
+    | free to modify these language lines according to your application's
+    | requirements.
+    |
+    */
+
+    'Add' => 'Add',
+    'Cancel' => 'Cancel',
+    'Open' => "Open",
+    'Close' => 'Close',
+    'Save' => 'Save' ,
+    'Accept' => 'Accept',
+
+    /**
+     * Users list
+     */
+    'firstName' => 'First Name',
+    'secondName' => 'Second Name',
+    'email' => 'E-Mail',
+    'contactPhone' => 'Contact Phone',
+    'city' => 'City',
+    'country' => 'Country',
+    'teacher' => 'Teacher',
+
+    /**
+     * Schools list
+     */
+    'institutionType' => 'Institution Type',
+    'municipality' => 'Municipality',
+    'school' => 'School',
+
+    /**
+     * Add user dialog
+     */
+    'addUser' => 'Add New User',
+    'changeUser' => 'Change User Data',
+
+    /**
+     * User form
+     */
+    'password' => "Password",
+    'repeatPassword' => 'Repeat Password',
+    'repeatEmail' => 'Repeat Email',
+    'addressAndNo' => 'Address and Number',
+    'postalCode' => 'Postal Code',
+    'tel1' => 'Phone Number #1',
+    'tel2' => 'Phone Number #2',
+    'isTeacher' => "Is Teacher?",
+    'subjects' => 'Subjects',
+    'subjectsSubtitle' => '(You can select more than one answer)',
+    'professionalStatus' => 'Professional Status',
+    'professionalStatusSubtitle' => "(You can select more than one answer)",
+
+    /**
+     * School form
+     */
+    'schoolName' => 'School Name',
+    'schoolNameHolder' => "Enter the school name",
+    'schoolFormDialogTitleAdd' => 'Add new school',
+    'schoolFormDialogTitleChange' => 'Change school data'
+
+
+];

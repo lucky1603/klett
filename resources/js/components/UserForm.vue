@@ -7,13 +7,13 @@
         <b-form size="sm" @submit.prevent="sendData" autocomplete="nope">
             <b-row v-if="userId == 0">
                 <b-col>
-                    <b-form-group label="Imejl adresa" label-for="email" autocomplete="nope">
+                    <b-form-group :label="_('gui.email')" label-for="email" autocomplete="nope">
                         <b-input ref="email" id="email" type="email" v-model="form.email"></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Ponovite imejl adresu" label-for="email-repeat">
+                    <b-form-group :label="_('gui.repeatEmail')" label-for="email-repeat">
                         <b-input id="email-repeat" type="email" v-model="form.repeated_email"></b-input>
                         <span v-if="errors.repeated_email" class="text-danger">{{ errors.repeated_email}}</span>
                     </b-form-group>
@@ -22,55 +22,55 @@
 
             <b-row v-if="userId == 0">
                 <b-col>
-                    <b-form-group label="Lozinka" label-for="password" autocomplete="newhope">
+                    <b-form-group :label="_('gui.password')" label-for="password" autocomplete="newhope">
                         <b-input ref="password" id="password" type="password" v-model="form.password"></b-input>
                         <span v-if="errors.password" class="text-danger">{{ errors.password}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Ponovite lozinku" label-for="password-repeat">
+                    <b-form-group :label="_('gui.repeatPassword')" label-for="password-repeat">
                         <b-input id="password-repeat" type="password" v-model="form.repeated_password"></b-input>
                         <span v-if="errors.repeated_password" class="text-danger">{{ errors.repeated_password}}</span>
                     </b-form-group>
                 </b-col>
             </b-row>
 
-            <b-form-group v-if="userId != 0" label="Imejl adresa" label-for="email" autocomplete="nope">
+            <b-form-group v-if="userId != 0" :label="_('gui.email')" label-for="email" autocomplete="nope">
                 <b-input id="email" type="email" v-model="form.email"></b-input>
                 <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
             </b-form-group>
 
             <b-row>
                 <b-col>
-                    <b-form-group label="Ime" label-for="ime" >
+                    <b-form-group :label="_('gui.firstName')" label-for="ime" >
                         <b-input id="ime" type="text" v-model="form.ime"></b-input>
                         <span v-if="errors.ime" class="text-danger">{{ errors.ime}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Prezime" label-for="prezime" >
+                    <b-form-group :label="_('gui.secondName')" label-for="prezime" >
                         <b-input id="prezime" type="text" v-model="form.prezime"></b-input>
                         <span v-if="errors.prezime" class="text-danger">{{ errors.prezime}}</span>
                     </b-form-group>
                 </b-col>
             </b-row>
-            <b-form-group label="Država" label-for="country">
+            <b-form-group :label="_('gui.country')" label-for="country">
                 <b-form-select id="country" v-model="form.country" :options="countries"></b-form-select>
                 <span v-if="errors.country" class="text-danger">{{ errors.country}}</span>
             </b-form-group>
-            <b-form-group label="Adresa i broj" label-for="adresa">
+            <b-form-group :label="_('gui.addressAndNo')" label-for="adresa">
                 <b-form-input id="adresa" v-model="form.adresa"></b-form-input>
                 <span v-if="errors.adresa" class="text-danger">{{ errors.adresa}}</span>
             </b-form-group>
             <b-row>
                 <b-col>
-                    <b-form-group label="Poštanski broj" label-for="pb">
+                    <b-form-group :label="_('gui.postalCode')" label-for="pb">
                         <b-input id="pb" type="text" v-model="form.pb"></b-input>
                         <span v-if="errors.pb" class="text-danger">{{ errors.pb}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Mesto" label-for="mesto">
+                    <b-form-group :label="_('gui.city')" label-for="mesto">
                         <b-input id="mesto" type="text" v-model="form.mesto"></b-input>
                         <span v-if="errors.mesto" class="text-danger">{{ errors.mesto}}</span>
                     </b-form-group>
@@ -78,40 +78,40 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <b-form-group label="Broj telefona 1" label-for="tel1">
+                    <b-form-group :label="_('gui.tel1')" label-for="tel1">
                         <b-input id="tel1" type="text" v-model="form.tel1"></b-input>
                         <span v-if="errors.tel1" class="text-danger">{{ errors.tel1}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Broj telefona 2" label-for="tel2">
+                    <b-form-group :label="_('gui.tel2')" label-for="tel2">
                         <b-input id="tel2" type="text" v-model="form.tel2"></b-input>
                     </b-form-group>
                 </b-col>
             </b-row>
-            <b-form-checkbox v-model="form.isTeacher" :value="true">Da li je nastavnik?</b-form-checkbox>
+            <b-form-checkbox v-model="form.isTeacher" :value="true">{{ _('gui.isTeacher') }}</b-form-checkbox>
             <div v-if="form.isTeacher" class="mt-3">
                 <b-row>
                     <b-col>
-                        <b-form-group label="Tip ustanove" label-for="institution_type">
+                        <b-form-group :label="_('gui.institutionType')" label-for="institution_type">
                             <b-form-select v-model="institutionType" id="institution_type" :options="institutionTypes" @change="filterSchools"></b-form-select>
                         </b-form-group>
                     </b-col>
                     <b-col>
-                        <b-form-group label="Opštine" label-for="municipalities">
+                        <b-form-group :label="_('gui.municipality')" label-for="municipalities">
                             <b-form-select v-model="municipality" id="municipalities" :options="municipalities" @change="filterSchools"></b-form-select>
                         </b-form-group>
                     </b-col>
                 </b-row>
 
-                <b-form-group label="Škola" label-for="school">
+                <b-form-group :label="_('gui.school')" label-for="school">
                     <b-form-select v-model="form.school" id="school" :options="schools"></b-form-select>
                     <span v-if="errors.school" class="text-danger">{{ errors.school}}</span>
                 </b-form-group>
 
 
-                <h5 class="mb-0">Predmeti</h5>
-                <small class="text-secondary mt-0">(Možete izabrati i više od jednog odgovora)</small>
+                <h5 class="mb-0">{{ _('gui.subjects') }}</h5>
+                <small class="text-secondary mt-0">{{_('gui.subjectsSubtitle')}}</small>
                 <div class="d-flex flex-column flex-wrap" style="height:300px">
                     <b-form-checkbox
                         v-for="subject in subjects"
@@ -123,8 +123,8 @@
                 </div>
                 <span v-if="errors.subjects" class="text-danger">{{ errors.subjects}}</span>
 
-                <h5 class="mt-3 mb-0">Profesionalni status</h5>
-                <small class="text-secondary mt-0">(Možete izabrati i više od jednog odgovora)</small>
+                <h5 class="mt-3 mb-0">{{_('gui.professionalStatus')}}</h5>
+                <small class="text-secondary mt-0">{{_('gui.professionalStatusSubtitle')}}</small>
                 <div class="d-flex flex-column flex-wrap" style="height:150px">
                     <b-form-checkbox
                         v-for="professionalStatus in professionalStatuses"

@@ -15,6 +15,9 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!-- Localization -->
+    <script src="/lang-{{ app()->getLocale() }}.js"></script>
 </head>
 <body>
     <div id="app">

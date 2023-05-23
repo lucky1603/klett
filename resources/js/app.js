@@ -9,6 +9,10 @@ import Vue from 'vue';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueApexCharts from 'vue-apexcharts';
 
+
+import _ from 'lodash'
+Vue.prototype._ = str => _.get(window.i18n, str);
+
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 

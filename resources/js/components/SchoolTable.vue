@@ -24,15 +24,15 @@
                 aria-controls="profileTable"
                 align="right"
                 ></b-pagination>
-            <b-button variant="primary" @click="onNewClicked">Dodaj</b-button>
+            <b-button variant="primary" @click="onNewClicked">{{ _('gui.Add')}}</b-button>
         </div>
 
         <b-modal id="createSchoolDialog" ref="createSchoolDialog" header-bg-variant="dark" header-text-variant="light">
             <template #modal-title>{{ dialogTitle }}</template>
             <school-form ref="schoolForm" :school-id="selectedSchoolId" :action="dialogDataAction"></school-form>
             <template #modal-footer>
-                <b-button type="button" variant="primary" @click.prevent="onOk" >Prihvati</b-button>
-                <b-button type="button" variant="light" @click="onCancel" >Zatvori</b-button>
+                <b-button type="button" variant="primary" @click.prevent="onOk" >{{ _('gui.Accept') }}</b-button>
+                <b-button type="button" variant="light" @click="onCancel" >{{ _('gui.Close') }}</b-button>
             </template>
         </b-modal>
 
@@ -59,17 +59,17 @@ export default {
                 {
                     key: "institution_type",
                     sortable: true,
-                    label: "Tip ustanove"
+                    label: window.i18n.gui.institutionType
                 },
                 {
                     key: "municipality",
                     sortable: true,
-                    label: "Opština"
+                    label: window.i18n.gui.municipality
                 },
                 {
                     key: "school",
                     sortable: true,
-                    label: "Škola"
+                    label: window.i18n.gui.school
                 },
                 {
                     key: "action",
@@ -78,7 +78,7 @@ export default {
 
             ],
             test: 1,
-            dialogTitle: "DODAJ ŠKOLU",
+            dialogTitle: window.i18n.gui.schoolFormDialogTitleAdd,
             dialogDataAction: '/schools/create',
             selectedSchoolId: 0,
             hasData: true
@@ -119,13 +119,13 @@ export default {
         onEditClicked(id) {
             this.selectedSchoolId = id;
             this.dialogDataAction = '/schools/edit';
-            this.dialogTitle = "Promeni podatke o školi"
+            this.dialogTitle = window.i18n.gui.schoolFormDialogTitleChange;
             this.openForm();
         },
         onNewClicked() {
             this.selectedSchoolId = 0;
             this.dialogDataAction = '/schools/create';
-            this.dialogTitle = "Dodaj novu školu"
+            this.dialogTitle = window.i18n.gui.schoolFormDialogTitleAdd;
             this.openForm();
         }
     },

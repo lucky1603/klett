@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-form @submit.prevent="onSubmit">
-            <b-form-group id="municipalities-group" label="Opštine:" label-for="municipality">
+            <b-form-group id="municipalities-group" :label="_('gui.municipality')" label-for="municipality">
                 <b-form-select
                     id="municipality"
                     v-model="form.municipality"
@@ -9,7 +9,7 @@
               ></b-form-select>
               <span v-if="errors.municipality" class="text-danger">{{ errors.municipality}}</span>
             </b-form-group>
-            <b-form-group id="institution-types-group" label="Tipovi ustanova:" label-for="institution-type">
+            <b-form-group id="institution-types-group" :label="_('gui.institutionType')" label-for="institution-type">
                 <b-form-select
                     id="institution-type"
                     v-model="form.institution_type"
@@ -20,9 +20,9 @@
 
             <b-form-group
                 id="name-group"
-                label="Ime škole:"
+                :label="_('gui.schoolName')"
                 label-for="name"
-                description="Unesite ime škole"
+                :description="_('gui.schoolNameHolder')"
             >
                 <b-form-input
                     id="name"

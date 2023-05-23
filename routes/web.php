@@ -5,6 +5,7 @@ use App\Http\Controllers\CountryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InstitutionTypeController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MunicipalityController;
 use App\Http\Controllers\ProfessionalStatusController;
 use App\Http\Controllers\SchoolController;
@@ -62,3 +63,5 @@ Route::get('municipalities', [MunicipalityController::class, 'data'])->name('mun
 // Institution types.
 Route::get('institution_types', [InstitutionTypeController::class, 'data'])->name('institution_types');
 
+// Language-Localization.p
+Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');
