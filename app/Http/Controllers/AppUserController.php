@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AppUserExport;
 use App\Models\AppUser;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AppUserController extends Controller
 {
@@ -146,5 +148,13 @@ class AppUserController extends Controller
         $user->save();
 
         return 0;
+    }
+
+    public function register() {
+        return view('appusers.register');
+    }
+
+    public function export() {
+        return Excel::download(new AppUserExport, 'appusers.xlsx');
     }
 }

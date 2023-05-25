@@ -33,6 +33,7 @@ Route::get('/home',[ HomeController::class, 'index'])->name('home');
 // Schools.
 Route::get('schools', [SchoolController::class, 'index'])->name('schools');
 Route::get('schools/create', [SchoolController::class, 'create'])->name('schools.create');
+Route::get('schools/export', [SchoolController::class, 'export'])->name('schools.export');
 Route::get('schools/edit/{school}', [SchoolController::class, 'edit'])->name('schools.edit');
 Route::get('schools/getSchools', [SchoolController::class, 'getSchools'])->name('schools.getSchools');
 Route::get('schools/getMunicipalities', [SchoolController::class, 'getMunicipalities'])->name('schools.getMunicipalities');
@@ -44,6 +45,8 @@ Route::post('schools', [SchoolController::class, 'filterSchools'])->name('school
 
 Route::get('appusers', [AppUserController::class, 'index'])->name('appusers');
 Route::get('appusers/data', [AppUserController::class, 'getAppUsers'])->name('appusers.data');
+Route::get('appusers/export',[AppUserController::class, 'export'])->name('appusers.export');
+Route::get('appusers/register', [AppUserController::class, 'register'])->name('appusers.register');
 Route::post('appusers/create', [AppUserController::class, 'store'])->name('appusers.store');
 Route::post('appusers/edit', [AppUserController::class, 'update'])->name('appusers.update');
 Route::post('appusers/user', [AppUserController::class, 'getAppUser'])->name('appusers.user');

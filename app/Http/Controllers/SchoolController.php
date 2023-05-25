@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InstitutionType;
-use App\Models\Municipality;
 use App\Models\School;
+use App\Models\Municipality;
 use Illuminate\Http\Request;
+use App\Exports\SchoolExport;
+use App\Models\InstitutionType;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SchoolController extends Controller
 {
@@ -115,5 +117,9 @@ class SchoolController extends Controller
                 "name" => $school->name
             ];
         });
+    }
+
+    public function export() {
+        return Excel::download(new SchoolExport, 'schools.xlsx');
     }
 }

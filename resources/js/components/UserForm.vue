@@ -4,7 +4,7 @@
             <b-spinner></b-spinner>
         </div>
 
-        <b-form size="sm" @submit.prevent="sendData" autocomplete="nope">
+        <b-form @submit.prevent="sendData" autocomplete="nope">
             <b-row v-if="userId == 0">
                 <b-col>
                     <b-form-group :label="_('gui.email')" label-for="email" autocomplete="nope">
@@ -146,7 +146,8 @@ import axios from 'axios';
 export default {
     name: 'UserForm',
     props: {
-        userId: { typeof: Number, default: 0 }
+        userId: { typeof: Number, default: 0 },
+        formSize: { typeof: String, default: "sm" }
     },
     computed : {
         action() {

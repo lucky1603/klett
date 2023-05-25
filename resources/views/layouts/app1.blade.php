@@ -15,30 +15,21 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <!-- Localization -->
+    <script src="/lang-{{ app()->getLocale() }}.js"></script>
 </head>
 <body>
     <div id="app">
-        <div>
-            <b-navbar type="dark" variant="dark">
-              <b-navbar-nav>
-                <b-nav-item href="/home">Home</b-nav-item>
-                <b-nav-item href="/schools">Schools</b-nav-item>
-
-                <!-- Navbar dropdowns -->
-                <b-nav-item-dropdown text="Lang" right>
-                  <b-dropdown-item href="#">EN</b-dropdown-item>
-                  <b-dropdown-item href="#">ES</b-dropdown-item>
-                  <b-dropdown-item href="#">RU</b-dropdown-item>
-                  <b-dropdown-item href="#">FA</b-dropdown-item>
-                </b-nav-item-dropdown>
-
-                <b-nav-item-dropdown text="User" right>
-                  <b-dropdown-item href="#">Account</b-dropdown-item>
-                  <b-dropdown-item href="#">Settings</b-dropdown-item>
-                </b-nav-item-dropdown>
-              </b-navbar-nav>
-            </b-navbar>
-          </div>
+        <!-- Header with logos -->
+        <div class="container-fluid d-flex align-items-center justify-content-center" style="height: 200px; background-color:coral">
+            <img src="/images/klett1.png" style="height: 60px; margin: 20px"/>
+            <img src="/images/logos.png" style="height: 60px; margin: 20px"/>
+            <img src="/images/freska.png" style="height: 60px; margin: 20px"/>
+            <img src="/images/eucilogo1.png" style="height: 60px; margin: 20px"/>
+            <img src="/images/eucionica.png" style="height: 60px; margin: 20px"/>
+            <img src="/images/eknjizaralogo.svg" style="height: 60px; margin: 20px"/>
+        </div>
 
         <main class="py-4">
             @yield('content')

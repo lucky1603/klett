@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <h5 class="text-center">{{ __('Users List')}}</h5>
-    <user-list></user-list>
+    <div class="d-flex flex-column container">
+        <user-list></user-list>
+    </div>
+
 @endsection

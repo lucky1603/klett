@@ -30,6 +30,7 @@ return [
     'city' => 'Место',
     'country' => 'Држава',
     'teacher' => 'Наставник',
+    'usersList' => 'Листа корисника',
 
     /**
      * Schools list
@@ -37,6 +38,7 @@ return [
     'institutionType' => 'Тип установе',
     'municipality' => 'Општина',
     'school' => 'Школа',
+    'schoolList' => "Листа школа",
 
     /**
      * Add user dialog
@@ -66,6 +68,11 @@ return [
     'schoolName' => 'Име школе',
     'schoolNameHolder' => "Унесите име школе",
     'schoolFormDialogTitleAdd' => 'Додај нову школу',
-    'schoolFormDialogTitleChange' => 'Промените податке о школи'
+    'schoolFormDialogTitleChange' => 'Промените податке о школи',
+
+    /**
+     * Register user form.
+     */
+    'registerUserFormTitle' => "Регистрација новог корисника"
 
 ];

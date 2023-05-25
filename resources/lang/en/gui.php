@@ -30,6 +30,7 @@ return [
     'city' => 'City',
     'country' => 'Country',
     'teacher' => 'Teacher',
+    'usersList' => 'Users List',
 
     /**
      * Schools list
@@ -37,6 +38,7 @@ return [
     'institutionType' => 'Institution Type',
     'municipality' => 'Municipality',
     'school' => 'School',
+    'schoolList' => "Schools List",
 
     /**
      * Add user dialog
@@ -66,7 +68,12 @@ return [
     'schoolName' => 'School Name',
     'schoolNameHolder' => "Enter the school name",
     'schoolFormDialogTitleAdd' => 'Add new school',
-    'schoolFormDialogTitleChange' => 'Change school data'
+    'schoolFormDialogTitleChange' => 'Change school data',
+
+    /**
+     * Register user form.
+     */
+    'registerUserFormTitle' => "New User Registration"
 
 
 ];
