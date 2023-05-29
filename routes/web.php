@@ -55,6 +55,10 @@ Route::post('appusers/user', [AppUserController::class, 'getAppUser'])->name('ap
 // Remote users (from KeyCloak).
 Route::get('remoteusers', [RemoteUserController::class, 'index'])->name('remoteusers');
 Route::get("remoteusers/keycloak", [RemoteUserController::class, 'connectKeyCloak'])->name("remoteusers.keycloak");
+Route::get("remoteusers/create", [RemoteUserController::class, 'create'])->name('remoteusers.create');
+Route::post("remoteusers/userData", [RemoteUserController::class, 'userData'])->name('remoteusers.userData');
+Route::post('remoteusers/update', [RemoteUserController::class, 'update'])->name('remoteusers.update');
+Route::post('remoteusers/create', [RemoteUserController::class, 'store'])->name('remoteusers.store');
 Route::post("remoteusers/data", [RemoteUserController::class, 'getData'])->name("remoteusers.data");
 
 // Professional statuses.

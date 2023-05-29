@@ -25,4 +25,48 @@ class RemoteUserController extends Controller
         $token = $request->post('token');
         return Http::withToken($token)->get("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users");
     }
+
+    public function create() {
+        return view('remoteusers.create');
+    }
+
+    public function store(Request $request) {
+        $data = $request->post();
+
+        return Http::withToken($data['token'])
+            ->asJson()
+            ->post("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users", [
+                "username" => $data['username'],
+                "firstName" => $data['firstName'],
+                "lastName" => $data['lastName'],
+                "email" => $data["email"],
+                "enabled" => $data['enabled'] == "true" ? true : false
+        ]);
+
+    }
+
+    public function userData(Request $request) {
+        $data = $request->post();
+
+        $userId = $data['userId'];
+        $token = $data['token'];
+        return Http::withToken($token)
+            ->get("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId);
+    }
+
+    public function update(Request $request) {
+        $data = $request->post();
+
+        $userId = $data['userId'];
+        $token = $data["token"];
+        return Http::withToken($token)
+            ->asJson()
+            ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId,[
+                "username" => $data['username'],
+                "firstName" => $data['firstName'],
+                "lastName" => $data['lastName'],
+                "email" => $data["email"],
+                "enabled" => $data['enabled'] == "true" ? true : false
+        ]);
+    }
 }

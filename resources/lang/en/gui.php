@@ -62,6 +62,7 @@ return [
     'subjectsSubtitle' => '(You can select more than one answer)',
     'professionalStatus' => 'Professional Status',
     'professionalStatusSubtitle' => "(You can select more than one answer)",
+    'enabled' => "Enabled",
 
     /**
      * School form

@@ -62,6 +62,7 @@ return [
     'subjectsSubtitle' => '(Можете одабрати више од једног одговора)',
     'professionalStatus' => 'Професионални статус',
     'professionalStatusSubtitle' => "(Можете одабрати више од једног одговора)",
+    'enabled' => "Омогућен",
 
     /**
      * School form

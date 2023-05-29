@@ -28,7 +28,7 @@
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
-            <user-form ref="userForm" :user-id="selectedUserId"></user-form>
+            <remote-user-form ref="remoteUserForm" :user-id="selectedUserId"></remote-user-form>
             <template #modal-footer>
                 <b-button type="button" variant="primary" @click="onOk">{{ _('gui.Accept')}}</b-button>
                 <b-button type="button" @click="onCancel">{{ _('gui.Cancel')}}</b-button>
@@ -47,7 +47,7 @@ export default {
         return {
             currentPage: 1,
             pageSize: 15,
-            selectedUserId: 0,
+            selectedUserId: '',
             userDialogTitle: window.i18n.gui.addUser,
             items: [],
             fields: [
@@ -109,6 +109,7 @@ export default {
             await axios.post('/remoteusers/data', formData)
             .then(response => {
                 console.log(response.data);
+                this.items.length = 0;
                 for(let i = 0; i < response.data.length; i++) {
                     this.items.push(response.data[i]);
                 }
@@ -119,10 +120,10 @@ export default {
         },
         closeForm() {
             this.$refs.userFormDialog.hide();
-            this.selectedUserId = 0;
+            this.selectedUserId = '';
         },
         onOk() {
-            this.$refs.userForm.sendData()
+            this.$refs.remoteUserForm.sendData()
             .then(response => {
                 console.log(response.data);
                 this.getData();
@@ -140,9 +141,9 @@ export default {
             this.closeForm();
         },
         tableClick(item, index) {
-            // this.selectedUserId = item.id;
-            // this.userDialogTitle = window.i18n.gui.changeUser;
-            // this.showForm();
+            this.selectedUserId = item.id;
+            this.userDialogTitle = window.i18n.gui.changeUser;
+            this.showForm();
         }
     },
 };
