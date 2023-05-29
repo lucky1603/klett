@@ -63,6 +63,8 @@ return [
     'professionalStatus' => 'Professional Status',
     'professionalStatusSubtitle' => "(You can select more than one answer)",
     'enabled' => "Enabled",
+    'verifyEmail' => "Verify Email",
+    "updatePassword" => "Update Password",
 
     /**
      * School form

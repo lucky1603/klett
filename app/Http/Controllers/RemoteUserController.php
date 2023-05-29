@@ -33,6 +33,15 @@ class RemoteUserController extends Controller
     public function store(Request $request) {
         $data = $request->post();
 
+        $requiredActions = [];
+        if(isset($data['verifyEmail'])) {
+            $requiredActions[] = "VERIFY_EMAIL";
+        }
+
+        if(isset($data['updatePassword'])) {
+            $requiredActions[] = "UPDATE_PASSWORD";
+        }
+
         return Http::withToken($data['token'])
             ->asJson()
             ->post("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users", [
@@ -40,7 +49,8 @@ class RemoteUserController extends Controller
                 "firstName" => $data['firstName'],
                 "lastName" => $data['lastName'],
                 "email" => $data["email"],
-                "enabled" => $data['enabled'] == "true" ? true : false
+                "enabled" => $data['enabled'] == "true" ? true : false,
+                "requiredActions" => $requiredActions
         ]);
 
     }
@@ -57,6 +67,15 @@ class RemoteUserController extends Controller
     public function update(Request $request) {
         $data = $request->post();
 
+        $requiredActions = [];
+        if(isset($data['verifyEmail'])) {
+            $requiredActions[] = "VERIFY_EMAIL";
+        }
+
+        if(isset($data['updatePassword'])) {
+            $requiredActions[] = "UPDATE_PASSWORD";
+        }
+
         $userId = $data['userId'];
         $token = $data["token"];
         return Http::withToken($token)
@@ -66,7 +85,8 @@ class RemoteUserController extends Controller
                 "firstName" => $data['firstName'],
                 "lastName" => $data['lastName'],
                 "email" => $data["email"],
-                "enabled" => $data['enabled'] == "true" ? true : false
+                "enabled" => $data['enabled'] == "true" ? true : false,
+                "requiredActions" => $requiredActions
         ]);
     }
 }

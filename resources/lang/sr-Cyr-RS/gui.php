@@ -63,6 +63,8 @@ return [
     'professionalStatus' => 'Професионални статус',
     'professionalStatusSubtitle' => "(Можете одабрати више од једног одговора)",
     'enabled' => "Омогућен",
+    'verifyEmail' => "Верификуј имејл",
+    "updatePassword" => "Промени лозинку",
 
     /**
      * School form

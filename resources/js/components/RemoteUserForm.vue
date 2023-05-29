@@ -20,6 +20,8 @@
                 <b-input id="email" v-model="form.email"></b-input>
             </b-form-group>
             <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
+            <b-form-checkbox v-model="form.verifyEmail" :value="true">{{ _('gui.verifyEmail') }}</b-form-checkbox>
+            <b-form-checkbox v-model="form.updatePassword" :value="true">{{ _('gui.updatePassword') }}</b-form-checkbox>
         </b-form>
     </div>
 </template>
@@ -39,7 +41,9 @@ export default {
                 firstName: '',
                 lastName: '',
                 email: '',
-                enabled: false
+                enabled: false,
+                verifyEmail: false,
+                updatePassword: false
             },
             accessToken: '',
             errors: {},
@@ -67,7 +71,27 @@ export default {
             .then(response => {
                 let resultObject = response.data;
                 for(let property in this.form) {
+                    if(property == 'requiredActions')
+                        continue;
                     this.form[property] = resultObject[property];
+                }
+
+                if(resultObject.requiredActions.length > 0) {
+                    console.log(resultObject.requiredActions);
+
+
+                    if(resultObject.requiredActions.includes('VERIFY_EMAIL')) {
+                        this.form.verifyEmail = true;
+                    } else {
+                        this.form.verifyEmail = false;
+                    }
+
+                    if(resultObject.requiredActions.includes('UPDATE_PASSWORD')) {
+                        this.form.updatePassword = true;
+                    } else {
+                        this.form.updatePassword = false;
+                    }
+
                 }
             });
         },
