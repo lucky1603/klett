@@ -31,6 +31,7 @@ return [
     'country' => 'Држава',
     'teacher' => 'Наставник',
     'usersList' => 'Листа корисника',
+    'username' => "Корисничко име",
 
     /**
      * Schools list

@@ -32,7 +32,7 @@ return [
     'country' => 'Država',
     'teacher' => 'Nastavnik',
     'usersList' => 'Lista korisnika',
-
+    'username' => "Korisničko ime",
     /**
      * Schools list
      */

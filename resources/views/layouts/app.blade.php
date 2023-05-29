@@ -1,3 +1,4 @@
+<?php header("Access-Control-Allow-Origin", true) ?>
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -41,6 +42,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route("schools") }}">Škole</a>
+                        </li>
+                        <li class="nav-item" >
+                            <a class="nav-link" href="{{ route('remoteusers')}}">KeyCloak</a>
                         </li>
                     </ul>
 

@@ -41,6 +41,7 @@ Vue.component('user-form', require('./components/UserForm.vue').default);
 Vue.component('apexchart', VueApexCharts);
 Vue.component('dashboard', require('./components/Dashboard.vue').default);
 Vue.component('register-user-form', require('./components/RegisterUserForm.vue').default);
+Vue.component('remote-user-list', require('./components/RemoteUserList.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -31,6 +31,7 @@ return [
     'country' => 'Country',
     'teacher' => 'Teacher',
     'usersList' => 'Users List',
+    'username' => "Username",
 
     /**
      * Schools list

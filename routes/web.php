@@ -8,6 +8,7 @@ use App\Http\Controllers\InstitutionTypeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MunicipalityController;
 use App\Http\Controllers\ProfessionalStatusController;
+use App\Http\Controllers\RemoteUserController;
 use App\Http\Controllers\SchoolController;
 use App\Http\Controllers\SubjectController;
 
@@ -50,6 +51,11 @@ Route::get('appusers/register', [AppUserController::class, 'register'])->name('a
 Route::post('appusers/create', [AppUserController::class, 'store'])->name('appusers.store');
 Route::post('appusers/edit', [AppUserController::class, 'update'])->name('appusers.update');
 Route::post('appusers/user', [AppUserController::class, 'getAppUser'])->name('appusers.user');
+
+// Remote users (from KeyCloak).
+Route::get('remoteusers', [RemoteUserController::class, 'index'])->name('remoteusers');
+Route::get("remoteusers/keycloak", [RemoteUserController::class, 'connectKeyCloak'])->name("remoteusers.keycloak");
+Route::post("remoteusers/data", [RemoteUserController::class, 'getData'])->name("remoteusers.data");
 
 // Professional statuses.
 Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");
