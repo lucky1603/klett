@@ -100,7 +100,7 @@ export default {
         async getData() {
             await axios.get('/remoteusers/keycloak')
             .then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.accessToken = response.data.access_token;
             });
 
@@ -108,7 +108,7 @@ export default {
             formData.append('token', this.accessToken);
             await axios.post('/remoteusers/data', formData)
             .then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.items.length = 0;
                 for(let i = 0; i < response.data.length; i++) {
                     this.items.push(response.data[i]);

@@ -60,6 +60,7 @@ Route::post("remoteusers/userData", [RemoteUserController::class, 'userData'])->
 Route::post('remoteusers/update', [RemoteUserController::class, 'update'])->name('remoteusers.update');
 Route::post('remoteusers/create', [RemoteUserController::class, 'store'])->name('remoteusers.store');
 Route::post("remoteusers/data", [RemoteUserController::class, 'getData'])->name("remoteusers.data");
+Route::get("remoteusers/{user}/updatePassword", [RemoteUserController::class, 'sendUpdatePasswordNotice']);
 
 // Professional statuses.
 Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");

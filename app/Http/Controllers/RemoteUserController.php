@@ -34,15 +34,15 @@ class RemoteUserController extends Controller
         $data = $request->post();
 
         $requiredActions = [];
-        if(isset($data['verifyEmail'])) {
+        if(isset($data['verifyEmail']) && $data['verifyEmail'] == "true") {
             $requiredActions[] = "VERIFY_EMAIL";
         }
 
-        if(isset($data['updatePassword'])) {
+        if(isset($data['updatePassword']) && $data['updatePassword'] == "true") {
             $requiredActions[] = "UPDATE_PASSWORD";
         }
 
-        return Http::withToken($data['token'])
+        $response = Http::withToken($data['token'])
             ->asJson()
             ->post("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users", [
                 "username" => $data['username'],
@@ -50,9 +50,28 @@ class RemoteUserController extends Controller
                 "lastName" => $data['lastName'],
                 "email" => $data["email"],
                 "enabled" => $data['enabled'] == "true" ? true : false,
-                "requiredActions" => $requiredActions
         ]);
 
+        $items = explode("/", $response->header("Location"));
+        $userId = $items[count($items) - 1];
+
+        return Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+            ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId."/execute-actions-email");
+
+    }
+
+    public function sendUpdatePasswordNotice($userId) {
+        $response = Http::asForm()->post("https://wp6test.prosmart.rs:8443/realms/master/protocol/openid-connect/token", [
+            "client_id" => "admin-cli",
+            "username" => "admin",
+            "password" => "BiloKoji12@",
+            "grant_type" => "password"
+        ]);
+
+        $token = $response->json('access_token');
+
+        return Http::withToken($token)->withBody('["UPDATE_PASSWORD"]', 'application/json')
+            ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId."/execute-actions-email");
     }
 
     public function userData(Request $request) {
@@ -88,5 +107,13 @@ class RemoteUserController extends Controller
                 "enabled" => $data['enabled'] == "true" ? true : false,
                 "requiredActions" => $requiredActions
         ]);
+    }
+
+    public function getByUserName($username) {
+
+    }
+
+    public function executeActions(Request $request) {
+
     }
 }
