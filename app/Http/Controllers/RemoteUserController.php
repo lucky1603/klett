@@ -109,11 +109,13 @@ class RemoteUserController extends Controller
         ]);
     }
 
-    public function getByUserName($username) {
+    public function delete(Request $request) {
+        $data = $request->post();
 
-    }
+        $userId = $data['userId'];
+        $token = $data['token'];
 
-    public function executeActions(Request $request) {
-
+        return Http::withToken($token)
+            ->delete("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId);
     }
 }

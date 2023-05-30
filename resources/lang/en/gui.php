@@ -19,6 +19,8 @@ return [
     'Close' => 'Close',
     'Save' => 'Save' ,
     'Accept' => 'Accept',
+    "Yes" => "Yes",
+    "No" => "No",
 
     /**
      * Users list
@@ -32,6 +34,8 @@ return [
     'teacher' => 'Teacher',
     'usersList' => 'Users List',
     'username' => "Username",
+    'enabled' => 'Enabled',
+    'activity' => 'Activity',
 
     /**
      * Schools list

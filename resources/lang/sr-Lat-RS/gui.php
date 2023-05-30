@@ -20,6 +20,8 @@ return [
     'Close' => 'Zatvori',
     'Save' => 'Sačuvaj',
     'Accept' => 'Prihvati',
+    "Yes" => "Da",
+    "No" => "Ne",
 
     /**
      * Users list
@@ -33,6 +35,8 @@ return [
     'teacher' => 'Nastavnik',
     'usersList' => 'Lista korisnika',
     'username' => "Korisničko ime",
+    'enabled' => 'Omogućen',
+    'activity' => 'Aktivnost',
     /**
      * Schools list
      */

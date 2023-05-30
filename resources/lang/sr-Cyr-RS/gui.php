@@ -19,6 +19,8 @@ return [
     'Close' => 'Затвори',
     'Save' => 'Сачувај',
     'Accept' => 'Прихвати',
+    "Yes" => "Да",
+    "No" => "Не",
 
     /**
      * Users list
@@ -32,6 +34,8 @@ return [
     'teacher' => 'Наставник',
     'usersList' => 'Листа корисника',
     'username' => "Корисничко име",
+    'enabled' => 'Омогућен',
+    'activity' => 'Активност',
 
     /**
      * Schools list
