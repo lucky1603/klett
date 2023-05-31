@@ -33,15 +33,6 @@ class RemoteUserController extends Controller
     public function store(Request $request) {
         $data = $request->post();
 
-        $requiredActions = [];
-        if(isset($data['verifyEmail']) && $data['verifyEmail'] == "true") {
-            $requiredActions[] = "VERIFY_EMAIL";
-        }
-
-        if(isset($data['updatePassword']) && $data['updatePassword'] == "true") {
-            $requiredActions[] = "UPDATE_PASSWORD";
-        }
-
         $response = Http::withToken($data['token'])
             ->asJson()
             ->post("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users", [
@@ -52,12 +43,15 @@ class RemoteUserController extends Controller
                 "enabled" => $data['enabled'] == "true" ? true : false,
         ]);
 
-        $items = explode("/", $response->header("Location"));
-        $userId = $items[count($items) - 1];
+        if($data['updatePassword'] == 'true') {
+            $items = explode("/", $response->header("Location"));
+            $userId = $items[count($items) - 1];
 
-        return Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
-            ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId."/execute-actions-email");
+            return Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId."/execute-actions-email");
+        }
 
+        return $response;
     }
 
     public function sendUpdatePasswordNotice($userId) {
@@ -86,18 +80,9 @@ class RemoteUserController extends Controller
     public function update(Request $request) {
         $data = $request->post();
 
-        $requiredActions = [];
-        if(isset($data['verifyEmail'])) {
-            $requiredActions[] = "VERIFY_EMAIL";
-        }
-
-        if(isset($data['updatePassword'])) {
-            $requiredActions[] = "UPDATE_PASSWORD";
-        }
-
         $userId = $data['userId'];
         $token = $data["token"];
-        return Http::withToken($token)
+        $response =  Http::withToken($token)
             ->asJson()
             ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId,[
                 "username" => $data['username'],
@@ -105,8 +90,12 @@ class RemoteUserController extends Controller
                 "lastName" => $data['lastName'],
                 "email" => $data["email"],
                 "enabled" => $data['enabled'] == "true" ? true : false,
-                "requiredActions" => $requiredActions
         ]);
+
+        if($data['updatePassword'] == "true") {
+            return Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId."/execute-actions-email");
+        }
     }
 
     public function delete(Request $request) {

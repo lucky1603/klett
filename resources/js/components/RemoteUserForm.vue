@@ -20,7 +20,7 @@
                 <b-input id="email" v-model="form.email"></b-input>
             </b-form-group>
             <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
-            <b-form-checkbox v-model="updatePassword" :value="true">{{ _('gui.updatePassword') }}</b-form-checkbox>
+            <b-form-checkbox v-model="form.updatePassword" :value="true">{{ _('gui.updatePassword') }}</b-form-checkbox>
         </b-form>
     </div>
 </template>
@@ -41,8 +41,8 @@ export default {
                 lastName: '',
                 email: '',
                 enabled: false,
+                updatePassword: true
             },
-            updatePassword: false,
             accessToken: '',
             errors: {},
             formAction: '/remoteusers/create'
@@ -52,6 +52,7 @@ export default {
     async mounted() {
         if(this.userId != null && this.userId != '') {
             await this.getData();
+            this.form.updatePassword = false;
         }
     },
 
