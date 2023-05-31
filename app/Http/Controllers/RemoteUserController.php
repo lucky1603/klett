@@ -13,7 +13,7 @@ class RemoteUserController extends Controller
 
     public function connectKeyCloak() {
 
-        return Http::asForm()->post("https://wp6test.prosmart.rs:8443/realms/master/protocol/openid-connect/token", [
+        return Http::asForm()->post(env('KEYCLOAK_TOKEN_URL'), [
             "client_id" => "admin-cli",
             "username" => "admin",
             "password" => "BiloKoji12@",
@@ -23,7 +23,7 @@ class RemoteUserController extends Controller
 
     public function getData(Request $request) {
         $token = $request->post('token');
-        return Http::withToken($token)->get("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users");
+        return Http::withToken($token)->get(ENV("KEYCLOAK_API_URL"));
     }
 
     public function create() {
@@ -35,7 +35,7 @@ class RemoteUserController extends Controller
 
         $response = Http::withToken($data['token'])
             ->asJson()
-            ->post("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users", [
+            ->post(env("KEYCLOAK_API_URL"), [
                 "username" => $data['username'],
                 "firstName" => $data['firstName'],
                 "lastName" => $data['lastName'],
@@ -48,14 +48,14 @@ class RemoteUserController extends Controller
             $userId = $items[count($items) - 1];
 
             return Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
-                ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId."/execute-actions-email");
+                ->put(env("KEYCLOAK_API_URL").$userId."/execute-actions-email");
         }
 
         return $response;
     }
 
     public function sendUpdatePasswordNotice($userId) {
-        $response = Http::asForm()->post("https://wp6test.prosmart.rs:8443/realms/master/protocol/openid-connect/token", [
+        $response = Http::asForm()->post(env("KEYCLOAK_TOKEN_URL"), [
             "client_id" => "admin-cli",
             "username" => "admin",
             "password" => "BiloKoji12@",
@@ -65,7 +65,7 @@ class RemoteUserController extends Controller
         $token = $response->json('access_token');
 
         return Http::withToken($token)->withBody('["UPDATE_PASSWORD"]', 'application/json')
-            ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId."/execute-actions-email");
+            ->put(env("KEYCLOAK_API_URL").$userId."/execute-actions-email");
     }
 
     public function userData(Request $request) {
@@ -74,7 +74,7 @@ class RemoteUserController extends Controller
         $userId = $data['userId'];
         $token = $data['token'];
         return Http::withToken($token)
-            ->get("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId);
+            ->get(env("KEYCLOAK_API_URL").$userId);
     }
 
     public function update(Request $request) {
@@ -84,7 +84,7 @@ class RemoteUserController extends Controller
         $token = $data["token"];
         $response =  Http::withToken($token)
             ->asJson()
-            ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId,[
+            ->put(env("KEYCLOAK_API_URL").$userId,[
                 "username" => $data['username'],
                 "firstName" => $data['firstName'],
                 "lastName" => $data['lastName'],
@@ -94,7 +94,7 @@ class RemoteUserController extends Controller
 
         if($data['updatePassword'] == "true") {
             return Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
-                ->put("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId."/execute-actions-email");
+                ->put(env("KEYCLOAK_API_URL").$userId."/execute-actions-email");
         }
     }
 
@@ -105,6 +105,6 @@ class RemoteUserController extends Controller
         $token = $data['token'];
 
         return Http::withToken($token)
-            ->delete("https://wp6test.prosmart.rs:8443/admin/realms/Klett/users/".$userId);
+            ->delete(env("KEYCLOAK_API_URL").$userId);
     }
 }
