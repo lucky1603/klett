@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Exports\RemoteUsersExport;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RemoteUserController extends Controller
 {
@@ -107,4 +109,9 @@ class RemoteUserController extends Controller
         return Http::withToken($token)
             ->delete(env("KEYCLOAK_API_URL").$userId);
     }
+
+    public function export() {
+        return Excel::download(new RemoteUsersExport, 'remoteusers.xlsx');
+    }
+
 }

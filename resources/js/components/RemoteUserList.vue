@@ -2,7 +2,7 @@
     <div class="container">
         <div class="my-4">
             <h5 class="float-left">{{ _('gui.usersList') }}</h5>
-            <a class="btn btn-sm btn-primary float-right" role="button" href="/appusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
+            <a class="btn btn-sm btn-primary float-right" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
         </div>
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
             <b-table

@@ -62,6 +62,7 @@ Route::post('remoteusers/create', [RemoteUserController::class, 'store'])->name(
 Route::post("remoteusers/data", [RemoteUserController::class, 'getData'])->name("remoteusers.data");
 Route::get("remoteusers/{user}/updatePassword", [RemoteUserController::class, 'sendUpdatePasswordNotice']);
 Route::post("remoteusers/delete", [RemoteUserController::class, 'delete'])->name('remoteusers.delete');
+Route::get("remoteusers/export", [RemoteUserController::class, 'export'])->name('remoteusers.export');
 
 // Professional statuses.
 Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");
