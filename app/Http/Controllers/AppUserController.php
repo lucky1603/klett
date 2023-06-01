@@ -17,8 +17,14 @@ class AppUserController extends Controller
         return view('appusers.index', ["ip" => $ip]);
     }
 
+    public function waiting(Request $request) {
+        $ip = $request->ip();
+        return view('appusers.waiting', ['ip' => $ip]);
+    }
+
     public function getAppUsers() {
-        return AppUser::all()
+        return AppUser::where('enabled', true)
+            ->get()
             ->load("school", "subjects", "professional_statuses", "country")
             ->map(function($appUser) {
                 return [
@@ -33,6 +39,31 @@ class AppUserController extends Controller
                     "tel1" => $appUser->tel1,
                     "tel2" => $appUser->tel2,
                     "isTeacher" => $appUser->is_teacher == 1 ? 'DA' : 'NE',
+                    "enabled" => $appUser->enabled == 1 ? 'DA' : 'NE',
+                    "createdAt" => $appUser->created_at,
+                    "updatedAt" => $appUser->updated_at,
+                ];
+            });
+    }
+
+    public function getAppUsersToApprove() {
+        return AppUser::where('enabled', false)
+            ->get()
+            ->load("school", "subjects", "professional_statuses", "country")
+            ->map(function($appUser) {
+                return [
+                    "id" => $appUser->id,
+                    "ime" => $appUser->ime,
+                    "prezime" => $appUser->prezime,
+                    "email" => $appUser->email,
+                    "country" => $appUser->country->name,
+                    "adresa" => $appUser->adresa,
+                    "pb" => $appUser->pb,
+                    "mesto" => $appUser->mesto,
+                    "tel1" => $appUser->tel1,
+                    "tel2" => $appUser->tel2,
+                    "isTeacher" => $appUser->is_teacher == 1 ? 'DA' : 'NE',
+                    "enabled" => $appUser->enabled == 1 ? 'DA' : 'NE',
                     "createdAt" => $appUser->created_at,
                     "updatedAt" => $appUser->updated_at,
                 ];
@@ -94,7 +125,8 @@ class AppUserController extends Controller
             "isTeacher" => $user->is_teacher == 1 ? true : false,
             "school" => $school ?? null,
             "subjects" => $subjects ?? [],
-            "professionalStatuses" => $professionalStatuses ?? []
+            "professionalStatuses" => $professionalStatuses ?? [],
+            "enabled" => $user->enabled == 1 ? true : false
         ];
 
     }
@@ -114,6 +146,7 @@ class AppUserController extends Controller
             'tel2' => $data['tel2'],
             'is_teacher' => $data['isTeacher'] == "true" ? true : false,
             'password' => $data['password'],
+            'enabled' => $data['enabled'] == "true" ? true : false
         ]);
 
         if($appUser->is_teacher == true) {
@@ -141,9 +174,17 @@ class AppUserController extends Controller
         $user->tel2 = $data['tel2'];
         $user->country()->associate($data['country']);
         $user->is_teacher = $data['isTeacher'] == "true" ? true : false;
-        $user->school()->associate($data['school']);
-        $user->subjects()->sync($data['subjects']);
-        $user->professional_statuses()->sync($data['professionalStatuses']);
+        if($user->is_teacher) {
+            $user->school()->associate($data['school']);
+            $user->subjects()->sync($data['subjects']);
+            $user->professional_statuses()->sync($data['professionalStatuses']);
+        } else {
+            $user->school()->dissociate();
+            $user->subjects()->detach();
+            $user->professional_statuses()->detach();
+        }
+
+        $user->enabled = $data['enabled'] == "true" ? true : false;
 
         $user->save();
 

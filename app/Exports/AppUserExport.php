@@ -34,7 +34,8 @@ class AppUserExport implements FromCollection, WithStyles, WithHeadings, WithCol
                 'drzava' => $appUser->country->name,
                 'telefon(1)' => $appUser->tel1,
                 'telefon(2)' => $appUser->tel2,
-                'nastavnik' => $appUser->is_teacher == 1 ? 'DA' : 'NE'
+                'nastavnik' => $appUser->is_teacher == 1 ? 'DA' : 'NE',
+                'enabled' => $appUser->enabled ? "DA" : "NE"
             ];
         });
     }
@@ -51,7 +52,8 @@ class AppUserExport implements FromCollection, WithStyles, WithHeadings, WithCol
             "Država",
             "Telefon #1",
             "Telefon #2",
-            "Jel nastavnik"
+            "Jel nastavnik",
+            "Aktivan"
         ];
     }
 
@@ -67,7 +69,8 @@ class AppUserExport implements FromCollection, WithStyles, WithHeadings, WithCol
             'G' => 25,
             'H' => 20,
             'I' => 25,
-            'J' => 25
+            'J' => 25,
+            'K' => 10
         ];
     }
 

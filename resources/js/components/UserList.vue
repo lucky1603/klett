@@ -42,9 +42,12 @@ import axios from 'axios';
 
 export default {
     name: 'UserList',
-
+    props: {
+        showMode: { typeof: Number, default: 0 }
+    },
     data() {
         return {
+            getAction: "/appusers/data",
             currentPage: 1,
             pageSize: 15,
             selectedUserId: 0,
@@ -131,6 +134,10 @@ export default {
     },
 
     async mounted() {
+        if(this.showMode == 1) {
+            this.getAction = "/appusers/dataToApprove";
+        }
+
         await this.getData();
     },
 
@@ -139,7 +146,7 @@ export default {
             console.log("Page changed " + this.currentPage);
         },
         async getData() {
-            await axios.get('/appusers/data')
+            await axios.get(this.getAction)
             .then(response => {
                 console.log(response.data);
                 this.items.length = 0;

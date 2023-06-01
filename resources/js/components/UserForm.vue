@@ -136,6 +136,10 @@
                 </div>
                 <span v-if="errors.professionalStatuses" class="text-danger">{{ errors.professionalStatuses}}</span>
             </div>
+            <div v-if="userId != 0">
+                <hr/>
+                <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
+            </div>
         </b-form>
     </div>
 </template>
@@ -177,7 +181,8 @@ export default {
                 isTeacher: false,
                 school: 0,
                 subjects: [],
-                professionalStatuses: []
+                professionalStatuses: [],
+                enabled: false
             },
             subjects: [],
             selectedSubjects: [],
@@ -282,6 +287,7 @@ export default {
                 this.form.country = userObject.country["id"];
                 this.form.tel1 = userObject.tel1;
                 this.form.tel2 = userObject.tel2;
+                this.form.enabled = userObject.enabled;
 
                 if(userObject.isTeacher) {
                     this.municipality = userObject.school["municipality"];
