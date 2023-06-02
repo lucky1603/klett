@@ -43,6 +43,13 @@ class RemoteUserController extends Controller
                 "lastName" => $data['lastName'],
                 "email" => $data["email"],
                 "enabled" => $data['enabled'] == "true" ? true : false,
+                "attributes" => [
+                    "subjects" => serialize($data['subjects']),
+                    "professions" => serialize($data['professions']),
+                    "township" => $data['township'],
+                    "institution_type" => $data['institutionType'],
+                    "institution" => $data['institution']
+                ]
         ]);
 
         if($data['updatePassword'] == 'true') {
@@ -75,8 +82,23 @@ class RemoteUserController extends Controller
 
         $userId = $data['userId'];
         $token = $data['token'];
-        return Http::withToken($token)
+        $response = Http::withToken($token)
             ->get(env("KEYCLOAK_API_URL").$userId);
+        $retObject = json_decode($response->body());
+
+        return [
+            'id' => $retObject->id,
+            'username' => $retObject->username,
+            'firstName' => $retObject->firstName,
+            'lastName' => $retObject->lastName,
+            'email' => $retObject->email,
+            'institution' => isset($retObject->attributes) ? $retObject->attributes->institution[0] : null,
+            'institutionType' => isset($retObject->attributes) ? $retObject->attributes->institution_type[0] : null,
+            'township' => isset($retObject->attributes) ? $retObject->attributes->township[0] : null,
+            'subjects' => isset($retObject->attributes) ? unserialize($retObject->attributes->subjects[0]) : null,
+            'professions' => isset($retObject->attributes) ? unserialize($retObject->attributes->professions[0]) : null,
+            'enabled' => $retObject->enabled
+        ];
     }
 
     public function update(Request $request) {
