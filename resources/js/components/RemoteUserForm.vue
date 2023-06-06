@@ -118,6 +118,7 @@ export default {
         if(this.userId != null && this.userId != '') {
             await this.getData();
             this.form.updatePassword = false;
+            await this.getUserGroup();
         }
     },
 
@@ -196,7 +197,7 @@ export default {
                 let resultObject = response.data;
                 console.log(resultObject);
                 for(let property in this.form) {
-                    if(property == 'requiredActions')
+                    if(property == 'requiredActions' || property == 'isTeacher')
                         continue;
                     if(property == 'institution') {
                         this.filterSchools();
@@ -204,10 +205,34 @@ export default {
                     this.form[property] = resultObject[property];
                 }
 
-                if(this.form.institution != null && this.form.institution != undefined) {
-                    this.form.isTeacher = true;
-                }
+                // if(this.form.institution != null && this.form.institution != undefined) {
+                //     this.form.isTeacher = true;
+                // }
             });
+        },
+        async getUserGroup() {
+            let token = '';
+            await axios.get('remoteusers/keycloak')
+            .then(response => {
+                token = response.data.access_token;
+            });
+
+            if(token != '' && this.userId != 0) {
+                let formData = new FormData();
+                formData.append('token', token);
+                formData.append('userId', this.userId);
+                await axios.post('/remoteusers/user_group', formData)
+                .then(response => {
+                    let group = response.data;
+                    console.log(group);
+
+                    if(group.name == "Teacher") {
+                        this.form.isTeacher = true;
+                    } else {
+                        this.form.isTeacher = false;
+                    }
+                });
+            }
         },
         async sendData() {
             await axios.get('/remoteusers/keycloak')
@@ -255,7 +280,8 @@ export default {
                     reject(error);
                 });
             });
-        }
+        },
+
     },
 };
 </script>
