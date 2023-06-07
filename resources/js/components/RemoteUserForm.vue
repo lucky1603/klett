@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div v-if="showSpinner" class="d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
+            <b-spinner></b-spinner>
+        </div>
         <b-form @submit.prevent="sendData">
             <b-form-group label="Korisničko ime" label-for="username">
                 <b-input id="username" v-model="form.username"></b-input>
@@ -105,11 +108,14 @@ export default {
             townships: [],
             schools: [],
             institutionTypes: [],
-            professions: []
+            professions: [],
+            showSpinner: false
         };
     },
 
     async mounted() {
+
+        this.showSpinner = true;
         await this.getSubjects();
         await this.getProfessionalStatuses();
         await this.getInstitutionTypes();
@@ -119,6 +125,8 @@ export default {
             await this.getData();
             this.form.updatePassword = false;
             await this.getUserGroup();
+        } else {
+            this.showSpinner = false;
         }
     },
 
@@ -184,6 +192,7 @@ export default {
             });
         },
         async getData() {
+
             await axios.get('/remoteusers/keycloak')
             .then(response => {
                 this.accessToken = response.data.access_token;
@@ -204,6 +213,8 @@ export default {
                     }
                     this.form[property] = resultObject[property];
                 }
+
+                this.showSpinner = false;
 
                 // if(this.form.institution != null && this.form.institution != undefined) {
                 //     this.form.isTeacher = true;
