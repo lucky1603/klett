@@ -88,8 +88,6 @@ class RemoteUserController extends Controller
         $token = $data['token'];
         $userId = $data['userId'];
 
-        var_dump($data);
-
         $response = Http::withToken($token)
             ->get(env('KEYCLOAK_API_USERS_URL').$userId."/groups");
 
@@ -110,8 +108,6 @@ class RemoteUserController extends Controller
 
     public function setUserGroup(Request $request) {
         $data = $request->post();
-
-        var_dump($data);
 
         $groupId = $data['groupId'];
         $userId = $data['userId'];
@@ -140,11 +136,11 @@ class RemoteUserController extends Controller
 
         if(!$sameGroups) {
             // If the group was changed, set the new group.
-            $response = Http::withToken($token)
+            Http::withToken($token)
                 ->put(env('KEYCLOAK_API_USERS_URL').$userId."/groups/".$groupId);
         }
 
-        return $response;
+        return $userId;
 
     }
 
@@ -227,18 +223,30 @@ class RemoteUserController extends Controller
             ->get(env("KEYCLOAK_API_USERS_URL").$userId);
         $retObject = json_decode($response->body());
 
+        $userGroupRequest = new Request([], [
+            'userId' => $userId,
+            'token' => $token
+        ], [], [], [], [], null);
+
+        $groupResponse = $this->userGroup($userGroupRequest);
+        $isTeacher = false;
+        if($groupResponse["name"] == "Teacher") {
+            $isTeacher = true;
+        }
+
         return [
             'id' => $retObject->id,
             'username' => $retObject->username,
-            'firstName' => $retObject->firstName,
-            'lastName' => $retObject->lastName,
+            'firstName' => $retObject->firstName ?? '',
+            'lastName' => $retObject->lastName ?? '',
             'email' => $retObject->email,
             'institution' => isset($retObject->attributes) ? $retObject->attributes->institution[0] : null,
             'institutionType' => isset($retObject->attributes) ? $retObject->attributes->institution_type[0] : null,
             'township' => isset($retObject->attributes->township)  ? $retObject->attributes->township[0] : null,
-            'subjects' => isset($retObject->attributes->subjects) ? unserialize($retObject->attributes->subjects[0]) : null,
-            'professions' => isset($retObject->attributes->professions) ? unserialize($retObject->attributes->professions[0]) : null,
+            'subjects' => isset($retObject->attributes->subjects) ? unserialize($retObject->attributes->subjects[0]) : [],
+            'professions' => isset($retObject->attributes->professions) ? unserialize($retObject->attributes->professions[0]) : [],
             'enabled' => $retObject->enabled,
+            'isTeacher' => $isTeacher
         ];
     }
 
@@ -247,7 +255,7 @@ class RemoteUserController extends Controller
 
         $userId = $data['userId'];
         $token = $data["token"];
-        $response = Http::withToken($token)
+        Http::withToken($token)
             ->asJson()
             ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
                 "username" => $data['username'],
@@ -264,8 +272,7 @@ class RemoteUserController extends Controller
                 ],
         ]);
 
-        $items = explode("/", $response->header("Location"));
-        $userId = $items[count($items) - 1];
+
 
         // Get current user group.
         $getGroupRequest = new Request([], [
@@ -273,8 +280,10 @@ class RemoteUserController extends Controller
             'token' => $token
         ], [], [], [], [], null);
 
-        var_dump($this->userGroup($getGroupRequest));
-        die();
+        var_dump($getGroupRequest->post());
+        $oldGroup = $this->userGroup($getGroupRequest);
+        var_dump($oldGroup);
+
 
         if($data['isTeacher'] == "true") {
             $groupId = $this->getGroupIdByName("Teacher");
@@ -286,7 +295,7 @@ class RemoteUserController extends Controller
             'groupId' => $groupId,
             'userId' => $userId,
             'token' => $data['token'],
-            'oldGroupId' => $oldGroupId
+            'oldGroupId' => $oldGroup["id"]
         ], [], [], [], [], null);
 
         $response = $this->setUserGroup($setGroupRequest);
