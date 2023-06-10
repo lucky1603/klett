@@ -1,9 +1,43 @@
 <template>
     <div class="container">
-        <div class="my-4">
-            <h5 class="float-left">{{ _('gui.usersList') }}</h5>
-            <a class="btn btn-sm btn-primary float-right" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
-        </div>
+            <b-row class="w-100 mt-4">
+                <b-col lg="10">
+                    <b-form id="filterForm" ref="filterForm" inline class="w-100 m-2" @submit.prevent="submitFilter">
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-input
+                                type="search"
+                                id="searchFirstName"
+                                placeholder="Po imenu ..."
+                                v-model="searchForm.firstName"
+                            ></b-form-input>
+                            <template #append>
+                                <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
+                            </template>
+                        </b-input-group>
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-input
+                                type="search"
+                                id="searchLastName"
+                                placeholder="Po prezimenu ..."
+                                v-model="searchForm.lastName"
+                            ></b-form-input>
+                            <template #append>
+                                <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
+                            </template>
+                        </b-input-group>
+                        <!-- <b-form-select v-model="searchForm.userRole" :options="roles" class="m-1" size="sm"></b-form-select> -->
+                        <b-form-select v-model="searchForm.userStatus" :options="statuses" class="m-1" size="sm"></b-form-select>
+                    </b-form>
+                </b-col>
+                <b-col lg="2">
+                    <div class="d-flex align-items-center justify-content-end justify-content-right flex-row w-100 h-100">
+                        <b-button variant="outline-secondary" size="sm" class="m-1" title="Filtriraj" @click="submitFilter"><i class="bi bi-filter"></i></b-button>
+                        <b-button variant="success" size="sm" title="Resetuj filter" @click="resetSearchForm"><i class="bi bi-arrow-repeat"></i></b-button>
+                    </div>
+                </b-col>
+            </b-row>
+
+
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
             <b-table
                 responsive
@@ -35,7 +69,11 @@
                 aria-controls="profileTable"
                 align="right"
                 ></b-pagination>
-            <b-button variant="primary" @click="createUser">{{ _('gui.Add')}}</b-button>
+            <div class="d-flex align-items-center justify-content-center">
+                <b-button variant="primary" @click="createUser" class="m-1" size="sm"><i class="bi bi-person-fill-add mr-1"></i>{{ _('gui.Add')}}</b-button>
+                <a class="btn btn-sm btn-primary float-right m-1" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
+            </div>
+
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
@@ -121,7 +159,24 @@ export default {
 
 
             ],
-            accessToken: ''
+            accessToken: '',
+            searchForm: {
+                firstName: '',
+                lastName: '',
+                userRole: 0,
+                userStatus: 0
+            },
+            roles: [
+                { value: 0, text: "Po tipu korisnika"},
+                { value: 1, text: "Pratioci"},
+                { value: 2, text: "Nastavnici"},
+                { value: 3, text: "Ucenici" }
+            ],
+            statuses: [
+                { value: 0, text: "Po statusu"},
+                { value: 1, text: "Neaktivan(-na)"},
+                { value: 2, text: "Aktivan(-na)"}
+            ]
         };
     },
 
@@ -132,6 +187,22 @@ export default {
     methods: {
         pageChanged(ctx) {
             console.log("Page changed " + this.currentPage);
+        },
+        submitFilter() {
+            let formData = new FormData();
+            formData.append('token', this.accessToken);
+            for(let property in this.searchForm) {
+                formData.append(property, this.searchForm[property]);
+            }
+            axios.post('/remoteusers/filterUsers', formData)
+            .then(response => {
+                console.log(response.data);
+                //this.items.length = 0;
+                this.items = [];
+                for(let i = 0; i < response.data.length; i++) {
+                    this.items.push(response.data[i]);
+                }
+            });
         },
         async getData() {
             await axios.get('/remoteusers/keycloak')
@@ -217,6 +288,12 @@ export default {
             this.$refs.deleteDialog.hide();
             this.selectedUserId = 0;
             this.selectedUsername = '';
+        },
+        resetSearchForm() {
+            this.searchForm.firstName = '';
+            this.searchForm.lastName = '';
+            this.searchForm.userStatus = 0;
+            this.getData();
         }
 
     },

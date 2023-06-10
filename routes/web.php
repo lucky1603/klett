@@ -70,6 +70,7 @@ Route::post("remoteusers/user_groups", [RemoteUserController::class, 'userGroups
 Route::post("remoteusers/user_group", [RemoteUserController::class, 'userGroup'])->name('remoteusers.userGroup');
 Route::post("remoteusers/setUserGroup", [RemoteUserController::class, 'setUserGroup'])->name('remoteusers.setUserGroup');
 Route::get("remoteusers/getGroupIdByName/{user}/{group}", [RemoteUserController::class, 'getGroupIdByName'])->name('remoteusers.getGroupIdByName');
+Route::post('remoteusers/filterUsers', [RemoteUserController::class, 'filterUsers'])->name('remoteusers.filterUsers');
 
 // Professional statuses.
 Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");

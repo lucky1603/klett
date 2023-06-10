@@ -149,6 +149,68 @@ class RemoteUserController extends Controller
         return Http::withToken($token)->get(ENV("KEYCLOAK_API_USERS_URL"));
     }
 
+    public function filterUsers(Request $request) {
+        $data = $request->post();
+
+        // Get access token.
+        $token = '';
+        if(isset($data['token']) && $data['token'] != '') {
+            $token = $data['token'];
+        } else {
+            $response = $this->connectKeyCloak();
+            $token = $response->json('access_token');
+        }
+
+        $requestUrl = env('KEYCLOAK_API_USERS_URL');
+        if($data['firstName'] != '') {
+            $requestUrl .= "?firstName=".$data['firstName'];
+        }
+
+        if($data['lastName'] != '') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $requestUrl .= "lastName=".$data['lastName'];
+        }
+
+        if($data['userStatus'] != 0) {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $val = $data['userStatus'] == 1 ? "false" : "true";
+            $requestUrl .= "enabled=".$val;
+        }
+
+        // if($data['username'] != '') {
+        //     if(str_contains($requestUrl, "?")) {
+        //         $requestUrl .= "?";
+        //     } else {
+        //         $requestUrl .= "&&";
+        //     }
+
+        //     $requestUrl .= "username=".$data['username'];
+        // }
+
+        // if($data['email'] != '') {
+        //     if(str_contains($requestUrl, "?")) {
+        //         $requestUrl .= "?";
+        //     } else {
+        //         $requestUrl .= "&&";
+        //     }
+
+        //     $requestUrl .= "email=".$data['email'];
+        // }
+
+        return Http::withToken($token)->get($requestUrl);
+
+    }
+
     public function create() {
         return view('remoteusers.create');
     }

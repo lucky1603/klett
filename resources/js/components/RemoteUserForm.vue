@@ -4,9 +4,18 @@
             <b-spinner></b-spinner>
         </div>
         <b-form @submit.prevent="sendData">
-            <b-form-group label="Korisničko ime" label-for="username">
-                <b-input id="username" v-model="form.username"></b-input>
-            </b-form-group>
+            <b-row>
+                <b-col>
+                    <b-form-group label="Korisničko ime" label-for="username">
+                        <b-input id="username" v-model="form.username"></b-input>
+                    </b-form-group>
+                </b-col>
+                <b-col>
+                    <b-form-group label="Imejl" label-for="email">
+                        <b-input id="email" v-model="form.email"></b-input>
+                    </b-form-group>
+                </b-col>
+            </b-row>
             <b-row>
                 <b-col>
                     <b-form-group label="Ime" label-for="firstName">
@@ -19,9 +28,39 @@
                     </b-form-group>
                 </b-col>
             </b-row>
-            <b-form-group label="Imejl" label-for="email">
-                <b-input id="email" v-model="form.email"></b-input>
+
+            <b-form-group label="Adresa i broj" label-for="billingAddress">
+                <b-input id="billingAddress"></b-input>
             </b-form-group>
+            <b-row>
+                <b-col cols="2">
+                    <b-form-group label="Poštanski broj" label-for="pb">
+                        <b-input id="pb"></b-input>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="5">
+                    <b-form-group label="Mesto" label-for="city">
+                        <b-input id="pb"></b-input>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="5">
+                    <b-form-group label="Država" label-for="country">
+                        <b-select></b-select>
+                    </b-form-group>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <b-form-group label="Telefon 1" label-for="tel1">
+                        <b-input id="tel1" placeholder="Unesite broj telefona"></b-input>
+                    </b-form-group>
+                </b-col>
+                <b-col>
+                    <b-form-group label="Telefon 2" label-for="tel2">
+                        <b-input id="tel2" placeholder="Unesite alternativni broj telefona"></b-input>
+                    </b-form-group>
+                </b-col>
+            </b-row>
 
             <b-form-checkbox v-model="form.isTeacher" :value="true">{{ _('gui.isTeacher') }}</b-form-checkbox>
             <div v-if="form.isTeacher">
