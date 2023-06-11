@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AppUserController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CRMController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InstitutionTypeController;
@@ -71,6 +72,10 @@ Route::post("remoteusers/user_group", [RemoteUserController::class, 'userGroup']
 Route::post("remoteusers/setUserGroup", [RemoteUserController::class, 'setUserGroup'])->name('remoteusers.setUserGroup');
 Route::get("remoteusers/getGroupIdByName/{user}/{group}", [RemoteUserController::class, 'getGroupIdByName'])->name('remoteusers.getGroupIdByName');
 Route::post('remoteusers/filterUsers', [RemoteUserController::class, 'filterUsers'])->name('remoteusers.filterUsers');
+
+// CRM
+Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');
+Route::get('crm/checkUser/{email}', [CRMController::class, 'checkUser'])->name('crm.checkUser');
 
 // Professional statuses.
 Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");
