@@ -64,8 +64,13 @@ export default {
         ok() {
             this.$refs.userForm.sendData()
             .then(response => {
-                this.sent = true;
-                this.success = true;
+                if(response.data.status == 201) {
+                    this.sent = true;
+                    this.success = true;
+                } else {
+                    alert(response.data.message);
+                }
+
             });
         },
         applicationSent() {

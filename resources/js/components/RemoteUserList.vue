@@ -233,8 +233,13 @@ export default {
             this.$refs.remoteUserForm.sendData()
             .then(response => {
                 console.log(response.data);
-                this.getData();
-                this.closeForm();
+                if(response.data.status == 201 || response.data.status == 204) {
+                    this.getData();
+                    this.closeForm();
+                } else {
+                    alert(response.data.message);
+                }
+
             })
             .catch(error => {
                 console.log(error);

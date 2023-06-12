@@ -251,31 +251,48 @@ class RemoteUserController extends Controller
                 ],
         ]);
 
-        $items = explode("/", $response->header("Location"));
-        $userId = $items[count($items) - 1];
+        /* test
+        var_dump($response->ok());
+        var_dump($response->failed());
+        var_dump($response->status());
+        */
 
+        if($response->status() == 201 /* Created */) {
+            $items = explode("/", $response->header("Location"));
+            $userId = $items[count($items) - 1];
 
-        if($data['isTeacher'] == "true") {
-            $groupId = $this->getGroupIdByName("Teacher");
-        } else {
-            $groupId = $this->getGroupIdByName('Subscriber');
+            if($data['isTeacher'] == "true") {
+                $groupId = $this->getGroupIdByName("Teacher");
+            } else {
+                $groupId = $this->getGroupIdByName('Subscriber');
+            }
+
+            $setGroupRequest = new Request([],[
+                'groupId' => $groupId,
+                'userId' => $userId,
+                'token' => $data['token']
+            ], [], [], [], [], null);
+
+            $this->setUserGroup($setGroupRequest);
+
+            // Send password reset link.
+            if($data['updatePassword'] == 'true') {
+                Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                    ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+            }
+
+            return [
+                'status' => $response->status(),
+                'message' => "Success!!!"
+            ];
         }
 
-        $setGroupRequest = new Request([],[
-            'groupId' => $groupId,
-            'userId' => $userId,
-            'token' => $data['token']
-        ], [], [], [], [], null);
 
-        $response = $this->setUserGroup($setGroupRequest);
-
-        // Send password reset link.
-        if($data['updatePassword'] == 'true') {
-            return Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
-                ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
-        }
-
-        return $response;
+        // $response->status() = 209 - Failed.
+        return [
+            'status' => $response->status(),
+            'message' => $response->json('errorMessage')
+        ];
     }
 
     public function sendUpdatePasswordNotice($userId) {
@@ -317,7 +334,7 @@ class RemoteUserController extends Controller
             'username' => $retObject->username,
             'firstName' => $retObject->firstName ?? '',
             'lastName' => $retObject->lastName ?? '',
-            'email' => $retObject->email,
+            'email' => $retObject->email ?? '',
             'institution' => isset($retObject->attributes) ? $retObject->attributes->institution[0] : null,
             'institutionType' => isset($retObject->attributes) ? $retObject->attributes->institution_type[0] : null,
             'township' => isset($retObject->attributes->township)  ? $retObject->attributes->township[0] : null,
@@ -333,7 +350,7 @@ class RemoteUserController extends Controller
 
         $userId = $data['userId'];
         $token = $data["token"];
-        Http::withToken($token)
+        $response = Http::withToken($token)
             ->asJson()
             ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
                 "username" => $data['username'],
@@ -350,40 +367,48 @@ class RemoteUserController extends Controller
                 ],
         ]);
 
+        if($response->status() == 204) {
 
+            // Get current user group.
+            $getGroupRequest = new Request([], [
+                'userId' => $userId,
+                'token' => $token
+            ], [], [], [], [], null);
 
-        // Get current user group.
-        $getGroupRequest = new Request([], [
-            'userId' => $userId,
-            'token' => $token
-        ], [], [], [], [], null);
+            $oldGroup = $this->userGroup($getGroupRequest);
 
-        var_dump($getGroupRequest->post());
-        $oldGroup = $this->userGroup($getGroupRequest);
-        var_dump($oldGroup);
+            if($data['isTeacher'] == "true") {
+                $groupId = $this->getGroupIdByName("Teacher");
+            } else {
+                $groupId = $this->getGroupIdByName('Subscriber');
+            }
 
+            $setGroupRequest = new Request([],[
+                'groupId' => $groupId,
+                'userId' => $userId,
+                'token' => $data['token'],
+                'oldGroupId' => $oldGroup["id"]
+            ], [], [], [], [], null);
 
-        if($data['isTeacher'] == "true") {
-            $groupId = $this->getGroupIdByName("Teacher");
-        } else {
-            $groupId = $this->getGroupIdByName('Subscriber');
+            $this->setUserGroup($setGroupRequest);
+
+            if($data['updatePassword'] == "true") {
+                Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                    ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+            }
+
+            return [
+                "status" => $response->status(),
+                "message" => "Success!!!"
+            ];
+
         }
 
-        $setGroupRequest = new Request([],[
-            'groupId' => $groupId,
-            'userId' => $userId,
-            'token' => $data['token'],
-            'oldGroupId' => $oldGroup["id"]
-        ], [], [], [], [], null);
+        return [
+            "status" => $response->status(),
+            "message" => $response->json("errorMessage")
+        ];
 
-        $response = $this->setUserGroup($setGroupRequest);
-
-        if($data['updatePassword'] == "true") {
-            Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
-                ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
-        }
-
-        return $response;
     }
 
     public function delete(Request $request) {

@@ -109,7 +109,6 @@
             <div v-if="!anonimous">
                 <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
                 <b-form-checkbox v-model="form.updatePassword" :value="true">{{ _('gui.updatePassword') }}</b-form-checkbox>
-                <b-button variant="primary" @click="checkCRM">Check CRM</b-button>
             </div>
 
         </b-form>
