@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NoCRMInfo;
 use Illuminate\Http\Request;
 use App\Exports\RemoteUsersExport;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpParser\Node\Expr\Cast\Array_;
 
@@ -218,6 +220,20 @@ class RemoteUserController extends Controller
     public function store(Request $request) {
         $data = $request->post();
 
+        $inCRM = true;
+
+        if($data['isTeacher'] == "true") {
+            // Check CRM
+            $inCRM = false;
+            $value = $this->checkUser($data['email']);
+            if(is_array($value) && count($value) > 0) {
+                $inCRM = true;
+            } else {
+                // send email
+                Mail::to($data['email'])->send(new NoCRMInfo($data));
+            }
+        }
+
         $response = Http::withToken($data['token'])
             ->asJson()
             ->post(env("KEYCLOAK_API_USERS_URL"), [
@@ -225,7 +241,7 @@ class RemoteUserController extends Controller
                 "firstName" => $data['firstName'],
                 "lastName" => $data['lastName'],
                 "email" => $data["email"],
-                "enabled" => $data['enabled'] == "true" ? true : false,
+                "enabled" => $data['enabled'] == "true" && $inCRM ? true : false,
                 "attributes" => [
                     "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
                     "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
@@ -384,4 +400,38 @@ class RemoteUserController extends Controller
         return Excel::download(new RemoteUsersExport, 'remoteusers.xlsx');
     }
 
+    public function testMail($emailAddress) {
+        var_dump($emailAddress);
+        $email = [];
+        $email[] = $emailAddress;
+        Mail::to($email[0])
+            ->send(new NoCRMInfo(['firstName' => 'Sinisa', 'lastName' => 'Ristic']));
+
+        return 0;
+    }
+
+    public function connectCRM() {
+        return Http::asForm()
+            ->post('https://login.microsoftonline.com/570b0e1b-60ff-4adf-8b73-5a3dab04aa93/oauth2/v2.0/token', [
+            "grant_type" => 'Client_Credentials',
+            "client_id" => '2f9027fe-9597-46bc-818b-d7af10d52016',
+            'client_secret' => '5tJ8Q~3ZSQgSb1aGN8e2rv7opFqUdkhKgmOwbbWH',
+            'scope' => 'https://klettdev.crm4.dynamics.com/.default',
+        ]);
+    }
+
+    public function checkUser($userEmail) {
+        $response = $this->connectCRM();
+        $token = $response->json('access_token');
+
+        $requestUrl = 'https://klettdev.crm4.dynamics.com/api/data/v9.2/contacts';
+        $requestUrl .= "?\$select=contactid&\$filter=(emailaddress1 eq '".$userEmail."'";
+        $requestUrl .= "and (parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a754452c-b664-ec11-8f8f-6045bd888602";
+        $requestUrl .= " or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a654452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a954452c-b664-ec11-8f8f-6045bd888602))";
+
+        $response = Http::withToken($token)->get($requestUrl);
+        return $response->json("value");
+    }
 }
+
+

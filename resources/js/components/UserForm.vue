@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="showSpinner" class="d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
+        <div v-if="showSpinner" class="d-flex align-items-center justify-content-center w-100 h-100 position-absolute" style="z-index: 1000">
             <b-spinner></b-spinner>
         </div>
 

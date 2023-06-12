@@ -21,6 +21,7 @@ return [
     'Accept' => 'Accept',
     "Yes" => "Yes",
     "No" => "No",
+    "Send" => "Send",
 
     /**
      * Users list

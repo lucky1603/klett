@@ -21,6 +21,7 @@ return [
     'Accept' => 'Прихвати',
     "Yes" => "Да",
     "No" => "Не",
+    "Send" => "Пошаљи",
 
     /**
      * Users list

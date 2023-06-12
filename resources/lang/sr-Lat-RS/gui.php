@@ -22,6 +22,7 @@ return [
     'Accept' => 'Prihvati',
     "Yes" => "Da",
     "No" => "Ne",
+    "Send" => "Pošalji",
 
     /**
      * Users list

@@ -11,19 +11,31 @@
                 tačnost podataka omogućiće Vam da imate pristup nastavnim materijalima
                 i da budete na vreme obavešteni o novim izdanjima i stručnim skupovima.
             </div>
-            <user-form style="width: 55%"></user-form>
+            <div class="container">
+                <remote-user-form ref="userForm" :anonimous="true" style="width: 55%"></remote-user-form>
+            </div>
+
             <div class="d-flex align-items-center justify-content-center mt-2" >
-                <b-button variant="primary" type="button" class="m-2" @click="applicationSent">{{ _('gui.Accept') }}</b-button>
-                <b-button type="button" class="m-2">{{ _('gui.Cancel') }}</b-button>
+                <b-button variant="primary" type="button" class="m-2" @click="ok">{{ _('gui.Send') }}</b-button>
             </div>
         </div>
-        <div v-else class="container">
+        <div v-if="sent && success" class="container">
             <h4 class="text-center mt-4 w-100 display-4 text-center">Potvrda</h4>
             <hr/>
             <p class="text-center">
                 Vaša prijava za registraciju na našem sajtu je evidentirana. U kratkom
                 roku ćete biti obavešteni o statusu vaše prijave na email adresu koju
                 ste naveli u formularu za prijavu.
+            </p>
+            <div class="d-flex align-items-center justify-content-center">
+                <a class="btn btn-sm btn-primary" role="button" href="https://klett.rs">Na glavnu stranu</a>
+            </div>
+        </div>
+        <div v-if="sent && !success">
+            <h4 class="text-center mt-4 w-100 display-4 text-center">Greška</h4>
+            <hr/>
+            <p class="text-center">
+                Desila se greška prilikom slanja prijave.
             </p>
             <div class="d-flex align-items-center justify-content-center">
                 <a class="btn btn-sm btn-primary" role="button" href="https://klett.rs">Na glavnu stranu</a>
@@ -40,6 +52,7 @@ export default {
     data() {
         return {
             sent: false,
+            success: false,
         };
     },
 
@@ -48,6 +61,13 @@ export default {
     },
 
     methods: {
+        ok() {
+            this.$refs.userForm.sendData()
+            .then(response => {
+                this.sent = true;
+                this.success = true;
+            });
+        },
         applicationSent() {
             this.sent = true;
         }

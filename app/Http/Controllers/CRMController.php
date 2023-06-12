@@ -26,6 +26,7 @@ class CRMController extends Controller
         $requestUrl .= "and (parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a754452c-b664-ec11-8f8f-6045bd888602";
         $requestUrl .= " or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a654452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a954452c-b664-ec11-8f8f-6045bd888602))";
 
-        return Http::withToken($token)->get($requestUrl);
+        $response = Http::withToken($token)->get($requestUrl);
+        return $response->json("value");
     }
 }

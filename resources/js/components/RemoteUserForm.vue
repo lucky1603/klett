@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <div v-if="showSpinner" class="d-flex align-items-center justify-content-center w-100 h-100 position-absolute">
-            <b-spinner></b-spinner>
+    <div class="h-100 w-100">
+        <div v-if="showSpinner" class="d-flex align-items-center justify-content-center h-100 w-100 position-absolute">
+            <b-spinner variant="primary" type="grow" style="z-index: 1000"></b-spinner>
         </div>
         <b-form @submit.prevent="sendData">
             <b-row>
@@ -45,7 +45,7 @@
                 </b-col>
                 <b-col cols="5">
                     <b-form-group label="Država" label-for="country">
-                        <b-select></b-select>
+                        <b-select id="country" v-model="form.country" :options="countries"></b-select>
                     </b-form-group>
                 </b-col>
             </b-row>
@@ -61,10 +61,8 @@
                     </b-form-group>
                 </b-col>
             </b-row>
-
             <b-form-checkbox v-model="form.isTeacher" :value="true">{{ _('gui.isTeacher') }}</b-form-checkbox>
             <div v-if="form.isTeacher">
-
                 <b-row>
                     <b-col>
                         <b-form-group :label="_('gui.institutionType')" label-for="institution_type">
@@ -82,8 +80,6 @@
                     <b-form-select v-model="form.institution" id="school" :options="schools"></b-form-select>
                     <span v-if="errors.school" class="text-danger">{{ errors.school}}</span>
                 </b-form-group>
-
-
                 <h5 class="mb-0">{{ _('gui.subjects') }}</h5>
                 <small class="text-secondary mt-0">{{_('gui.subjectsSubtitle')}}</small>
                 <div class="d-flex flex-column flex-wrap" style="height:300px">
@@ -110,8 +106,12 @@
             </div>
 
             <hr />
-            <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
-            <b-form-checkbox v-model="form.updatePassword" :value="true">{{ _('gui.updatePassword') }}</b-form-checkbox>
+            <div v-if="!anonimous">
+                <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
+                <b-form-checkbox v-model="form.updatePassword" :value="true">{{ _('gui.updatePassword') }}</b-form-checkbox>
+                <b-button variant="primary" @click="checkCRM">Check CRM</b-button>
+            </div>
+
         </b-form>
     </div>
 </template>
@@ -123,6 +123,7 @@ export default {
     name: 'RemoteUserForm',
     props: {
         userId: {typeof: String, default: ''},
+        anonimous: {typeof: Boolean, default: false}
     },
     data() {
         return {
@@ -131,14 +132,15 @@ export default {
                 firstName: '',
                 lastName: '',
                 email: '',
-                enabled: false,
+                enabled: true,
                 updatePassword: true,
                 isTeacher: false,
                 institutionType: 0,
                 township: 0,
                 institution: 0,
                 subjects : [],
-                professions: []
+                professions: [],
+                country: ''
             },
             accessToken: '',
             errors: {},
@@ -148,7 +150,8 @@ export default {
             schools: [],
             institutionTypes: [],
             professions: [],
-            showSpinner: false
+            showSpinner: false,
+            countries: []
         };
     },
 
@@ -159,6 +162,7 @@ export default {
         await this.getProfessionalStatuses();
         await this.getInstitutionTypes();
         await this.getMunicipalities();
+        await this.getCountries();
 
         if(this.userId != null && this.userId != '') {
             await this.getData();
@@ -170,6 +174,37 @@ export default {
     },
 
     methods: {
+        async getCountries() {
+            await axios.get('/countries')
+            .then(response => {
+                this.countries.push({
+                    value: '',
+                    text: 'Izaberite'
+                });
+
+                for(let property in response.data) {
+                    let item = response.data[property];
+
+
+                    this.countries.push({
+                        value: item.code,
+                        text: item.name
+                    })
+                }
+            });
+        },
+        async checkCRM() {
+            axios.get('/crm/checkUser/' + this.form.email)
+            .then(response => {
+                let values = response.data;
+                if(values.length > 0) {
+                    let user = values[0];
+                    alert("In CRM! With ID=" + user.contactid);
+                } else {
+                    alert("Not in CRM");
+                }
+            })
+        },
         async filterSchools() {
             let formData = new FormData();
             formData.append('municipalityId', this.form.township);
