@@ -16,7 +16,7 @@
             </div>
 
             <div class="d-flex align-items-center justify-content-center mt-2" >
-                <b-button variant="primary" type="button" class="m-2" @click="ok">{{ _('gui.Send') }}</b-button>
+                <b-button variant="primary" type="button" class="m-2" @click="ok"><b-spinner v-if="spinner" small class="mr-2"></b-spinner>{{ _('gui.Send') }}</b-button>
             </div>
         </div>
         <div v-if="sent && success" class="container">
@@ -53,6 +53,7 @@ export default {
         return {
             sent: false,
             success: false,
+            spinner: false
         };
     },
 
@@ -62,8 +63,10 @@ export default {
 
     methods: {
         ok() {
+            this.spinner = true;
             this.$refs.userForm.sendData()
             .then(response => {
+                this.spinner = false;
                 if(response.data.status == 201) {
                     this.sent = true;
                     this.success = true;
