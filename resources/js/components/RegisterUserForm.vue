@@ -41,6 +41,14 @@
                 <a class="btn btn-sm btn-primary" role="button" href="https://klett.rs">Na glavnu stranu</a>
             </div>
         </div>
+        <b-modal ref="messageDialog" :cancel-disabled="true" title="Greška pri unosu" header-bg-variant="warning" header-text-variant="light">
+            <p>{{ message }}</p>
+            <template #modal-footer>
+                <div class="d-flex align-items-center justify-content-center">
+                    <b-button variant="outline-warning" @click="closeMessage">Ok</b-button>
+                </div>
+            </template>
+        </b-modal>
     </div>
 
 </template>
@@ -53,7 +61,8 @@ export default {
         return {
             sent: false,
             success: false,
-            spinner: false
+            spinner: false,
+            message: "Greška pri unosu podataka."
         };
     },
 
@@ -62,6 +71,13 @@ export default {
     },
 
     methods: {
+        showMessage($message) {
+            this.message = $message;
+            this.$refs.messageDialog.show();
+        },
+        closeMessage($message) {
+            this.$refs.messageDialog.hide();
+        },
         ok() {
             this.spinner = true;
             this.$refs.userForm.sendData()
@@ -71,7 +87,8 @@ export default {
                     this.sent = true;
                     this.success = true;
                 } else {
-                    alert(response.data.message);
+                    // alert(response.data.message);
+                    this.showMessage(response.data.message);
                 }
 
             });

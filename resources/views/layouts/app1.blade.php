@@ -22,7 +22,7 @@
 <body>
     <div id="app">
         <!-- Header with logos -->
-        <div class="container-fluid d-flex align-items-center justify-content-center" style="height: 200px; background-color:coral">
+        <div class="container-fluid d-flex align-items-center justify-content-center bg-warning" style="height: 200px">
             <img src="/images/klett1.png" style="height: 60px; margin: 20px"/>
             <img src="/images/logos.png" style="height: 60px; margin: 20px"/>
             <img src="/images/freska.png" style="height: 60px; margin: 20px"/>
