@@ -41,6 +41,9 @@
                             <a class="nav-link" href="{{ route("appusers") }}">Korisnici</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route("appusers.list") }}">KorisniciEx</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route("appusers.waiting") }}">Na odobrenju</a>
                         </li>
                         <li class="nav-item">

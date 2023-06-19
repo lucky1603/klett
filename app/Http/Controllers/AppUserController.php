@@ -17,6 +17,10 @@ class AppUserController extends Controller
         return view('appusers.index', ["ip" => $ip]);
     }
 
+    public function list() {
+        return view('appusers.list');
+    }
+
     public function waiting(Request $request) {
         $ip = $request->ip();
         return view('appusers.waiting', ['ip' => $ip]);
@@ -24,7 +28,7 @@ class AppUserController extends Controller
 
     public function getAppUsers() {
         return AppUser::where('enabled', true)
-            ->get()
+             ->get()
             ->load("school", "subjects", "professional_statuses", "country")
             ->map(function($appUser) {
                 return [
@@ -44,6 +48,43 @@ class AppUserController extends Controller
                     "updatedAt" => $appUser->updated_at,
                 ];
             });
+    }
+
+    public function getAppUsersEx() {
+        $paginator = AppUser::where('enabled', true)
+            ->paginate();
+
+        $data = $paginator->load("school", "subjects", "professional_statuses", "country");
+        $currentPage = $paginator->currentPage();
+        $perPage = $paginator->perPage();
+        $count = $paginator->total();
+
+        $returnData = $data
+            ->map(function($appUser) {
+                return [
+                    "id" => $appUser->id,
+                    "ime" => $appUser->ime,
+                    "prezime" => $appUser->prezime,
+                    "email" => $appUser->email,
+                    "country" => $appUser->country->name,
+                    "adresa" => $appUser->adresa,
+                    "pb" => $appUser->pb,
+                    "mesto" => $appUser->mesto,
+                    "tel1" => $appUser->tel1,
+                    "tel2" => $appUser->tel2,
+                    "isTeacher" => $appUser->is_teacher == 1 ? 'DA' : 'NE',
+                    "enabled" => $appUser->enabled == 1 ? 'DA' : 'NE',
+                    "createdAt" => $appUser->created_at,
+                    "updatedAt" => $appUser->updated_at,
+                ];
+            });
+
+        return [
+            'perPage' => $perPage,
+            'currentPage' => $currentPage,
+            'count' => $count,
+            'rows' => $returnData
+        ];
     }
 
     public function getAppUsersToApprove() {

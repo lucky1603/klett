@@ -46,8 +46,10 @@ Route::post('schools/edit', [SchoolController::class, 'update'])->name('schools.
 Route::post('schools', [SchoolController::class, 'filterSchools'])->name('schools.filter');
 
 Route::get('appusers', [AppUserController::class, 'index'])->name('appusers');
+Route::get('appusers/list', [AppUserController::class, 'list'])->name('appusers.list');
 Route::get('appusers/waiting', [AppUserController::class, 'waiting'])->name('appusers.waiting');
 Route::get('appusers/data', [AppUserController::class, 'getAppUsers'])->name('appusers.data');
+Route::get('appusers/dataEx', [AppUserController::class, 'getAppUsersEx'])->name('appusers.dataEx');
 Route::get('appusers/dataToApprove', [AppUserController::class, 'getAppUsersToApprove'])->name('appusers.dataToApprove');
 Route::get('appusers/export',[AppUserController::class, 'export'])->name('appusers.export');
 Route::get('appusers/register', [AppUserController::class, 'register'])->name('appusers.register');

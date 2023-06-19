@@ -14,7 +14,7 @@ class AppUserSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 0; $i < 200; $i++) {
+        for($i = 0; $i < 20000; $i++) {
             $user = AppUser::factory()->make();
             $user->save();
         }
