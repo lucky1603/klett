@@ -5,6 +5,9 @@
             <a class="btn btn-sm btn-primary float-right" role="button" href="/appusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
         </div>
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
+            <div v-if="!loaded" class="d-flex align-items-center justify-content-center w-100 py-4">
+                <b-spinner></b-spinner>
+            </div>
             <b-table
                 responsive
                 small striped bordered hover
@@ -47,6 +50,7 @@ export default {
     },
     data() {
         return {
+            loaded: true,
             getAction: "/appusers/data",
             currentPage: 1,
             pageSize: 15,
@@ -146,8 +150,10 @@ export default {
             console.log("Page changed " + this.currentPage);
         },
         async getData() {
+            this.loaded = false;
             await axios.get(this.getAction)
             .then(response => {
+                this.loaded = true;
                 console.log(response.data);
                 this.items.length = 0;
                 for(let property in response.data) {

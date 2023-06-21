@@ -8,7 +8,6 @@
             <b-table
                 responsive
                 small striped bordered hover
-                :busy.sync="isBusy"
                 :items="myItems"
                 :fields="fields"
                 :current-page="currentPage"
