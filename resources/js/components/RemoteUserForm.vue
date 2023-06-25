@@ -30,17 +30,17 @@
             </b-row>
 
             <b-form-group label="Adresa i broj" label-for="billingAddress">
-                <b-input id="billingAddress"></b-input>
+                <b-input id="billingAddress" v-model="form.address"></b-input>
             </b-form-group>
             <b-row>
                 <b-col cols="2">
                     <b-form-group label="Poštanski broj" label-for="pb">
-                        <b-input id="pb"></b-input>
+                        <b-input id="pb" v-model="form.pb"></b-input>
                     </b-form-group>
                 </b-col>
                 <b-col cols="5">
                     <b-form-group label="Mesto" label-for="city">
-                        <b-input id="pb"></b-input>
+                        <b-input id="city" v-model="form.city"></b-input>
                     </b-form-group>
                 </b-col>
                 <b-col cols="5">
@@ -52,12 +52,12 @@
             <b-row>
                 <b-col>
                     <b-form-group label="Telefon 1" label-for="tel1">
-                        <b-input id="tel1" placeholder="Unesite broj telefona"></b-input>
+                        <b-input id="tel1" placeholder="Unesite broj telefona" v-model="form.tel1"></b-input>
                     </b-form-group>
                 </b-col>
                 <b-col>
                     <b-form-group label="Telefon 2" label-for="tel2">
-                        <b-input id="tel2" placeholder="Unesite alternativni broj telefona"></b-input>
+                        <b-input id="tel2" placeholder="Unesite alternativni broj telefona" v-model="tel2"></b-input>
                     </b-form-group>
                 </b-col>
             </b-row>
@@ -139,7 +139,12 @@ export default {
                 institution: 0,
                 subjects : [],
                 professions: [],
-                country: ''
+                country: '',
+                address: '',
+                pb: '',
+                tel1: '',
+                tel2: '',
+                city: ''
             },
             accessToken: '',
             errors: {},

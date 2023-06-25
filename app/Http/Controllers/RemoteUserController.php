@@ -247,7 +247,14 @@ class RemoteUserController extends Controller
                     "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
                     "township" => isset($data['township']) ?  $data['township'] : null,
                     "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
-                    "institution" => isset($data['institution']) ? $data['institution'] : null
+                    "institution" => isset($data['institution']) ? $data['institution'] : null,
+                    "billing_first_name" => $data['firstName'],
+                    "billing_last_name" => $data['lastName'],
+                    "billing_address_1" => $data['address'],
+                    'billing_city' => $data['city'],
+                    "billing_postcode" => $data['pb'],
+                    "billing_country" => $data['country'],
+                    "billing_phone" => $data['tel1']
                 ],
         ]);
 
@@ -341,7 +348,13 @@ class RemoteUserController extends Controller
             'subjects' => isset($retObject->attributes->subjects) ? unserialize($retObject->attributes->subjects[0]) : [],
             'professions' => isset($retObject->attributes->professions) ? unserialize($retObject->attributes->professions[0]) : [],
             'enabled' => $retObject->enabled,
-            'isTeacher' => $isTeacher
+            'isTeacher' => $isTeacher,
+            'address' => isset($retObject->attributes) && isset($retObject->attributes->billing_address_1) ?  $retObject->attributes->billing_address_1[0] : '',
+            'city' => isset($retObject->attributes) && isset($retObject->attributes->billing_city) ?  $retObject->attributes->billing_city[0] : '',
+            'pb' => isset($retObject->attributes) && isset($retObject->attributes->billing_postcode) ?  $retObject->attributes->billing_postcode[0] : '',
+            'country' => isset($retObject->attributes) && isset($retObject->attributes->billing_country) ?  $retObject->attributes->billing_country[0] : '',
+            'tel1' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
+            'tel2' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
         ];
     }
 
@@ -363,7 +376,14 @@ class RemoteUserController extends Controller
                     "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
                     "township" => isset($data['township']) ?  $data['township'] : null,
                     "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
-                    "institution" => isset($data['institution']) ? $data['institution'] : null
+                    "institution" => isset($data['institution']) ? $data['institution'] : null,
+                    "billing_first_name" => $data['firstName'],
+                    "billing_last_name" => $data['lastName'],
+                    "billing_address_1" => $data['address'],
+                    'billing_city' => $data['city'],
+                    "billing_postcode" => $data['pb'],
+                    "billing_country" => $data['country'],
+                    "billing_phone" => $data['tel1']
                 ],
         ]);
 
