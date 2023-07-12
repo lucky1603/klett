@@ -29,10 +29,13 @@
                 </b-col>
             </b-row>
 
-            <b-form-group label="Adresa i broj" label-for="billingAddress">
-                <b-input id="billingAddress" v-model="form.address"></b-input>
-            </b-form-group>
+
             <b-row>
+                <b-col cols="5">
+                    <b-form-group label="Adresa i broj" label-for="billingAddress">
+                        <b-input id="billingAddress" v-model="form.address"></b-input>
+                    </b-form-group>
+                </b-col>
                 <b-col cols="2">
                     <b-form-group label="Poštanski broj" label-for="pb">
                         <b-input id="pb" v-model="form.pb"></b-input>
@@ -43,11 +46,11 @@
                         <b-input id="city" v-model="form.city"></b-input>
                     </b-form-group>
                 </b-col>
-                <b-col cols="5">
+                <!-- <b-col cols="5">
                     <b-form-group label="Država" label-for="country">
                         <b-select id="country" v-model="form.country" :options="countries"></b-select>
                     </b-form-group>
-                </b-col>
+                </b-col> -->
             </b-row>
             <b-row>
                 <b-col>
@@ -80,9 +83,9 @@
                     <b-form-select v-model="form.institution" id="school" :options="schools"></b-form-select>
                     <span v-if="errors.school" class="text-danger">{{ errors.school}}</span>
                 </b-form-group>
-                <h5 class="mb-0">{{ _('gui.subjects') }}</h5>
-                <small class="text-secondary mt-0">{{_('gui.subjectsSubtitle')}}</small>
-                <div class="d-flex flex-column flex-wrap" style="height:300px">
+                <!-- <h5 class="mb-0">{{ _('gui.subjects') }}</h5> -->
+                <!-- <small class="text-secondary mt-0">{{_('gui.subjectsSubtitle')}}</small> -->
+                <!-- <div class="d-flex flex-column flex-wrap" style="height:300px">
                     <b-form-checkbox
                         v-for="subject in subjects"
                         :key="subject.id"
@@ -90,9 +93,14 @@
                         :value="subject.id">
                         {{ subject.name }}
                     </b-form-checkbox>
-                </div>
+                </div> -->
 
-                <h5 class="mt-3 mb-0">{{_('gui.professionalStatus')}}</h5>
+                <b-form-group :label="_('gui.subjects')" label-for="subjects">
+                    <b-form-select v-model="form.subjects" :options="subjects" multiple :select-size="6"></b-form-select>
+                </b-form-group>
+
+
+                <!-- <h5 class="mt-3 mb-0">{{_('gui.professionalStatus')}}</h5>
                 <small class="text-secondary mt-0">{{_('gui.professionalStatusSubtitle')}}</small>
                 <div class="d-flex flex-column flex-wrap" style="height:150px">
                     <b-form-checkbox
@@ -102,7 +110,7 @@
                         :value="profession.id">
                         {{ profession.name }}
                     </b-form-checkbox>
-                </div>
+                </div> -->
             </div>
 
             <hr />
@@ -225,7 +233,16 @@ export default {
         async getSubjects() {
             await axios.get('/subjects')
             .then(response => {
-                this.subjects = response.data;
+                // this.subjects = response.data;
+                this.subjects = [];
+                let subjects = response.data;
+                for(let property in subjects) {
+                    let subject = subjects[property];
+                    this.subjects.push({
+                        value: subject.id,
+                        text: subject.name
+                    });
+                }
             });
         },
         async getProfessionalStatuses() {
