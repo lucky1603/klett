@@ -8,11 +8,13 @@
                 <b-col>
                     <b-form-group label="Korisničko ime" label-for="username">
                         <b-input id="username" v-model="form.username"></b-input>
+                        <span v-if="errors.username" class="text-danger">{{ errors.username}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
                     <b-form-group label="Imejl" label-for="email">
                         <b-input id="email" v-model="form.email"></b-input>
+                        <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </b-form-group>
                 </b-col>
             </b-row>
@@ -20,11 +22,13 @@
                 <b-col>
                     <b-form-group label="Ime" label-for="firstName">
                         <b-input id="firstName" v-model="form.firstName"></b-input>
+                        <span v-if="errors.firstName" class="text-danger">{{ errors.firstName}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
                     <b-form-group label="Prezime" label-for="lastName">
                         <b-input id="lastName" v-model="form.lastName"></b-input>
+                        <span v-if="errors.lastName" class="text-danger">{{ errors.lastName}}</span>
                     </b-form-group>
                 </b-col>
             </b-row>
@@ -34,16 +38,19 @@
                 <b-col cols="5">
                     <b-form-group label="Adresa i broj" label-for="billingAddress">
                         <b-input id="billingAddress" v-model="form.address"></b-input>
+                        <span v-if="errors.address" class="text-danger">{{ errors.address}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col cols="2">
                     <b-form-group label="Poštanski broj" label-for="pb">
                         <b-input id="pb" v-model="form.pb"></b-input>
+                        <span v-if="errors.pb" class="text-danger">{{ errors.pb}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col cols="5">
                     <b-form-group label="Mesto" label-for="city">
                         <b-input id="city" v-model="form.city"></b-input>
+                        <span v-if="errors.city" class="text-danger">{{ errors.city}}</span>
                     </b-form-group>
                 </b-col>
                 <!-- <b-col cols="5">
@@ -56,6 +63,7 @@
                 <b-col>
                     <b-form-group label="Telefon 1" label-for="tel1">
                         <b-input id="tel1" placeholder="Unesite broj telefona" v-model="form.tel1"></b-input>
+                        <span v-if="errors.tel1" class="text-danger">{{ errors.tel1}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col>
@@ -81,7 +89,7 @@
 
                 <b-form-group :label="_('gui.school')" label-for="school">
                     <b-form-select v-model="form.institution" id="school" :options="schools"></b-form-select>
-                    <span v-if="errors.school" class="text-danger">{{ errors.school}}</span>
+                    <span v-if="errors.institution" class="text-danger">{{ errors.institution}}</span>
                 </b-form-group>
                 <!-- <h5 class="mb-0">{{ _('gui.subjects') }}</h5> -->
                 <!-- <small class="text-secondary mt-0">{{_('gui.subjectsSubtitle')}}</small> -->
@@ -97,6 +105,7 @@
 
                 <b-form-group :label="_('gui.subjects')" label-for="subjects">
                     <b-form-select v-model="form.subjects" :options="subjects" multiple :select-size="6"></b-form-select>
+                    <span v-if="errors.subjects" class="text-danger">{{ errors.subjects}}</span>
                 </b-form-group>
 
 

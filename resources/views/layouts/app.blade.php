@@ -37,7 +37,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route("home") }}">Statistika</a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" href="{{ route("appusers") }}">Korisnici</a>
                         </li>
                         <li class="nav-item">
@@ -48,9 +48,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route("schools") }}">Škole</a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item" >
-                            <a class="nav-link" href="{{ route('remoteusers')}}">KeyCloak</a>
+                            <a class="nav-link" href="{{ route('remoteusers')}}">Korisnici</a>
                         </li>
                     </ul>
 

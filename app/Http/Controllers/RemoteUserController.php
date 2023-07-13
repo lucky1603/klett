@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\NoCRMInfo;
 use Illuminate\Http\Request;
 use App\Exports\RemoteUsersExport;
+use App\Http\Requests\CreateRemoteUserRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -217,7 +218,7 @@ class RemoteUserController extends Controller
         return view('remoteusers.create');
     }
 
-    public function store(Request $request) {
+    public function store(CreateRemoteUserRequest $request) {
         $data = $request->post();
 
         $inCRM = true;
@@ -358,7 +359,7 @@ class RemoteUserController extends Controller
         ];
     }
 
-    public function update(Request $request) {
+    public function update(CreateRemoteUserRequest $request) {
         $data = $request->post();
 
         $userId = $data['userId'];

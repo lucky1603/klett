@@ -242,7 +242,8 @@ export default {
 
             })
             .catch(error => {
-                console.log(error);
+                console.log("greska!!!");
+                console.log(error.message);
             });
         },
         createUser() {

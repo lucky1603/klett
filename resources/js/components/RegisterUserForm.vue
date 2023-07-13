@@ -91,7 +91,11 @@ export default {
                     this.showMessage(response.data.message);
                 }
 
+            })
+            .catch(error => {
+                this.spinner = false;
             });
+
         },
         applicationSent() {
             this.sent = true;
