@@ -24,15 +24,11 @@ class CreateRemoteUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'username' => 'required',
-            'password' => 'required',
+            'ime' => 'required',
+            'prezime' => 'required',
+            'korisnickoIme' => 'required',
             'email' => 'email|required',
-            'address' => 'required',
-            'pb' => 'required',
-            'city' => 'required',
-            'tel1' => 'required',
+            'telefon1' => 'required',
         ];
     }
 
@@ -40,12 +36,12 @@ class CreateRemoteUserRequest extends FormRequest
         $validator->after(function($validator) {
             $data = $this->post();
 
-            if($data['isTeacher'] == "true" && $data['institution'] == "0") {
-                $validator->errors()->add('institution', 'Morate odabrati školu!');
+            if($data['isTeacher'] == "true" && $data['skola'] == "0") {
+                $validator->errors()->add('skola', 'Morate odabrati školu!');
             }
 
-            if($data['isTeacher'] == "true" && !isset($data['subjects'])) {
-                $validator->errors()->add('subjects', 'Morate odabrati bar jedan predmet!');
+            if($data['isTeacher'] == "true" && !isset($data['predmeti'])) {
+                $validator->errors()->add('predmeti', 'Morate odabrati bar jedan predmet!');
             }
         });
     }

@@ -4,74 +4,78 @@
             <b-spinner variant="primary" type="grow" style="z-index: 1000"></b-spinner>
         </div>
         <b-form @submit.prevent="sendData">
-            <b-row>
+            <b-row class="p-2">
                 <b-col>
-                    <b-form-group label="Korisničko ime" label-for="username">
-                        <b-input id="username" v-model="form.username"></b-input>
-                        <span v-if="errors.username" class="text-danger">{{ errors.username}}</span>
-                    </b-form-group>
+                    <div class="form-input">
+                        <label for="username">Korisničko ime</label>
+                        <b-input id="username" v-model="form.korisnickoIme"></b-input>
+                        <span v-if="errors.korisnickoIme" class="text-danger">{{ errors.korisnickoIme}}</span>
+                    </div>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Imejl" label-for="email">
+                    <div class="form-input">
+                        <label for="email">E Mail</label>
                         <b-input id="email" v-model="form.email"></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
-                    </b-form-group>
+                    </div>
                 </b-col>
             </b-row>
-            <b-row>
+            <b-row class="p-2">
                 <b-col>
-                    <b-form-group label="Ime" label-for="firstName">
-                        <b-input id="firstName" v-model="form.firstName"></b-input>
-                        <span v-if="errors.firstName" class="text-danger">{{ errors.firstName}}</span>
-                    </b-form-group>
+                    <div class="form-input">
+                        <label for="firstName">Ime</label>
+                        <b-input id="firstName" v-model="form.ime"></b-input>
+                        <span v-if="errors.ime" class="text-danger">{{ errors.ime}}</span>
+                    </div>
                 </b-col>
                 <b-col>
-                    <b-form-group label="Prezime" label-for="lastName">
-                        <b-input id="lastName" v-model="form.lastName"></b-input>
-                        <span v-if="errors.lastName" class="text-danger">{{ errors.lastName}}</span>
-                    </b-form-group>
+                    <div class="form-input">
+                        <label for="lastName">Prezime</label>
+                        <b-input id="lastName" v-model="form.prezime"></b-input>
+                        <span v-if="errors.prezime" class="text-danger">{{ errors.prezime}}</span>
+                    </div>
                 </b-col>
             </b-row>
 
+            <b-row class="p-2">
+                <b-col>
+                    <div class="form-input">
+                        <label for="tel1">Telefon 1</label>
+                        <b-input id="tel1" placeholder="Unesite broj telefona" v-model="form.telefon1"></b-input>
+                        <span v-if="errors.telefon1" class="text-danger">{{ errors.telefon1}}</span>
+                    </div>
+                </b-col>
+                <b-col>
+                    <div class="form-input">
+                        <label for="tel2">Telefon 2</label>
+                        <b-input id="tel2" placeholder="Unesite alternativni broj telefona" v-model="form.telefon2"></b-input>
+                    </div>
+                </b-col>
+            </b-row>
 
-            <b-row>
+            <!-- <small class="text-secondary mt-0">Sledeća polja služe samo u tu svrhu</small> -->
+
+            <b-row class="p-2">
                 <b-col cols="5">
                     <b-form-group label="Adresa i broj" label-for="billingAddress">
-                        <b-input id="billingAddress" v-model="form.address"></b-input>
-                        <span v-if="errors.address" class="text-danger">{{ errors.address}}</span>
+                        <b-input id="billingAddress" v-model="form.adresa"></b-input>
+                        <span v-if="errors.adresa" class="text-danger">{{ errors.adresa}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col cols="2">
                     <b-form-group label="Poštanski broj" label-for="pb">
-                        <b-input id="pb" v-model="form.pb"></b-input>
-                        <span v-if="errors.pb" class="text-danger">{{ errors.pb}}</span>
+                        <b-input id="pb" v-model="form.postanskiBroj"></b-input>
+                        <span v-if="errors.postanskiBroj" class="text-danger">{{ errors.postanskiBroj}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col cols="5">
                     <b-form-group label="Mesto" label-for="city">
-                        <b-input id="city" v-model="form.city"></b-input>
-                        <span v-if="errors.city" class="text-danger">{{ errors.city}}</span>
-                    </b-form-group>
-                </b-col>
-                <!-- <b-col cols="5">
-                    <b-form-group label="Država" label-for="country">
-                        <b-select id="country" v-model="form.country" :options="countries"></b-select>
-                    </b-form-group>
-                </b-col> -->
-            </b-row>
-            <b-row>
-                <b-col>
-                    <b-form-group label="Telefon 1" label-for="tel1">
-                        <b-input id="tel1" placeholder="Unesite broj telefona" v-model="form.tel1"></b-input>
-                        <span v-if="errors.tel1" class="text-danger">{{ errors.tel1}}</span>
-                    </b-form-group>
-                </b-col>
-                <b-col>
-                    <b-form-group label="Telefon 2" label-for="tel2">
-                        <b-input id="tel2" placeholder="Unesite alternativni broj telefona" v-model="tel2"></b-input>
+                        <b-input id="city" v-model="form.mesto"></b-input>
+                        <span v-if="errors.mesto" class="text-danger">{{ errors.mesto}}</span>
                     </b-form-group>
                 </b-col>
             </b-row>
+
             <b-form-checkbox v-model="form.isTeacher" :value="true">{{ _('gui.isTeacher') }}</b-form-checkbox>
             <div v-if="form.isTeacher">
                 <b-row>
@@ -88,8 +92,8 @@
                 </b-row>
 
                 <b-form-group :label="_('gui.school')" label-for="school">
-                    <b-form-select v-model="form.institution" id="school" :options="schools"></b-form-select>
-                    <span v-if="errors.institution" class="text-danger">{{ errors.institution}}</span>
+                    <b-form-select v-model="form.skola" id="school" :options="schools"></b-form-select>
+                    <span v-if="errors.skola" class="text-danger">{{ errors.skola}}</span>
                 </b-form-group>
                 <!-- <h5 class="mb-0">{{ _('gui.subjects') }}</h5> -->
                 <!-- <small class="text-secondary mt-0">{{_('gui.subjectsSubtitle')}}</small> -->
@@ -104,8 +108,8 @@
                 </div> -->
 
                 <b-form-group :label="_('gui.subjects')" label-for="subjects">
-                    <b-form-select v-model="form.subjects" :options="subjects" multiple :select-size="6"></b-form-select>
-                    <span v-if="errors.subjects" class="text-danger">{{ errors.subjects}}</span>
+                    <b-form-select v-model="form.predmeti" :options="subjects" multiple :select-size="6"></b-form-select>
+                    <span v-if="errors.predmeti" class="text-danger">{{ errors.predmeti}}</span>
                 </b-form-group>
 
 
@@ -144,24 +148,24 @@ export default {
     data() {
         return {
             form: {
-                username: '',
-                firstName: '',
-                lastName: '',
+                korisnickoIme: '',
+                ime: '',
+                prezime: '',
                 email: '',
                 enabled: true,
                 updatePassword: true,
                 isTeacher: false,
                 institutionType: 0,
                 township: 0,
-                institution: 0,
-                subjects : [],
+                skola: 0,
+                predmeti : [],
                 professions: [],
                 country: '',
-                address: '',
-                pb: '',
-                tel1: '',
-                tel2: '',
-                city: ''
+                adresa: '',
+                postanskiBroj: '',
+                telefon1: '',
+                telefon2: '',
+                mesto: ''
             },
             accessToken: '',
             errors: {},
@@ -312,7 +316,7 @@ export default {
                 for(let property in this.form) {
                     if(property == 'requiredActions' || property == 'isTeacher')
                         continue;
-                    if(property == 'institution') {
+                    if(property == 'skola') {
                         this.filterSchools();
                     }
                     this.form[property] = resultObject[property];
@@ -401,6 +405,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-
+<style scoped>
+label::after {
+    content: " *";
+    color: red;
+}
 </style>

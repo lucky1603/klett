@@ -238,24 +238,23 @@ class RemoteUserController extends Controller
         $response = Http::withToken($data['token'])
             ->asJson()
             ->post(env("KEYCLOAK_API_USERS_URL"), [
-                "username" => $data['username'],
-                "firstName" => $data['firstName'],
-                "lastName" => $data['lastName'],
+                "username" => $data['korisnickoIme'],
+                "firstName" => $data['ime'],
+                "lastName" => $data['prezime'],
                 "email" => $data["email"],
                 "enabled" => $data['enabled'] == "true" && $inCRM ? true : false,
                 "attributes" => [
-                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
-                    "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
+                    "subjects" => isset($data['predmeti']) ? serialize($data['predmeti']) : null,
+                    // "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
                     "township" => isset($data['township']) ?  $data['township'] : null,
                     "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
-                    "institution" => isset($data['institution']) ? $data['institution'] : null,
-                    "billing_first_name" => $data['firstName'],
-                    "billing_last_name" => $data['lastName'],
-                    "billing_address_1" => $data['address'],
-                    'billing_city' => $data['city'],
-                    "billing_postcode" => $data['pb'],
-                    "billing_country" => $data['country'],
-                    "billing_phone" => $data['tel1']
+                    "institution" => isset($data['skola']) ? $data['skola'] : null,
+                    "billing_first_name" => $data['ime'],
+                    "billing_last_name" => $data['prezime'],
+                    "billing_address_1" => $data['adresa'],
+                    'billing_city' => $data['mesto'],
+                    "billing_postcode" => $data['postanskiBroj'],
+                    "billing_phone" => $data['telefon1']
                 ],
         ]);
 
@@ -339,23 +338,23 @@ class RemoteUserController extends Controller
 
         return [
             'id' => $retObject->id,
-            'username' => $retObject->username,
-            'firstName' => $retObject->firstName ?? '',
-            'lastName' => $retObject->lastName ?? '',
+            'korisnickoIme' => $retObject->username,
+            'ime' => $retObject->firstName ?? '',
+            'prezime' => $retObject->lastName ?? '',
             'email' => $retObject->email ?? '',
-            'institution' => isset($retObject->attributes) ? $retObject->attributes->institution[0] : null,
+            'skola' => isset($retObject->attributes) ? $retObject->attributes->institution[0] : null,
             'institutionType' => isset($retObject->attributes) ? $retObject->attributes->institution_type[0] : null,
             'township' => isset($retObject->attributes->township)  ? $retObject->attributes->township[0] : null,
-            'subjects' => isset($retObject->attributes->subjects) ? unserialize($retObject->attributes->subjects[0]) : [],
+            'predmeti' => isset($retObject->attributes->subjects) ? unserialize($retObject->attributes->subjects[0]) : [],
             'professions' => isset($retObject->attributes->professions) ? unserialize($retObject->attributes->professions[0]) : [],
             'enabled' => $retObject->enabled,
             'isTeacher' => $isTeacher,
-            'address' => isset($retObject->attributes) && isset($retObject->attributes->billing_address_1) ?  $retObject->attributes->billing_address_1[0] : '',
-            'city' => isset($retObject->attributes) && isset($retObject->attributes->billing_city) ?  $retObject->attributes->billing_city[0] : '',
-            'pb' => isset($retObject->attributes) && isset($retObject->attributes->billing_postcode) ?  $retObject->attributes->billing_postcode[0] : '',
-            'country' => isset($retObject->attributes) && isset($retObject->attributes->billing_country) ?  $retObject->attributes->billing_country[0] : '',
-            'tel1' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
-            'tel2' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
+            'adresa' => isset($retObject->attributes) && isset($retObject->attributes->billing_address_1) ?  $retObject->attributes->billing_address_1[0] : '',
+            'mesto' => isset($retObject->attributes) && isset($retObject->attributes->billing_city) ?  $retObject->attributes->billing_city[0] : '',
+            'postanskiBroj' => isset($retObject->attributes) && isset($retObject->attributes->billing_postcode) ?  $retObject->attributes->billing_postcode[0] : '',
+            'drzava' => isset($retObject->attributes) && isset($retObject->attributes->billing_country) ?  $retObject->attributes->billing_country[0] : '',
+            'telefon1' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
+            'telefon2' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
         ];
     }
 
@@ -367,24 +366,23 @@ class RemoteUserController extends Controller
         $response = Http::withToken($token)
             ->asJson()
             ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
-                "username" => $data['username'],
-                "firstName" => $data['firstName'],
-                "lastName" => $data['lastName'],
+                "username" => $data['korisnickoIme'],
+                "firstName" => $data['ime'],
+                "lastName" => $data['prezime'],
                 "email" => $data["email"],
                 "enabled" => $data['enabled'] == "true" ? true : false,
                 "attributes" => [
-                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
+                    "subjects" => isset($data['predmeti']) ? serialize($data['predmeti']) : null,
                     "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
                     "township" => isset($data['township']) ?  $data['township'] : null,
                     "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
-                    "institution" => isset($data['institution']) ? $data['institution'] : null,
-                    "billing_first_name" => $data['firstName'],
-                    "billing_last_name" => $data['lastName'],
-                    "billing_address_1" => $data['address'],
-                    'billing_city' => $data['city'],
-                    "billing_postcode" => $data['pb'],
-                    "billing_country" => $data['country'],
-                    "billing_phone" => $data['tel1']
+                    "institution" => isset($data['skola']) ? $data['skola'] : null,
+                    "billing_first_name" => $data['ime'],
+                    "billing_last_name" => $data['prezime'],
+                    "billing_address_1" => $data['adresa'],
+                    'billing_city' => $data['mesto'],
+                    "billing_postcode" => $data['postanskiBroj'],
+                    "billing_phone" => $data['telefon1']
                 ],
         ]);
 
