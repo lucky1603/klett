@@ -81,12 +81,12 @@
                 <b-row>
                     <b-col>
                         <b-form-group :label="_('gui.institutionType')" label-for="institution_type">
-                            <b-form-select v-model="form.institutionType" id="institution_type" :options="institutionTypes" @change="filterSchools"></b-form-select>
+                            <b-form-select v-model="form.institutionType" id="institution_type" :options="institutionTypes" @change="filtrirajSkole"></b-form-select>
                         </b-form-group>
                     </b-col>
                     <b-col>
                         <b-form-group :label="_('gui.municipality')" label-for="township">
-                            <b-form-select v-model="form.township" id="township" :options="townships" @change="filterSchools"></b-form-select>
+                            <b-form-select v-model="form.township" id="township" :options="opstine" @change="filtrirajSkole"></b-form-select>
                         </b-form-group>
                     </b-col>
                 </b-row>
@@ -176,7 +176,9 @@ export default {
             institutionTypes: [],
             professions: [],
             showSpinner: false,
-            countries: []
+            countries: [],
+            opstine: [],
+            tipoviKontakata: []
         };
     },
 
@@ -185,9 +187,11 @@ export default {
         this.showSpinner = true;
         await this.getSubjects();
         await this.getProfessionalStatuses();
-        await this.getInstitutionTypes();
+        // await this.getInstitutionTypes();
+        await this.getTipoviKontakata();
         await this.getMunicipalities();
         await this.getCountries();
+        await this.getOpstine();
 
         if(this.userId != null && this.userId != '') {
             await this.getData();
@@ -230,6 +234,72 @@ export default {
                 }
             })
         },
+
+        async getOpstine() {
+            axios.get('/crm/opstine')
+            .then(response => {
+                console.log('Opstine:');
+                console.log(response.data);
+                this.opstine = [];
+                this.opstine.push({
+                    value: 0,
+                    text: "Izaberite opštinu..."
+                });
+
+                for(let property in response.data) {
+                    let opstina = response.data[property];
+                    this.opstine.push({
+                        value: opstina.value,
+                        text: opstina.text
+                    });
+                }
+            })
+        },
+
+        async getTipoviKontakata() {
+            this.institutionTypes = [];
+            this.institutionTypes.push({
+                value: 0,
+                text: 'Izaberite tip skole'
+            });
+
+            await axios.get('/crm/tipoviKontakata')
+            .then(response => {
+                response.data.forEach(element => {
+                    this.institutionTypes.push(element);
+                });
+            })
+            // let formData = new FormData();
+            // formData.append('opstina', this.form.township);
+            // formData.append('tipSkole', this.form.institutionType);
+            // await axios.post('/crm/skole', formData)
+            // .then(response => {
+            //     console.log("Skole");
+            //     console.log(response.data);
+            //     this.schools = [];
+            //     for(let property in response.data) {
+            //         let skola = response.data[property];
+            //         this.schools.push(skola);
+            //     }
+            // });
+        },
+
+        async filtrirajSkole() {
+            let formData = new FormData();
+            if(this.form.township != 0 && this.form.institutionType != 0) {
+                formData.append('opstina', this.form.township);
+                formData.append('tipSkole', this.form.institutionType);
+                axios.post('/crm/skole', formData)
+                .then(response => {
+                    this.schools.length = 0;
+                    for(let property in response.data) {
+                        this.schools.push(response.data[property]);
+                    }
+                });
+            }
+
+        },
+
         async filterSchools() {
             let formData = new FormData();
             formData.append('municipalityId', this.form.township);

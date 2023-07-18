@@ -79,6 +79,9 @@ Route::get('remoteusers/testmail/{email}', [RemoteUserController::class, 'testMa
 // CRM
 Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');
 Route::get('crm/checkUser/{email}', [CRMController::class, 'checkUser'])->name('crm.checkUser');
+Route::get('crm/opstine', [CRMController::class, 'getOpstine'])->name('crm.opstine');
+Route::get('crm/tipoviKontakata', [CRMController::class, 'getTipoviKontakata'])->name('crm.tipoviKontakata');
+Route::post('crm/skole', [CRMController::class, 'getSkole'])->name('crm.skole');
 
 // Professional statuses.
 Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");
