@@ -40,7 +40,7 @@ class CreateRemoteUserRequest extends FormRequest
                 $validator->errors()->add('skola', 'Morate odabrati školu!');
             }
 
-            if($data['isTeacher'] == "true" && !isset($data['predmeti'])) {
+            if($data['isTeacher'] == "true" && !isset($data['subjects'])) {
                 $validator->errors()->add('predmeti', 'Morate odabrati bar jedan predmet!');
             }
         });

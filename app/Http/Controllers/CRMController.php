@@ -95,17 +95,19 @@ class CRMController extends Controller
         }
 
         $response = Http::withToken($token)->get($requestUrl);
-
         $skole = $response->json('value');
 
         $results = [];
-        foreach($skole as $skola) {
-            $results[] = [
-                'text' => $skola["name"],
-                'value' => $skola["accountid"]
+        if($skole != null) {
+            foreach($skole as $skola) {
+                $results[] = [
+                    'text' => $skola["name"],
+                    'value' => $skola["accountid"]
 
-            ];
+                ];
+            }
         }
+
 
         return $results;
     }

@@ -244,7 +244,7 @@ class RemoteUserController extends Controller
                 "email" => $data["email"],
                 "enabled" => $data['enabled'] == "true" && $inCRM ? true : false,
                 "attributes" => [
-                    "subjects" => isset($data['predmeti']) ? serialize($data['predmeti']) : null,
+                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
                     // "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
                     "township" => isset($data['township']) ?  $data['township'] : null,
                     "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
@@ -345,7 +345,7 @@ class RemoteUserController extends Controller
             'skola' => isset($retObject->attributes) ? $retObject->attributes->institution[0] : null,
             'institutionType' => isset($retObject->attributes) ? $retObject->attributes->institution_type[0] : null,
             'township' => isset($retObject->attributes->township)  ? $retObject->attributes->township[0] : null,
-            'predmeti' => isset($retObject->attributes->subjects) ? unserialize($retObject->attributes->subjects[0]) : [],
+            'subjects' => isset($retObject->attributes->subjects) ? unserialize($retObject->attributes->subjects[0]) : [],
             'professions' => isset($retObject->attributes->professions) ? unserialize($retObject->attributes->professions[0]) : [],
             'enabled' => $retObject->enabled,
             'isTeacher' => $isTeacher,
@@ -372,7 +372,7 @@ class RemoteUserController extends Controller
                 "email" => $data["email"],
                 "enabled" => $data['enabled'] == "true" ? true : false,
                 "attributes" => [
-                    "subjects" => isset($data['predmeti']) ? serialize($data['predmeti']) : null,
+                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
                     "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
                     "township" => isset($data['township']) ?  $data['township'] : null,
                     "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,

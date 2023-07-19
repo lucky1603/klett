@@ -269,19 +269,6 @@ export default {
                     this.institutionTypes.push(element);
                 });
             })
-            // let formData = new FormData();
-            // formData.append('opstina', this.form.township);
-            // formData.append('tipSkole', this.form.institutionType);
-            // await axios.post('/crm/skole', formData)
-            // .then(response => {
-            //     console.log("Skole");
-            //     console.log(response.data);
-            //     this.schools = [];
-            //     for(let property in response.data) {
-            //         let skola = response.data[property];
-            //         this.schools.push(skola);
-            //     }
-            // });
         },
 
         async filtrirajSkole() {
@@ -370,7 +357,6 @@ export default {
             });
         },
         async getData() {
-
             await axios.get('/remoteusers/keycloak')
             .then(response => {
                 this.accessToken = response.data.access_token;
@@ -387,9 +373,14 @@ export default {
                     if(property == 'requiredActions' || property == 'isTeacher')
                         continue;
                     if(property == 'skola') {
-                        this.filterSchools();
+                        this.filtrirajSkole();
                     }
-                    this.form[property] = resultObject[property];
+                    if(property == 'predmeti') {
+                        this.form['predmeti'] = resultObject['subjects'];
+                    } else {
+                        this.form[property] = resultObject[property];
+                    }
+
                 }
 
                 this.showSpinner = false;
@@ -433,7 +424,7 @@ export default {
                 let formData = new FormData();
                 formData.append('token', this.accessToken);
                 for(let property in this.form) {
-                    if(property == 'subjects') {
+                    if(property == 'predmeti') {
                         let subjects = this.form[property];
                         for(let idx in subjects) {
                             formData.append('subjects[]', subjects[idx]);
