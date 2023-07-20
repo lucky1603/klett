@@ -229,9 +229,16 @@ class RemoteUserController extends Controller
             $value = $this->checkUser($data['email']);
             if(is_array($value) && count($value) > 0) {
                 $inCRM = true;
+
+                // TODO: Call positive CRM
+
             } else {
                 // send email
                 Mail::to($data['email'])->send(new NoCRMInfo($data));
+
+                // TODO: Call negative CRM
+
+
             }
         }
 

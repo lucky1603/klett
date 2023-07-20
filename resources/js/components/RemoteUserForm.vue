@@ -370,7 +370,7 @@ export default {
                 let resultObject = response.data;
                 console.log(resultObject);
                 for(let property in this.form) {
-                    if(property == 'requiredActions' || property == 'isTeacher')
+                    if(property == 'requiredActions')
                         continue;
                     if(property == 'skola') {
                         this.filtrirajSkole();
