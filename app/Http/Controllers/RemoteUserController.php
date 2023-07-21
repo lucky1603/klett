@@ -483,6 +483,24 @@ class RemoteUserController extends Controller
         $response = Http::withToken($token)->get($requestUrl);
         return $response->json("value");
     }
+
+    public function ackCRMPositive($data) {
+        $response = $this->connectCRM();
+        $token = $response->json('access_token');
+
+        $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
+        $response = Http::withToken($token)
+            ->post($requestUrl, [
+                'ext_ime' => $data['firstName'],
+                'ext_prezime' => $data['lastName'],
+                'ext_emailadresa' => $data['email'],
+                'ext_kontakttelefon' => $data['telefon1'],
+                'ext_Tipustanove@odata.bind' => "ext_tipposlovnogkontaktas(".$data['institutionType'].")",
+                'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['township'].")",
+                'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")"
+
+            ]);
+    }
 }
 
 

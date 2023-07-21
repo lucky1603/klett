@@ -82,6 +82,7 @@ Route::get('crm/checkUser/{email}', [CRMController::class, 'checkUser'])->name('
 Route::get('crm/opstine', [CRMController::class, 'getOpstine'])->name('crm.opstine');
 Route::get('crm/tipoviKontakata', [CRMController::class, 'getTipoviKontakata'])->name('crm.tipoviKontakata');
 Route::post('crm/skole', [CRMController::class, 'getSkole'])->name('crm.skole');
+Route::get('crm/predmeti', [CRMController::class, 'getPredmeti'])->name('crm.predmeti');
 
 // Professional statuses.
 Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");

@@ -108,7 +108,7 @@
                 </div> -->
 
                 <b-form-group :label="_('gui.subjects')" label-for="subjects">
-                    <b-form-select v-model="form.predmeti" :options="subjects" multiple :select-size="6"></b-form-select>
+                    <b-form-select v-model="form.predmeti" :options="predmeti" multiple :select-size="6"></b-form-select>
                     <span v-if="errors.predmeti" class="text-danger">{{ errors.predmeti}}</span>
                 </b-form-group>
 
@@ -178,14 +178,16 @@ export default {
             showSpinner: false,
             countries: [],
             opstine: [],
-            tipoviKontakata: []
+            tipoviKontakata: [],
+            predmeti: []
         };
     },
 
     async mounted() {
 
         this.showSpinner = true;
-        await this.getSubjects();
+        // await this.getSubjects();
+        await this.getPredmeti();
         await this.getProfessionalStatuses();
         // await this.getInstitutionTypes();
         await this.getTipoviKontakata();
@@ -313,6 +315,13 @@ export default {
                         text: subject.name
                     });
                 }
+            });
+        },
+        async getPredmeti() {
+            await axios.get('/crm/predmeti')
+            .then(response => {
+                // this.subjects = response.data;
+                this.predmeti = response.data;
             });
         },
         async getProfessionalStatuses() {
