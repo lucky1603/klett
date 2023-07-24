@@ -34,16 +34,11 @@ window.Vue = require('vue').default;
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('school-table', require('./components/SchoolTable.vue').default);
-Vue.component('school-form', require('./components/SchoolForm.vue').default);
-Vue.component('user-list', require('./components/UserList.vue').default);
-Vue.component('user-form', require('./components/UserForm.vue').default);
 Vue.component('apexchart', VueApexCharts);
 Vue.component('dashboard', require('./components/Dashboard.vue').default);
 Vue.component('register-user-form', require('./components/RegisterUserForm.vue').default);
 Vue.component('remote-user-list', require('./components/RemoteUserList.vue').default);
 Vue.component('remote-user-form', require('./components/RemoteUserForm.vue').default);
-Vue.component('user-list-ex', require('./components/UserListEx.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

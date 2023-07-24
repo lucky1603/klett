@@ -30,32 +30,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home',[ HomeController::class, 'index'])->name('home');
 
-// Schools.
-Route::get('schools', [SchoolController::class, 'index'])->name('schools');
-Route::get('schools/create', [SchoolController::class, 'create'])->name('schools.create');
-Route::get('schools/export', [SchoolController::class, 'export'])->name('schools.export');
-Route::get('schools/edit/{school}', [SchoolController::class, 'edit'])->name('schools.edit');
-Route::get('schools/getSchools', [SchoolController::class, 'getSchools'])->name('schools.getSchools');
-Route::get('schools/getMunicipalities', [SchoolController::class, 'getMunicipalities'])->name('schools.getMunicipalities');
-Route::get('schools/getInstitutionTypes', [SchoolController::class, 'getInstitutionTypes'])->name('schools.getInstitutionTypes');
-Route::get('schools/getSchool/{school}', [SchoolController::class, 'getSchool'])->name('schools.getSchool');
-Route::post('schools/create', [SchoolController::class, 'store'])->name('schools.store');
-Route::post('schools/edit', [SchoolController::class, 'update'])->name('schools.update');
-Route::post('schools', [SchoolController::class, 'filterSchools'])->name('schools.filter');
-
-Route::get('appusers', [AppUserController::class, 'index'])->name('appusers');
-Route::get('appusers/list', [AppUserController::class, 'list'])->name('appusers.list');
-Route::get('appusers/waiting', [AppUserController::class, 'waiting'])->name('appusers.waiting');
-Route::get('appusers/data', [AppUserController::class, 'getAppUsers'])->name('appusers.data');
-Route::get('appusers/dataEx', [AppUserController::class, 'getAppUsersEx'])->name('appusers.dataEx');
-Route::get('appusers/dataToApprove', [AppUserController::class, 'getAppUsersToApprove'])->name('appusers.dataToApprove');
-Route::get('appusers/export',[AppUserController::class, 'export'])->name('appusers.export');
-Route::get('appusers/register', [AppUserController::class, 'register'])->name('appusers.register');
-Route::post('appusers/create', [AppUserController::class, 'store'])->name('appusers.store');
-Route::post('appusers/edit', [AppUserController::class, 'update'])->name('appusers.update');
-Route::post('appusers/user', [AppUserController::class, 'getAppUser'])->name('appusers.user');
+Route::get('register', [AppUserController::class, 'register'])->name('appusers.register');
 
 // Remote users (from KeyCloak).
 Route::get('remoteusers', [RemoteUserController::class, 'index'])->name('remoteusers');
@@ -83,21 +59,6 @@ Route::get('crm/opstine', [CRMController::class, 'getOpstine'])->name('crm.opsti
 Route::get('crm/tipoviKontakata', [CRMController::class, 'getTipoviKontakata'])->name('crm.tipoviKontakata');
 Route::post('crm/skole', [CRMController::class, 'getSkole'])->name('crm.skole');
 Route::get('crm/predmeti', [CRMController::class, 'getPredmeti'])->name('crm.predmeti');
-
-// Professional statuses.
-Route::get('professional_statuses', [ProfessionalStatusController::class, 'data'])->name("professional_statuses");
-
-// Countries.
-Route::get("countries", [CountryController::class, 'data'])->name("countries");
-
-// Subjects.
-Route::get('subjects', [SubjectController::class, 'data'])->name('subjects');
-
-// Municipalities.
-Route::get('municipalities', [MunicipalityController::class, 'data'])->name('municipalities');
-
-// Institution types.
-Route::get('institution_types', [InstitutionTypeController::class, 'data'])->name('institution_types');
 
 // Language-Localization.p
 Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');

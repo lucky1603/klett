@@ -188,11 +188,11 @@ export default {
         this.showSpinner = true;
         // await this.getSubjects();
         await this.getPredmeti();
-        await this.getProfessionalStatuses();
+        // await this.getProfessionalStatuses();
         // await this.getInstitutionTypes();
         await this.getTipoviKontakata();
-        await this.getMunicipalities();
-        await this.getCountries();
+        // await this.getMunicipalities();
+        // await this.getCountries();
         await this.getOpstine();
 
         if(this.userId != null && this.userId != '') {
