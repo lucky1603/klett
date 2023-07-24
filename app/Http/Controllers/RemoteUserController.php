@@ -231,14 +231,15 @@ class RemoteUserController extends Controller
                 $inCRM = true;
 
                 // TODO: Call positive CRM
+                $contactId = $value['contactid'];
+                $this->ackCRMPositive($data, $contactId);
 
             } else {
+                // TODO: Call negative CRM
+                $this->ackCRMNegative($data);
+
                 // send email
                 Mail::to($data['email'])->send(new NoCRMInfo($data));
-
-                // TODO: Call negative CRM
-
-
             }
         }
 
@@ -475,7 +476,7 @@ class RemoteUserController extends Controller
         $response = $this->connectCRM();
         $token = $response->json('access_token');
 
-        $requestUrl = 'https://klettdev.crm4.dynamics.com/api/data/v9.2/contacts';
+        $requestUrl = env('CRM_URL').'/api/data/v9.2/contacts';
         $requestUrl .= "?\$select=contactid&\$filter=(emailaddress1 eq '".$userEmail."'";
         $requestUrl .= "and (parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a754452c-b664-ec11-8f8f-6045bd888602";
         $requestUrl .= " or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a654452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a954452c-b664-ec11-8f8f-6045bd888602))";
@@ -484,12 +485,12 @@ class RemoteUserController extends Controller
         return $response->json("value");
     }
 
-    public function ackCRMPositive($data) {
+    public function ackCRMPositive($data, $userId) {
         $response = $this->connectCRM();
         $token = $response->json('access_token');
 
         $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
-        $response = Http::withToken($token)
+        return Http::withToken($token)
             ->post($requestUrl, [
                 'ext_ime' => $data['firstName'],
                 'ext_prezime' => $data['lastName'],
@@ -497,8 +498,28 @@ class RemoteUserController extends Controller
                 'ext_kontakttelefon' => $data['telefon1'],
                 'ext_Tipustanove@odata.bind' => "ext_tipposlovnogkontaktas(".$data['institutionType'].")",
                 'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['township'].")",
-                'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")"
+                'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")",
+                'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
+                'ext_Imekontakta@odata.bind' => '/contacts('.$userId.")",
+                "ext_verified" => true
+            ]);
+    }
 
+    public function ackCRMNegative($data) {
+        $response = $this->connectCRM();
+        $token = $response->json('access_token');
+
+        $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
+        return Http::withToken($token)
+            ->post($requestUrl, [
+                'ext_ime' => $data['firstName'],
+                'ext_prezime' => $data['lastName'],
+                'ext_emailadresa' => $data['email'],
+                'ext_kontakttelefon' => $data['telefon1'],
+                'ext_Tipustanove@odata.bind' => "ext_tipposlovnogkontaktas(".$data['institutionType'].")",
+                'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['township'].")",
+                'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")",
+                'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
             ]);
     }
 }
