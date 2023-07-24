@@ -30,8 +30,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-
-Route::get('register', [AppUserController::class, 'register'])->name('appusers.register');
+Route::get('/home',[ HomeController::class, 'index'])->name('home');
+Route::get('apply', [AppUserController::class, 'register'])->name('appusers.register');
 
 // Remote users (from KeyCloak).
 Route::get('remoteusers', [RemoteUserController::class, 'index'])->name('remoteusers');
