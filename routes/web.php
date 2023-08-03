@@ -1,17 +1,11 @@
 <?php
 
 use App\Http\Controllers\AppUserController;
-use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CRMController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\InstitutionTypeController;
 use App\Http\Controllers\LanguageController;
-use App\Http\Controllers\MunicipalityController;
-use App\Http\Controllers\ProfessionalStatusController;
 use App\Http\Controllers\RemoteUserController;
-use App\Http\Controllers\SchoolController;
-use App\Http\Controllers\SubjectController;
 
 /*
 |--------------------------------------------------------------------------
