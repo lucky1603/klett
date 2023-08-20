@@ -38,7 +38,10 @@
                             <a class="nav-link" href="{{ route("home") }}">Statistika</a>
                         </li>
                         <li class="nav-item" >
-                            <a class="nav-link" href="{{ route('remoteusers')}}">Korisnici</a>
+                            <a class="nav-link" href="{{ route('remoteusers')}}">Korisnici platforme</a>
+                        </li>
+                        <li class="nav-item" >
+                            <a class="nav-link" href="{{ route('users')}}">Korisnici aplikacije</a>
                         </li>
                     </ul>
 

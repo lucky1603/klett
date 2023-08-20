@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\AnonimousController;
 use App\Http\Controllers\AppUserController;
 use App\Http\Controllers\CRMController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\RemoteUserController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +25,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/anonimous/verify/{token}', [AnonimousController::class, 'verify'])->name('anonimous.verify');
+
 Auth::routes();
 
 Route::get('/home',[ HomeController::class, 'index'])->name('home');
 Route::get('apply', [AppUserController::class, 'register'])->name('appusers.register');
+
+// App users
+Route::get('users', [UserController::class, 'index'])->name('users');
+Route::post('users/filter', [UserController::class, 'filter'])->name('users.filter');
+Route::post('users/create', [UserController::class, 'store'])->name('users.store');
+Route::post('users/data', [UserController::class, 'getUserData'])->name('users.data');
+Route::post('users/password', [UserController::class, 'updatePassword'])->name('users.updatePassword');
+
+// Roles
+Route::get('roles/list', [RoleController::class, 'list'])->name("roles.list");
 
 // Remote users (from KeyCloak).
 Route::get('remoteusers', [RemoteUserController::class, 'index'])->name('remoteusers');

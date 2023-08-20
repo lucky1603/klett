@@ -39,6 +39,9 @@ Vue.component('dashboard', require('./components/Dashboard.vue').default);
 Vue.component('register-user-form', require('./components/RegisterUserForm.vue').default);
 Vue.component('remote-user-list', require('./components/RemoteUserList.vue').default);
 Vue.component('remote-user-form', require('./components/RemoteUserForm.vue').default);
+Vue.component('user-list', require('./components/UserList.vue').default);
+Vue.component('user-form', require('./components/UserForm.vue').default);
+Vue.component('change-password-form', require('./components/ChangePasswordForm.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -190,26 +190,6 @@ class RemoteUserController extends Controller
             $requestUrl .= "enabled=".$val;
         }
 
-        // if($data['username'] != '') {
-        //     if(str_contains($requestUrl, "?")) {
-        //         $requestUrl .= "?";
-        //     } else {
-        //         $requestUrl .= "&&";
-        //     }
-
-        //     $requestUrl .= "username=".$data['username'];
-        // }
-
-        // if($data['email'] != '') {
-        //     if(str_contains($requestUrl, "?")) {
-        //         $requestUrl .= "?";
-        //     } else {
-        //         $requestUrl .= "&&";
-        //     }
-
-        //     $requestUrl .= "email=".$data['email'];
-        // }
-
         return Http::withToken($token)->get($requestUrl);
 
     }

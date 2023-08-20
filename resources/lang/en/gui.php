@@ -37,6 +37,8 @@ return [
     'username' => "Username",
     'enabled' => 'Enabled',
     'activity' => 'Activity',
+    'name' => 'Name',
+    'role' => 'Role',
 
     /**
      * Schools list

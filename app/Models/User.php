@@ -41,4 +41,49 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Get assigned roles.
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles() {
+        return $this->belongsToMany(Role::class)->withTimestamps();
+    }
+
+
+    /**
+     * Assign user role.
+     * @param $role
+     */
+    public function assignRole($role) {
+        if(is_string($role)) {
+            $role = Role::whereName($role)->firstOrFail();
+        }
+
+        $this->roles()->sync($role, false);
+    }
+
+    /**
+     * Get all abilities assigned by the attached roles.
+     */
+    public function abilities() {
+        return $this->roles->map->abilities->flatten()->pluck('name');
+    }
+
+    /**
+     * Checks whether the current user is administrator or not.
+     * @return bool
+     */
+    public function isAdmin() {
+        return $this->roles()->whereName('superadmin')->count() != 0;
+    }
+
+    /**
+     * Checks whether the current user has the particular role.
+     * @param $role
+     * @return bool
+     */
+    public function isRole($role) {
+        return $this->roles()->whereName($role)->count() != 0;
+    }
 }

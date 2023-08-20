@@ -38,6 +38,9 @@ return [
     'username' => "Korisničko ime",
     'enabled' => 'Omogućen',
     'activity' => 'Aktivnost',
+    'name' => 'Ime',
+    'role' => 'Rola',
+
     /**
      * Schools list
      */
