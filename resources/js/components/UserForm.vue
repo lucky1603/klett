@@ -38,7 +38,9 @@ import axios from 'axios';
 
 export default {
     name: 'UserForm',
-
+    props: {
+        userId: {typeof: Number, default: 0}
+    },
     data() {
         return {
             form: {
@@ -64,6 +66,17 @@ export default {
                     this.roles.push(response.data[property]);
                 }
             });
+
+            if(this.userId != 0) {
+                let formData = new FormData();
+                formData.append("id", this.userId);
+                await axios.post('/users/data', formData)
+                .then(response => {
+                    this.form.name = response.data.name;
+                    this.form.email = response.data.email;
+                    this.form.role = response.data.role;
+                });
+            }
         },
         async sendData() {
             return new Promise((resolve, reject) => {

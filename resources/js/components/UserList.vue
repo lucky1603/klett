@@ -7,16 +7,29 @@
             :fields="fields"
             head-variant="dark"
         >
+            <template #cell(activity)="data">
+                <div class="d-flex align-items-center justify-content-center">
+                    <a href="#" @click.prevent="deleteClicked(data.item.id, data.item.name)" class="mx-1"><b-icon icon="trash"></b-icon></a>
+                </div>
+            </template>
         </b-table>
         <div class="d-flex align-items-center justify-content-center">
             <b-button variant="primary" @click="createUser" class="m-1" size="sm"><i class="bi bi-person-fill-add mr-1"></i>{{ _('gui.Add')}}</b-button>
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
-            <user-form ref="userForm"></user-form>
+            <user-form ref="userForm" :user-id="selectedUserId"></user-form>
             <template #modal-footer>
                 <b-button type="button" variant="primary" @click="onOk">{{ _('gui.Accept')}}</b-button>
                 <b-button type="button" @click="onCancel">{{ _('gui.Cancel')}}</b-button>
+            </template>
+        </b-modal>
+        <b-modal ref="deleteDialog" header-bg-variant="dark" header-text-variant="light">
+            <template #modal-header>Brisanje korisnika</template>
+            <p>Da li ste sigurni da hoćete da obrišete korisnika <strong>{{ selectedUsername }}</strong>?</p>
+            <template #modal-footer>
+                <b-button type="button" variant="primary" @click="onDelete">{{ _('gui.Yes')}}</b-button>
+                <b-button type="button" @click="onCancelDelete">{{ _('gui.No')}}</b-button>
             </template>
         </b-modal>
     </div>
@@ -58,11 +71,20 @@ export default {
                         width: "30%"
                     }
                 },
+                {
+                    key: "activity",
+                    label: window.i18n.gui.activity,
+                    thStyle: {
+                        width: '10%'
+                    }
+                }
             ],
             form: {
                 name: null,
                 email: null,
-            }
+            },
+            selectedUserId: 0,
+            selectedUsername: '',
         };
     },
 
@@ -111,6 +133,35 @@ export default {
         },
         onCancel() {
             this.closeForm();
+        },
+        onDelete() {
+            let formData = new FormData();
+            formData.append('id', this.selectedUserId);
+
+            axios.post('/users/delete', formData)
+            .then(response => {
+                console.log(response.data);
+                this.getData();
+                this.$refs.deleteDialog.hide();
+
+                this.selectedUserId = 0;
+                this.selectedUsername = '';
+            });
+        },
+        onCancelDelete() {
+            this.selectedUserId = 0;
+            this.selectedUserName = '';
+            this.$refs.deleteDialog.hide();
+        },
+        editClicked(id) {
+            this.selectedUserId = id;
+            this.$refs.userFormDialog.title = "Promeni podatke korisnika";
+            this.showForm();
+        },
+        deleteClicked(id, name) {
+            this.selectedUserId = id;
+            this.selectedUsername = name;
+            this.$refs.deleteDialog.show();
         },
         showForm() {
             this.$refs.userFormDialog.show();

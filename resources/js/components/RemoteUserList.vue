@@ -58,7 +58,7 @@
                 <template #cell(activity)="data">
                     <div class="d-flex align-items-center justify-content-center">
                         <a href="#" @click.prevent="editClicked(data.item.id)" class="mx-1"><b-icon icon="pencil"></b-icon></a>
-                        <a href="#" @click.prevent="deleteClicked(data.item.id, data.item.username)" class="mx-1"><b-icon icon="eraser"></b-icon></a>
+                        <a href="#" @click.prevent="deleteClicked(data.item.id, data.item.username)" class="mx-1"><b-icon icon="trash"></b-icon></a>
                     </div>
                 </template>
             </b-table>

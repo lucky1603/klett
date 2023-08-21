@@ -40,9 +40,11 @@
                         <li class="nav-item" >
                             <a class="nav-link" href="{{ route('remoteusers')}}">Korisnici platforme</a>
                         </li>
-                        <li class="nav-item" >
-                            <a class="nav-link" href="{{ route('users')}}">Korisnici aplikacije</a>
-                        </li>
+                        @can('manage_app_users')
+                            <li class="nav-item" >
+                                <a class="nav-link" href="{{ route('users')}}">Korisnici aplikacije</a>
+                            </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->

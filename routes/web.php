@@ -38,6 +38,7 @@ Route::post('users/filter', [UserController::class, 'filter'])->name('users.filt
 Route::post('users/create', [UserController::class, 'store'])->name('users.store');
 Route::post('users/data', [UserController::class, 'getUserData'])->name('users.data');
 Route::post('users/password', [UserController::class, 'updatePassword'])->name('users.updatePassword');
+Route::post('users/delete', [UserController::class, 'delete'])->name('users.delete');
 
 // Roles
 Route::get('roles/list', [RoleController::class, 'list'])->name("roles.list");

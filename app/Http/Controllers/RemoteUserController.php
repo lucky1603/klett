@@ -13,6 +13,11 @@ use PhpParser\Node\Expr\Cast\Array_;
 
 class RemoteUserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index() {
         return view('remoteusers.index');
     }

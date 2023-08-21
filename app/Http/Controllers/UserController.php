@@ -14,6 +14,11 @@ use App\Http\Requests\CreateUserRequest;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index() {
         return view('users.index');
     }
@@ -40,6 +45,7 @@ class UserController extends Controller
         $userData = [];
         foreach($users as $user) {
             $userData[] = [
+                'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->roles->first()->label
@@ -91,13 +97,35 @@ class UserController extends Controller
 
     public function getUserData(Request $request) {
         $data = $request->post();
-        $token = $data['token'];
+        $token = $data['token'] ?? null;
 
-        $user = User::where('remember_token', $token)->firstOrFail();
-        return [
-            'name' => $user->name,
-            'email' => $user->email,
-        ];
+        if($token != null) {
+            $user = User::where('remember_token', $token)->firstOrFail();
+            return [
+                'name' => $user->name,
+                'email' => $user->email,
+            ];
+        }
+
+        $id = $data['id'] ?? null;
+
+        if($id != null) {
+            $user = User::find($id)->load('roles');
+            return [
+                'id' => $user->name,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->roles->first()->id,
+            ];
+        }
+
+    }
+
+    public function delete(Request $request) {
+        $id = $request->post('id');
+        $user = User::find($id);
+        $user->delete();
+        return redirect(route('users'));
     }
 
 }
