@@ -372,8 +372,8 @@ class RemoteUserController extends Controller
         $userId = $data['userId'];
         $token = $data["token"];
         $response = Http::withToken($token)
-            ->withOptions(['verify' => false])
             ->asJson()
+            ->withOptions(['verify' => false])
             ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
                 "username" => $data['korisnickoIme'],
                 "firstName" => $data['ime'],
@@ -422,8 +422,8 @@ class RemoteUserController extends Controller
 
             if($data['updatePassword'] == "true") {
                 Http::withToken($data['token'])
-                    ->withOptions(['verify' => false])
                     ->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                    ->withOptions(['verify' => false])
                     ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
             }
 
