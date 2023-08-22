@@ -207,8 +207,11 @@ export default {
         async getData() {
             await axios.get('/remoteusers/keycloak')
             .then(response => {
-                // console.log(response.data);
+                console.log(response.data);
                 this.accessToken = response.data.access_token;
+            })
+            .then(error => {
+                console.log(error);
             });
 
             let formData = new FormData();
