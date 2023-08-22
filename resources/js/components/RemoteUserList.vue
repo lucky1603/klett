@@ -181,6 +181,7 @@ export default {
     },
 
     async mounted() {
+        console.log('mounted!!!');
         await this.getData();
     },
 
