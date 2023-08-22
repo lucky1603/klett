@@ -26,6 +26,7 @@ Route::get('/', function () {
 });
 
 Route::get('/anonimous/verify/{token}', [AnonimousController::class, 'verify'])->name('anonimous.verify');
+Route::post('anonimous/password', [AnonimousController::class, 'password'])->name('anonimous.password');
 
 Auth::routes();
 

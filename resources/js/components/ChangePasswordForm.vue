@@ -68,7 +68,7 @@ export default {
             formData.append('token', this.userToken);
 
             // todo send
-            await axios.post('/users/password', formData)
+            await axios.post('/anonimous/password', formData)
             .then(response => {
                 window.location.href = "/remoteusers";
             });

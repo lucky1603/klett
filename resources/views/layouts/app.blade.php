@@ -40,10 +40,12 @@
                         <li class="nav-item" >
                             <a class="nav-link" href="{{ route('remoteusers')}}">Korisnici platforme</a>
                         </li>
-                        @can('manage_app_users')
-                            <li class="nav-item" >
-                                <a class="nav-link" href="{{ route('users')}}">Korisnici aplikacije</a>
-                            </li>
+                        @auth
+                            @can('manage_app_users')
+                                <li class="nav-item" >
+                                    <a class="nav-link" href="{{ route('users')}}">Korisnici aplikacije</a>
+                                </li>
+                            @endcan
                         @endauth
                     </ul>
 
