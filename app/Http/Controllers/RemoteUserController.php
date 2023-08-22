@@ -45,6 +45,7 @@ class RemoteUserController extends Controller
         $token = $response->json('access_token');
 
         return Http::withToken($token)
+            ->withOptions(['verify' => false])
             ->get(env('KEYCLOAK_REALM_URL')."groups");
     }
 
@@ -56,6 +57,7 @@ class RemoteUserController extends Controller
         $token = $response->json('access_token');
 
         $response = Http::withToken($token)
+            ->withOptions(['verify' => false])
             ->get(env('KEYCLOAK_REALM_URL')."groups");
 
         $groups = json_decode($response->body());
@@ -87,6 +89,7 @@ class RemoteUserController extends Controller
         $userId = $data['userId'];
 
         return Http::withToken($token)
+            ->withOptions(['verify' => false])
             ->get(env('KEYCLOAK_API_USERS_URL').$userId."/groups");
     }
 
@@ -99,6 +102,7 @@ class RemoteUserController extends Controller
         $userId = $data['userId'];
 
         $response = Http::withToken($token)
+            ->withOptions(['verify' => false])
             ->get(env('KEYCLOAK_API_USERS_URL').$userId."/groups");
 
         $groups = json_decode($response->body());
@@ -137,6 +141,7 @@ class RemoteUserController extends Controller
             if($oldGroupId != $groupId) {
                 // TODO delete the group with the old group id.
                 Http::withToken($token)
+                    ->withOptions(['verify' => false])
                     ->delete(env('KEYCLOAK_API_USERS_URL').$userId."/groups/".$oldGroupId);
 
             } else {
@@ -147,6 +152,7 @@ class RemoteUserController extends Controller
         if(!$sameGroups) {
             // If the group was changed, set the new group.
             Http::withToken($token)
+                ->withOptions(['verify' => false])
                 ->put(env('KEYCLOAK_API_USERS_URL').$userId."/groups/".$groupId);
         }
 
@@ -156,7 +162,9 @@ class RemoteUserController extends Controller
 
     public function getData(Request $request) {
         $token = $request->post('token');
-        return Http::withToken($token)->get(ENV("KEYCLOAK_API_USERS_URL"));
+        return Http::withToken($token)
+            ->withOptions(['verify' => false])
+            ->get(ENV("KEYCLOAK_API_USERS_URL"));
     }
 
     public function filterUsers(Request $request) {
@@ -197,7 +205,9 @@ class RemoteUserController extends Controller
             $requestUrl .= "enabled=".$val;
         }
 
-        return Http::withToken($token)->get($requestUrl);
+        return Http::withToken($token)
+            ->withOptions(['verify' => false])
+            ->get($requestUrl);
 
     }
 
@@ -231,6 +241,7 @@ class RemoteUserController extends Controller
         }
 
         $response = Http::withToken($data['token'])
+            ->withOptions(['verify' => false])
             ->asJson()
             ->post(env("KEYCLOAK_API_USERS_URL"), [
                 "username" => $data['korisnickoIme'],
@@ -298,16 +309,18 @@ class RemoteUserController extends Controller
     }
 
     public function sendUpdatePasswordNotice($userId) {
-        $response = Http::asForm()->post(env("KEYCLOAK_TOKEN_URL"), [
-            "client_id" => "admin-cli",
-            "username" => "admin",
-            "password" => "BiloKoji12@",
-            "grant_type" => "password"
-        ]);
+        $response = Http::asForm()
+            ->withOptions(['verify' => false])
+            ->post(env("KEYCLOAK_TOKEN_URL"), [
+                "client_id" => "admin-cli",
+                "username" => "admin",
+                "password" => "BiloKoji12@",
+                "grant_type" => "password"
+            ]);
 
         $token = $response->json('access_token');
 
-        return Http::withToken($token)->withBody('["UPDATE_PASSWORD"]', 'application/json')
+        return Http::withToken($token)->withOptions(['verify' => false])->withBody('["UPDATE_PASSWORD"]', 'application/json')
             ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
     }
 
@@ -316,7 +329,7 @@ class RemoteUserController extends Controller
 
         $userId = $data['userId'];
         $token = $data['token'];
-        $response = Http::withToken($token)
+        $response = Http::withToken($token)->withOptions(['verify' => false])
             ->get(env("KEYCLOAK_API_USERS_URL").$userId);
         $retObject = json_decode($response->body());
 
@@ -359,6 +372,7 @@ class RemoteUserController extends Controller
         $userId = $data['userId'];
         $token = $data["token"];
         $response = Http::withToken($token)
+            ->withOptions(['verify' => false])
             ->asJson()
             ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
                 "username" => $data['korisnickoIme'],
@@ -407,7 +421,9 @@ class RemoteUserController extends Controller
             $this->setUserGroup($setGroupRequest);
 
             if($data['updatePassword'] == "true") {
-                Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                Http::withToken($data['token'])
+                    ->withOptions(['verify' => false])
+                    ->withBody('["UPDATE_PASSWORD"]', 'application/json')
                     ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
             }
 
@@ -432,6 +448,7 @@ class RemoteUserController extends Controller
         $token = $data['token'];
 
         return Http::withToken($token)
+            ->withOptions(['verify' => false])
             ->delete(env("KEYCLOAK_API_USERS_URL").$userId);
     }
 
