@@ -27,7 +27,9 @@ class RemoteUserController extends Controller
      */
     public function connectKeyCloak() {
 
-        return Http::asForm()->post(env('KEYCLOAK_TOKEN_URL'), [
+        return Http::asForm()
+        ->withOptions(['verify' => false])
+        ->post(env('KEYCLOAK_TOKEN_URL'), [
             "client_id" => "admin-cli",
             "username" => "admin",
             "password" => "BiloKoji12@",
