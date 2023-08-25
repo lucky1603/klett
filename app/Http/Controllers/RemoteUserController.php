@@ -475,7 +475,7 @@ class RemoteUserController extends Controller
             "grant_type" => 'Client_Credentials',
             "client_id" => '2f9027fe-9597-46bc-818b-d7af10d52016',
             'client_secret' => '5tJ8Q~3ZSQgSb1aGN8e2rv7opFqUdkhKgmOwbbWH',
-            'scope' => 'https://klettdev.crm4.dynamics.com/.default',
+            'scope' => env('CRM_URL').'.default',
         ]);
     }
 
