@@ -23,6 +23,7 @@ return [
     "Yes" => "Da",
     "No" => "Ne",
     "Send" => "Pošalji",
+    "PasswordFormat" => "Pogrešan format lozinke -> Minimum 8 karaktera, bar jedno veliko slovo i bar jedan broj.",
 
     /**
      * Users list

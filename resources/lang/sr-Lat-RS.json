@@ -7,5 +7,6 @@
     "Remember Me" : "Zapamti me",
     "Forgot Your Password?" : "Zaboravili ste lozinku?",
     "Schools List" : "Lista škola",
-    "Users List" : "Lista korisnika"
+    "Users List" : "Lista korisnika",
+    "The password format is invalid." : "Format lozinke je pogrešan."
 }

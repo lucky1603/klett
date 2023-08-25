@@ -22,6 +22,7 @@ return [
     "Yes" => "Yes",
     "No" => "No",
     "Send" => "Send",
+    "PasswordFormat" => "Wrong password format -> At least 8 chars, at least one uppercase letter and one number.",
 
     /**
      * Users list

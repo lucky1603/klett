@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\PassRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Password;
 
 class ChangePasswordRequest extends FormRequest
 {
@@ -24,7 +26,8 @@ class ChangePasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'password' => 'required|regex:/([A-Za-z]+[0-9]+){8,}/',
+            // 'password' => 'required|regex:/^(?=.*[0-9])(?=.*[A-Z]).{8,}$/',
+            'password' => ['required', "string", new PassRule()],
             'repeatPassword' => 'required'
         ];
     }
@@ -32,6 +35,8 @@ class ChangePasswordRequest extends FormRequest
     public function withValidator($validator) {
         $validator->after(function($validator) {
             $data = $this->post();
+
+
 
             if($data['password'] != $data['repeatPassword']) {
                 $validator->errors()->add('repeatPassword', 'Lozinke se ne poklapaju!');
