@@ -260,7 +260,8 @@ class RemoteUserController extends Controller
                     "billing_address_1" => $data['adresa'],
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
-                    "billing_phone" => $data['telefon1']
+                    "billing_phone" => $data['telefon1'],
+                    "crm_id" => isset($contactId) ? $contactId : ''
                 ],
         ]);
 
