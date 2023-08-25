@@ -475,7 +475,7 @@ class RemoteUserController extends Controller
             "grant_type" => 'Client_Credentials',
             "client_id" => '2f9027fe-9597-46bc-818b-d7af10d52016',
             'client_secret' => '5tJ8Q~3ZSQgSb1aGN8e2rv7opFqUdkhKgmOwbbWH',
-            'scope' => env('CRM_URL').'.default',
+            'scope' => 'https://klf.crm4.dynamics.com/.default',
         ]);
     }
 
@@ -499,8 +499,8 @@ class RemoteUserController extends Controller
         $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
         return Http::withToken($token)
             ->post($requestUrl, [
-                'ext_ime' => $data['firstName'],
-                'ext_prezime' => $data['lastName'],
+                'ext_ime' => $data['ime'],
+                'ext_prezime' => $data['prezime'],
                 'ext_emailadresa' => $data['email'],
                 'ext_kontakttelefon' => $data['telefon1'],
                 'ext_Tipustanove@odata.bind' => "ext_tipposlovnogkontaktas(".$data['institutionType'].")",
@@ -519,8 +519,8 @@ class RemoteUserController extends Controller
         $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
         return Http::withToken($token)
             ->post($requestUrl, [
-                'ext_ime' => $data['firstName'],
-                'ext_prezime' => $data['lastName'],
+                'ext_ime' => $data['ime'],
+                'ext_prezime' => $data['prezime'],
                 'ext_emailadresa' => $data['email'],
                 'ext_kontakttelefon' => $data['telefon1'],
                 'ext_Tipustanove@odata.bind' => "ext_tipposlovnogkontaktas(".$data['institutionType'].")",
