@@ -219,7 +219,6 @@ class RemoteUserController extends Controller
         $data = $request->post();
 
         $inCRM = true;
-        $contactId = "0";
 
         if($data['isTeacher'] == "true") {
             // Check CRM
@@ -262,7 +261,6 @@ class RemoteUserController extends Controller
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
                     "billing_phone" => $data['telefon1'],
-                    "crm_id" => $contactId
                 ],
         ]);
 
