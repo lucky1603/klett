@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Requests\ChangePasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -25,7 +26,7 @@ class AnonimousController extends Controller
         return view('anonimous.wrongpage');
     }
 
-    public function password(Request $request) {
+    public function password(ChangePasswordRequest $request) {
         $data = $request->post();
 
         $token = $data['token'];

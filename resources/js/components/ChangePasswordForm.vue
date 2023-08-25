@@ -9,9 +9,11 @@
                 <b-form-group label="Lozinka">
                     <b-form-input type="password" v-model="form.password"/>
                 </b-form-group>
+                <span v-if="errors.password" class="text-danger">{{ errors.password }}</span>
                 <b-form-group label="Ponovite lozinku">
                     <b-form-input type="password" v-model="form.repeatPassword"/>
                 </b-form-group>
+                <span v-if="errors.repeatPassword" class="text-danger">{{ errors.repeatPassword }}</span>
                 <div v-if="showButtons" class="d-flex align-items-center justify-content-center">
                     <b-button type="submit" variant="primary">Ok</b-button>
                 </div>
@@ -31,7 +33,7 @@ export default {
         showButtons: {typeof: Boolean, default: true},
     },
 
-    data() {
+    data() {        
         return {
             form: {
                 password: '',
@@ -41,7 +43,8 @@ export default {
                 name: '',
                 email: '',
                 token: ''
-            }
+            },
+            errors: {}
         };
     },
 
@@ -71,6 +74,13 @@ export default {
             await axios.post('/anonimous/password', formData)
             .then(response => {
                 window.location.href = "/remoteusers";
+            })
+            .catch(error => {
+                this.errors = {};
+                for(let err in error.response.data.errors) {
+                    this.errors[err] = error.response.data.errors[err][0];
+                }
+                reject(error);
             });
         },
 
