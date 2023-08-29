@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Requests\ChangePasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
+use App\Http\Requests\ChangePasswordRequest;
 
 class AnonimousController extends Controller
 {
@@ -38,5 +39,28 @@ class AnonimousController extends Controller
         Auth::login($user);
 
         return redirect(route('remoteusers'));
+    }
+
+    public function apply() {
+        return view('appusers.register');
+    }
+
+        /**
+     * Get access token.
+     */
+    public function connectKeyCloak() {
+
+        return Http::asForm()
+        // ->withOptions(['verify' => false])
+        ->post(env('KEYCLOAK_TOKEN_URL'), [
+            "client_id" => "admin-cli",
+            "username" => "admin",
+            "password" => "BiloKoji12@",
+            "grant_type" => "password"
+        ]);
+    }
+
+    public function refreshCaptcha() {
+        return captcha_img('klett');
     }
 }

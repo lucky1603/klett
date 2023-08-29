@@ -182,6 +182,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**
+         * Captcha service provider.
+         */
+
+         Mews\Captcha\CaptchaServiceProvider::class,
+
     ],
 
     /*

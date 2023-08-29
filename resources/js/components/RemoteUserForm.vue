@@ -131,7 +131,14 @@
                 <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
                 <b-form-checkbox v-model="form.updatePassword" :value="true">{{ _('gui.updatePassword') }}</b-form-checkbox>
             </div>
-
+            <div v-else class="d-flex align-items-center justify-content-center flex-column">
+                <div class="d-flex flex-row align-items-center m-2">
+                    <span v-html="captchaImg"/><b-button variant="success" class="ml-1" @click="getCaptchaImage" title="Osveži"><b-icon-arrow-repeat class="mr-1" /></b-button>
+                </div>
+                <b-form-input v-model="form.captcha" name="captcha" style="width: 200px; margin: 5px" placeholder="Unesite tekst sa slike" />
+                <span v-if="errors.captcha" class="text-danger">{{ errors.captcha }}</span>
+            </div>
+`
         </b-form>
     </div>
 </template>
@@ -143,7 +150,7 @@ export default {
     name: 'RemoteUserForm',
     props: {
         userId: {typeof: String, default: ''},
-        anonimous: {typeof: Boolean, default: false}
+        anonimous: {typeof: Boolean, default: false},
     },
     data() {
         return {
@@ -165,7 +172,8 @@ export default {
                 postanskiBroj: '',
                 telefon1: '',
                 telefon2: '',
-                mesto: ''
+                mesto: '',
+                captcha: '',
             },
             accessToken: '',
             errors: {},
@@ -179,13 +187,15 @@ export default {
             countries: [],
             opstine: [],
             tipoviKontakata: [],
-            predmeti: []
+            predmeti: [],
+            captchaImg: null,
         };
     },
 
     async mounted() {
 
         this.showSpinner = true;
+        this.getCaptchaImage();
         // await this.getSubjects();
         await this.getPredmeti();
         // await this.getProfessionalStatuses();
@@ -205,6 +215,13 @@ export default {
     },
 
     methods: {
+        async getCaptchaImage() {
+            await axios.get('/refreshCaptcha')
+            .then(response => {
+                console.log(response.data);
+                this.captchaImg = response.data;
+            })
+        },
         async getCountries() {
             await axios.get('/countries')
             .then(response => {
@@ -398,6 +415,7 @@ export default {
                 //     this.form.isTeacher = true;
                 // }
             });
+
         },
         async getUserGroup() {
             let token = '';
@@ -466,6 +484,7 @@ export default {
                     for(let err in error.response.data.errors) {
                         this.errors[err] = error.response.data.errors[err][0];
                     }
+                    this.getCaptchaImage();
                     reject(error);
                 });
             });

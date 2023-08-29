@@ -29,6 +29,7 @@ class CreateRemoteUserRequest extends FormRequest
             'korisnickoIme' => 'required',
             'email' => 'email|required',
             'telefon1' => 'required',
+            "captcha" => 'sometimes|required|captcha',
         ];
     }
 

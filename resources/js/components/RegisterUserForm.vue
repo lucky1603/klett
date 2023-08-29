@@ -56,18 +56,18 @@
 <script>
 export default {
     name: 'RegisterUserForm',
-
     data() {
         return {
             sent: false,
             success: false,
             spinner: false,
-            message: "Greška pri unosu podataka."
+            message: "Greška pri unosu podataka.",
         };
     },
 
     mounted() {
-
+        console.log("Remote user form mounted");
+        console.log(this.$refs.userForm);
     },
 
     methods: {
@@ -88,7 +88,12 @@ export default {
                     this.success = true;
                 } else {
                     // alert(response.data.message);
-                    this.showMessage(response.data.message);
+                    if(response.data.status == 409) {
+                        this.showMessage("Već postoji korisnik sa tim korisničkim imenom!");
+                    } else {
+                        this.showMessage(response.data.message);
+                    }
+
                 }
 
             })
