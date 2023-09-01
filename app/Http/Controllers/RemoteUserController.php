@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\NoCRMInfo;
 use Illuminate\Http\Request;
 use App\Exports\RemoteUsersExport;
+use App\Http\Requests\AdminCreateUserRequest;
 use App\Http\Requests\CreateRemoteUserRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -308,6 +309,96 @@ class RemoteUserController extends Controller
         ];
     }
 
+
+    public function adminStore(AdminCreateUserRequest $request) {
+        $data = $request->post();
+
+        $inCRM = true;
+
+        if($data['rola'] == "bab78444-87f6-45e9-86fc-fd1b1d5b6530" /* Teacher */) {
+            // Check CRM
+            $inCRM = false;
+            $value = $this->checkUser($data['email']);
+            if(is_array($value) && count($value) > 0) {
+                $inCRM = true;
+
+                // TODO: Call positive CRM
+                $contactId = $value['contactid'];
+                $this->ackCRMPositive($data, $contactId);
+
+            } else {
+                // TODO: Call negative CRM
+                $this->ackCRMNegative($data);
+
+                // send email
+                Mail::to($data['email'])->send(new NoCRMInfo($data));
+            }
+        }
+
+        $response = Http::withToken($data['token'])
+            ->asJson()
+            // ->withOptions(['verify' => false])
+            ->post(env("KEYCLOAK_API_USERS_URL"), [
+                "username" => $data['korisnickoIme'],
+                "firstName" => $data['ime'],
+                "lastName" => $data['prezime'],
+                "email" => $data["email"],
+                "enabled" => $data['enabled'] == "true" && $inCRM ? true : false,
+                "attributes" => [
+                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
+                    // "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
+                    "township" => isset($data['township']) ?  $data['township'] : null,
+                    "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
+                    "institution" => isset($data['skola']) ? $data['skola'] : null,
+                    "billing_first_name" => $data['ime'],
+                    "billing_last_name" => $data['prezime'],
+                    "billing_address_1" => $data['adresa'],
+                    'billing_city' => $data['mesto'],
+                    "billing_postcode" => $data['postanskiBroj'],
+                    "billing_phone" => $data['telefon1'],
+                ],
+        ]);
+
+        /* test
+        var_dump($response->ok());
+        var_dump($response->failed());
+        var_dump($response->status());
+        */
+
+        if($response->status() == 201 /* Created */) {
+            $items = explode("/", $response->header("Location"));
+            $userId = $items[count($items) - 1];
+
+            $groupId = $data['rola'];
+
+            $setGroupRequest = new Request([],[
+                'groupId' => $groupId,
+                'userId' => $userId,
+                'token' => $data['token']
+            ], [], [], [], [], null);
+
+            $this->setUserGroup($setGroupRequest);
+
+            // Send password reset link.
+            if($data['updatePassword'] == 'true') {
+                Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                    ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+            }
+
+            return [
+                'status' => $response->status(),
+                'message' => "Success!!!"
+            ];
+        }
+
+
+        // $response->status() = 209 - Failed.
+        return [
+            'status' => $response->status(),
+            'message' => $response->json('errorMessage')
+        ];
+    }
+
     public function sendUpdatePasswordNotice($userId) {
         $response = Http::asForm()
             // ->withOptions(['verify' => false])
@@ -442,6 +533,75 @@ class RemoteUserController extends Controller
             "message" => $response->json("errorMessage")
         ];
 
+    }
+
+    public function adminUpdate(AdminCreateUserRequest $request) {
+        $data = $request->post();
+
+        $userId = $data['userId'];
+        $token = $data["token"];
+        $response = Http::withToken($token)
+            ->asJson()
+            // ->withOptions(['verify' => false])
+            ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
+                "username" => $data['korisnickoIme'],
+                "firstName" => $data['ime'],
+                "lastName" => $data['prezime'],
+                "email" => $data["email"],
+                "enabled" => $data['enabled'] == "true" ? true : false,
+                "attributes" => [
+                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
+                    "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
+                    "township" => isset($data['township']) ?  $data['township'] : null,
+                    "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
+                    "institution" => isset($data['skola']) ? $data['skola'] : null,
+                    "billing_first_name" => $data['ime'],
+                    "billing_last_name" => $data['prezime'],
+                    "billing_address_1" => $data['adresa'],
+                    'billing_city' => $data['mesto'],
+                    "billing_postcode" => $data['postanskiBroj'],
+                    "billing_phone" => $data['telefon1']
+                ],
+        ]);
+
+        if($response->status() == 204) {
+
+            // Get current user group.
+            $getGroupRequest = new Request([], [
+                'userId' => $userId,
+                'token' => $token
+            ], [], [], [], [], null);
+
+            $oldGroup = $this->userGroup($getGroupRequest);
+            $groupId = $data['rola'];
+
+            $setGroupRequest = new Request([],[
+                'groupId' => $groupId,
+                'userId' => $userId,
+                'token' => $data['token'],
+                'oldGroupId' => $oldGroup["id"]
+            ], [], [], [], [], null);
+
+            $this->setUserGroup($setGroupRequest);
+
+            if($data['updatePassword'] == "true") {
+                Http::withToken($data['token'])
+                    ->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                    // ->withOptions(['verify' => false])
+                    ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+            }
+
+            return [
+                "status" => $response->status(),
+                "message" => "Success!!!"
+            ];
+
+        }
+
+        return [
+            "status" => $response->status(),
+            "message" => $response->json("errorMessage")
+        ];
     }
 
     public function delete(Request $request) {

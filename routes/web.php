@@ -63,6 +63,8 @@ Route::post("remoteusers/setUserGroup", [RemoteUserController::class, 'setUserGr
 Route::get("remoteusers/getGroupIdByName/{user}/{group}", [RemoteUserController::class, 'getGroupIdByName'])->name('remoteusers.getGroupIdByName');
 Route::post('remoteusers/filterUsers', [RemoteUserController::class, 'filterUsers'])->name('remoteusers.filterUsers');
 Route::get('remoteusers/testmail/{email}', [RemoteUserController::class, 'testMail'])->name('remoteusers.testmail');
+Route::post('remoteusers/adminupdate', [RemoteUserController::class, 'adminUpdate'])->name('remoteusers.adminupdate');
+Route::post('remoteusers/adminstore', [RemoteUserController::class, 'adminStore'])->name('remoteusers.adminstore');
 
 // CRM
 Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');

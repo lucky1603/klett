@@ -77,7 +77,7 @@
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
-            <remote-user-form ref="remoteUserForm" :user-id="selectedUserId"></remote-user-form>
+            <user-admin-form ref="remoteUserForm" :user-id="selectedUserId"></user-admin-form>
             <template #modal-footer>
                 <b-button type="button" variant="primary" @click="onOk">{{ _('gui.Accept')}}</b-button>
                 <b-button type="button" @click="onCancel">{{ _('gui.Cancel')}}</b-button>

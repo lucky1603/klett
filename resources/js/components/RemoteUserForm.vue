@@ -174,6 +174,7 @@ export default {
                 telefon2: '',
                 mesto: '',
                 captcha: '',
+                isTeacher: false,
             },
             accessToken: '',
             errors: {},
