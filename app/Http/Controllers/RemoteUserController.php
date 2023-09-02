@@ -438,6 +438,8 @@ class RemoteUserController extends Controller
             $isTeacher = true;
         }
 
+        $rola = $groupResponse["id"] ?? null;
+
         return [
             'id' => $retObject->id,
             'korisnickoIme' => $retObject->username,
@@ -457,6 +459,7 @@ class RemoteUserController extends Controller
             'drzava' => isset($retObject->attributes) && isset($retObject->attributes->billing_country) ?  $retObject->attributes->billing_country[0] : '',
             'telefon1' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
             'telefon2' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
+            'rola' => $rola
         ];
     }
 
