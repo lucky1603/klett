@@ -44,11 +44,9 @@
                 small striped bordered hover
                 :items="items"
                 :fields="fields"
-                :current-page="currentPage"
                 head-variant="dark"
                 class="w-100 h-100"
-                :per-page="pageSize"
-                @context-changed="pageChanged">
+                >
                 <template #cell(enabled)="data">
                     <div class="d-flex align-items-center justify-content-center">
                         <img v-if="data.item.enabled" src="/images/greenuser.png" height="15" />
@@ -62,13 +60,14 @@
                     </div>
                 </template>
             </b-table>
-            <b-pagination
+            <!-- <b-pagination
                 v-model="currentPage"
                 :total-rows="items.length"
                 :per-page="pageSize"
                 aria-controls="profileTable"
                 align="right"
-                ></b-pagination>
+                ></b-pagination> -->
+            <key-cloak-pagination v-model="currentPosition" :count="rowsCount"></key-cloak-pagination>
             <div class="d-flex align-items-center justify-content-center">
                 <b-button variant="primary" @click="createUser" class="m-1" size="sm"><i class="bi bi-person-fill-add mr-1"></i>{{ _('gui.Add')}}</b-button>
                 <a class="btn btn-sm btn-primary float-right m-1" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
@@ -99,11 +98,24 @@ import axios from 'axios';
 
 export default {
     name: 'RemoteUserList',
-
+    watch: {
+        currentPosition : {
+            handler(oldVal, newVal) {
+                if(this.isFilter) {
+                    this.filterData();
+                } else {
+                    this.getData();
+                }
+            }
+        }
+    },
     data() {
         return {
+            isFilter: false,
             currentPage: 1,
+            currentPosition: 0,
             pageSize: 15,
+            rowsCount: 0,
             selectedUserId: '',
             selectedUsername: '',
             userDialogTitle: window.i18n.gui.addUser,
@@ -217,6 +229,15 @@ export default {
 
             let formData = new FormData();
             formData.append('token', this.accessToken);
+            await axios.post('/remoteusers/count', formData)
+            .then(response => {
+                console.log(response.data);
+                this.rowsCount = response.data;
+            });
+
+            formData.append('first', this.currentPosition);
+            formData.append('max', this.pageSize);
+
             await axios.post('/remoteusers/data', formData)
             .then(response => {
                 console.log(response.data);
@@ -224,6 +245,8 @@ export default {
                 for(let i = 0; i < response.data.length; i++) {
                     this.items.push(response.data[i]);
                 }
+
+                // this.rowsCount = response.data.length;
             });
         },
         showForm() {

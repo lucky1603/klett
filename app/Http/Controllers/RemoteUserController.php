@@ -163,9 +163,17 @@ class RemoteUserController extends Controller
 
     public function getData(Request $request) {
         $token = $request->post('token');
+        $first = $request->post('first');
+        $max = $request->post('max');
         return Http::withToken($token)
             // ->withOptions(['verify' => false])
-            ->get(ENV("KEYCLOAK_API_USERS_URL"));
+            ->get(ENV("KEYCLOAK_API_USERS_URL")."?briefRepresentation=true&first=".$first."&max=".$max);
+    }
+
+    public function getCount(Request $request) {
+        $token = $request->post('token');
+        return Http::withToken($token)
+            ->get(ENV("KEYCLOAK_API_USERS_URL")."count");
     }
 
     public function filterUsers(Request $request) {

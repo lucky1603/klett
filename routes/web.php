@@ -65,6 +65,7 @@ Route::post('remoteusers/filterUsers', [RemoteUserController::class, 'filterUser
 Route::get('remoteusers/testmail/{email}', [RemoteUserController::class, 'testMail'])->name('remoteusers.testmail');
 Route::post('remoteusers/adminupdate', [RemoteUserController::class, 'adminUpdate'])->name('remoteusers.adminupdate');
 Route::post('remoteusers/adminstore', [RemoteUserController::class, 'adminStore'])->name('remoteusers.adminstore');
+Route::post('remoteusers/count', [RemoteUserController::class, 'getCount'])->name('remoteusers.count');
 
 // CRM
 Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');
