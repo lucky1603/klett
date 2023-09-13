@@ -32,7 +32,7 @@
                 <b-col lg="2">
                     <div class="d-flex align-items-center justify-content-end justify-content-right flex-row w-100 h-100">
                         <b-button variant="outline-secondary" size="sm" class="m-1" title="Filtriraj" @click="submitFilter"><i class="bi bi-filter"></i></b-button>
-                        <b-button variant="success" size="sm" title="Resetuj filter" @click="resetSearchForm"><i class="bi bi-arrow-repeat"></i></b-button>
+                        <b-button variant="success" size="sm" title="Resetuj filter" @click="cancelFilter"><i class="bi bi-arrow-repeat"></i></b-button>
                     </div>
                 </b-col>
             </b-row>
@@ -102,7 +102,7 @@ export default {
         currentPosition : {
             handler(oldVal, newVal) {
                 if(this.isFilter) {
-                    this.filterData();
+                    this.getFilter();
                 } else {
                     this.getData();
                 }
@@ -202,6 +202,14 @@ export default {
             console.log("Page changed " + this.currentPage);
         },
         async submitFilter() {
+            this.isFilter = true;
+            await this.getFilter();
+        },
+        async cancelFilter() {
+            this.isFilter = false;
+            await this.resetSearchForm();
+        },
+        async getFilter() {
             await axios.get('/remoteusers/keycloak')
             .then(response => {
                 console.log(response.data);
@@ -233,6 +241,7 @@ export default {
                 for(let i = 0; i < response.data.length; i++) {
                     this.items.push(response.data[i]);
                 }
+                this.currentPosition = 0;
             });
         },
         async getData() {
@@ -265,6 +274,7 @@ export default {
                 }
 
                 // this.rowsCount = response.data.length;
+                this.currentPosition = 0;
             });
         },
         showForm() {
@@ -340,12 +350,13 @@ export default {
             this.selectedUserId = 0;
             this.selectedUsername = '';
         },
-        resetSearchForm() {
+        async resetSearchForm() {
             this.searchForm.firstName = '';
             this.searchForm.lastName = '';
             this.searchForm.userStatus = 0;
-            this.getData();
-        }
+            await this.getData();
+        },
+
 
     },
 };

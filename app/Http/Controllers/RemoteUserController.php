@@ -179,7 +179,7 @@ class RemoteUserController extends Controller
     public function filterCount(Request $request) {
         $token = $request->post('token');
         $data = $request->post();
-        $requestUrl = ENV("KEYCLOAK_API_USERS_URL")."/count";
+        $requestUrl = ENV("KEYCLOAK_API_USERS_URL")."count";
         if($data['firstName'] != '') {
             $requestUrl .= "?firstName=".$data['firstName'];
         }
