@@ -201,13 +201,31 @@ export default {
         pageChanged(ctx) {
             console.log("Page changed " + this.currentPage);
         },
-        submitFilter() {
+        async submitFilter() {
+            await axios.get('/remoteusers/keycloak')
+            .then(response => {
+                console.log(response.data);
+                this.accessToken = response.data.access_token;
+            })
+            .then(error => {
+                console.log(error);
+            });
+
             let formData = new FormData();
             formData.append('token', this.accessToken);
+            formData.append('first', this.currentPosition);
+            formData.append('max', this.pageSize);
             for(let property in this.searchForm) {
                 formData.append(property, this.searchForm[property]);
             }
-            axios.post('/remoteusers/filterUsers', formData)
+
+            await axios.post('/remoteusers/filtercount', formData)
+            .then(response => {
+                console.log(response.data);
+                this.rowsCount = response.data;
+            });
+
+            await axios.post('/remoteusers/filterUsers', formData)
             .then(response => {
                 console.log(response.data);
                 //this.items.length = 0;

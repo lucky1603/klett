@@ -176,6 +176,39 @@ class RemoteUserController extends Controller
             ->get(ENV("KEYCLOAK_API_USERS_URL")."count");
     }
 
+    public function filterCount(Request $request) {
+        $token = $request->post('token');
+        $data = $request->post();
+        $requestUrl = ENV("KEYCLOAK_API_USERS_URL")."/count";
+        if($data['firstName'] != '') {
+            $requestUrl .= "?firstName=".$data['firstName'];
+        }
+
+        if($data['lastName'] != '') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $requestUrl .= "lastName=".$data['lastName'];
+        }
+
+        if($data['userStatus'] != 0) {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $val = $data['userStatus'] == 1 ? "false" : "true";
+            $requestUrl .= "enabled=".$val;
+        }
+
+        return Http::withToken($token)
+            ->get($requestUrl);
+    }
+
     public function filterUsers(Request $request) {
         $data = $request->post();
 
@@ -213,6 +246,13 @@ class RemoteUserController extends Controller
             $val = $data['userStatus'] == 1 ? "false" : "true";
             $requestUrl .= "enabled=".$val;
         }
+
+        if(!str_contains($requestUrl, "?")) {
+            $requestUrl .= "?";
+        } else {
+            $requestUrl .= "&&";
+        }
+        $requestUrl .= "briefRepresentation=true&&first=".$data['first']."&&max=".$data['max'];
 
         return Http::withToken($token)
             // ->withOptions(['verify' => false])
