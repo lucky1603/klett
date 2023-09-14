@@ -9,6 +9,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\RemoteUserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,10 @@ Route::get('crm/opstine', [CRMController::class, 'getOpstine'])->name('crm.opsti
 Route::get('crm/tipoviKontakata', [CRMController::class, 'getTipoviKontakata'])->name('crm.tipoviKontakata');
 Route::post('crm/skole', [CRMController::class, 'getSkole'])->name('crm.skole');
 Route::get('crm/predmeti', [CRMController::class, 'getPredmeti'])->name('crm.predmeti');
+
+// User imports.
+Route::get('userimports', [UserImportController::class, 'index'])->name('userimports.index');
+Route::get('userimports/data', [UserImportController::class, 'data'])->name('userimports.data');
 
 // Language-Localization.p
 Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');

@@ -44,6 +44,7 @@ Vue.component('user-form', require('./components/UserForm.vue').default);
 Vue.component('change-password-form', require('./components/ChangePasswordForm.vue').default);
 Vue.component('user-admin-form', require('./components/UserAdminForm.vue').default);
 Vue.component('key-cloak-pagination', require('./components/KeyCloakPagination.vue').default);
+Vue.component('import-users-panel', require('./components/ImportUsersPanel.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -241,7 +241,7 @@ export default {
                 for(let i = 0; i < response.data.length; i++) {
                     this.items.push(response.data[i]);
                 }
-                this.currentPosition = 0;
+
             });
         },
         async getData() {
@@ -274,7 +274,7 @@ export default {
                 }
 
                 // this.rowsCount = response.data.length;
-                this.currentPosition = 0;
+
             });
         },
         showForm() {
