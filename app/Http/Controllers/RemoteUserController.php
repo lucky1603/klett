@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NoCRMInfo;
+use App\Models\UserImport;
 use Illuminate\Http\Request;
 use App\Exports\RemoteUsersExport;
-use App\Http\Requests\AdminCreateUserRequest;
-use App\Http\Requests\CreateRemoteUserRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpParser\Node\Expr\Cast\Array_;
+use App\Http\Requests\AdminCreateUserRequest;
+use App\Http\Requests\CreateRemoteUserRequest;
 
 class RemoteUserController extends Controller
 {
@@ -475,6 +476,7 @@ class RemoteUserController extends Controller
             ->get(env("KEYCLOAK_API_USERS_URL").$userId);
         $retObject = json_decode($response->body());
 
+
         $userGroupRequest = new Request([], [
             'userId' => $userId,
             'token' => $token
@@ -694,12 +696,17 @@ class RemoteUserController extends Controller
         $response = $this->connectCRM();
         $token = $response->json('access_token');
 
-        $requestUrl = env('CRM_URL').'/api/data/v9.2/contacts';
-        $requestUrl .= "?\$select=contactid&\$filter=(emailaddress1 eq '".$userEmail."'";
-        $requestUrl .= "and (parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a754452c-b664-ec11-8f8f-6045bd888602";
-        $requestUrl .= " or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a654452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a954452c-b664-ec11-8f8f-6045bd888602))";
+        $select = "contactid,ext_cmslogin,emailaddress1,firstname,lastname,address1_line1,ext_postanskibroj,_ext_opstina_value,_ext_grad_value,_ext_drzava_value,mobilephone,telephone1,_ext_funkcijatip_value";
+        $expand = "ext_Predmetprofila_Nastavnik_Contact(\$select=ext_klfprocenat,ext_korisnik,ext_poslednjipreracunkorisnika,_ext_predmet_value,ext_razred,_ext_skola_value)";
+        $filter = "(emailaddress1 eq '".$userEmail."' and (parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a754452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a654452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a954452c-b664-ec11-8f8f-6045bd888602))";
 
-        $response = Http::withToken($token)->get($requestUrl);
+        $requestUrl = "https://klf.crm4.dynamics.com/api/data/v9.2/contacts";
+        $requestUrl .= "?\$select=".$select;
+        $requestUrl .= "&\$expand=".$expand;
+        $requestUrl .= "&\$filter=".$filter;
+
+        $response = Http::withToken($token)
+            ->get($requestUrl);
         return $response->json("value");
     }
 
@@ -739,6 +746,122 @@ class RemoteUserController extends Controller
                 'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")",
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
             ]);
+    }
+
+    public function importUser(Request $request) {
+        $data = $request->post();
+
+        $user = [
+            'email' => $data['email'],
+            'firstName' => $data['firstName'],
+            'lastName' => $data['lastName'],
+            'username' => $data['username'],
+            'isTeacher' => $data['isTeacher'],
+        ];
+
+        // Get user data from CRM
+        $users = $this->checkUser($data['email']);
+        if(count($users) > 0) {
+            $crmUserData = $users[0];
+
+            $user['enabled'] = false;
+            $user['firstName'] = $crmUserData['firstname'];
+            $user['lastName'] = $crmUserData['lastname'];
+            $user['billing_address_1'] = $crmUserData['address1_line1'];
+            $user['billing_postcode'] = $crmUserData['ext_postanskibroj'];
+            $user['township'] =  $crmUserData['_ext_opstina_value'];
+            $user['billing_city'] = $crmUserData['_ext_grad_value'];
+            $user['billing_phone'] = $crmUserData['mobilephone'];
+            $user['crm_id'] = $crmUserData['contactid'];
+
+            if(count($crmUserData['ext_Predmetprofila_Nastavnik_Contact']) > 0) {
+                $crmPredmeti = $crmUserData['ext_Predmetprofila_Nastavnik_Contact'];
+                $predmeti = [];
+                $korisnici = [];
+                foreach($crmPredmeti as $crmPredmet) {
+                    $predmeti[] = $crmPredmet['_ext_predmet_value'];
+                    $korisnici[] = $crmPredmet['ext_korisnik'];
+                    if(isset($crmPredmet['_ext_skola_value']) && !array_key_exists('institution', $user)) {
+                        $user['institution'] = $crmPredmet['_ext_skola_value'];
+                    }
+                }
+
+                $user['predmeti'] = serialize($predmeti);
+                $user['korisnici'] = serialize($korisnici);
+            }
+        }
+
+        // Add it to KeyCloak
+        if(!array_key_exists('token',$data)) {
+            $response = $this->connectKeyCloak();
+            $token = $response->json('access_token');
+        } else {
+            $token = $data['token'];
+        }
+
+        $response = Http::withToken($token)
+            ->asJson()
+            // ->withOptions(['verify' => false])
+            ->post(env("KEYCLOAK_API_USERS_URL"), [
+                "username" => $user['username'],
+                "firstName" => $user['firstName'],
+                "lastName" => $user['lastName'],
+                "email" => $user["email"],
+                "enabled" => $user['enabled'],
+                "attributes" => [
+                    "subjects" => $user['predmeti'] ?? null,
+                    "subject_users" => $user['korisnici'] ?? null,
+                    // "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
+                    "township" => $user['township'] ??  null,
+                    "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : 0,
+                    "institution" => $user['institution'] ?? null,
+                    "billing_first_name" => $user['firstName'],
+                    "billing_last_name" => $user['lastName'],
+                    "billing_address_1" => $user['billing_address_1'],
+                    'billing_city' => $user['billing_city'],
+                    "billing_postcode" => $user['billing_postcode'],
+                    "billing_phone" => $user['billing_phone'],
+                ],
+        ]);
+
+        if($response->status() == 201 /* Created */) {
+            $items = explode("/", $response->header("Location"));
+            $userId = $items[count($items) - 1];
+
+            if($data['isTeacher'] == "true") {
+                $groupId = $this->getGroupIdByName("Teacher");
+            } else {
+                $groupId = $this->getGroupIdByName('Subscriber');
+            }
+
+            $setGroupRequest = new Request([],[
+                'groupId' => $groupId,
+                'userId' => $userId,
+                'token' => $token
+            ], [], [], [], [], null);
+
+            $this->setUserGroup($setGroupRequest);
+
+            // // Send password reset link.
+            // if($data['updatePassword'] == 'true') {
+            //     Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+            //         ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+            // }
+
+            // Update the user in the user imports list as imported.
+            $userImport = UserImport::find($data['userId']);
+            $userImport->imported = 1;
+            $userImport->save();
+
+
+            return [
+                'status' => $response->status(),
+                'message' => "Success!!!"
+            ];
+        }
+
+        // Send ack-email
+        // TODO later
     }
 }
 

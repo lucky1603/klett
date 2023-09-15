@@ -208,6 +208,7 @@ export default {
         await this.getPredmeti();
         await this.getTipoviKontakata();
         await this.getOpstine();
+        await this.filtrirajSkole();
 
         if(this.userId != null && this.userId != '') {
             await this.getData();
@@ -299,14 +300,15 @@ export default {
             if(this.form.township != 0 && this.form.institutionType != 0) {
                 formData.append('opstina', this.form.township);
                 formData.append('tipSkole', this.form.institutionType);
-                axios.post('/crm/skole', formData)
-                .then(response => {
-                    this.schools.length = 0;
-                    for(let property in response.data) {
-                        this.schools.push(response.data[property]);
-                    }
-                });
             }
+
+            axios.post('/crm/skole', formData)
+            .then(response => {
+                this.schools.length = 0;
+                for(let property in response.data) {
+                    this.schools.push(response.data[property]);
+                }
+            });
 
         },
 

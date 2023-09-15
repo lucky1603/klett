@@ -77,6 +77,27 @@ class CRMController extends Controller
         return $results;
     }
 
+    public function arrayPredmeta() {
+        $response = $this->connectCRM();
+        $token = $response->json('access_token');
+
+        $requestUrl = 'https://klf.crm4.dynamics.com/api/data/v9.2/ext_predmets?$select=ext_predmetid,ext_naziv,ext_cirilicninaziv';
+        $response = Http::withToken($token)->get($requestUrl);
+
+        $predmetiRaw = $response->json('value');
+        $results = [];
+        foreach($predmetiRaw as $predmetRaw) {
+            $results[] = [
+                'value' => $predmetRaw['ext_predmetid'],
+                'text' => $predmetRaw['ext_naziv']
+            ];
+
+            $results[$predmetRaw['ext_predmetid']] = $predmetRaw['ext_naziv'];
+        }
+
+        return $results;
+    }
+
     public function getTipoviKontakata() {
         $response = $this->connectCRM();
         $token = $response->json('access_token');

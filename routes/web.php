@@ -68,6 +68,7 @@ Route::post('remoteusers/adminupdate', [RemoteUserController::class, 'adminUpdat
 Route::post('remoteusers/adminstore', [RemoteUserController::class, 'adminStore'])->name('remoteusers.adminstore');
 Route::post('remoteusers/count', [RemoteUserController::class, 'getCount'])->name('remoteusers.count');
 Route::post('remoteusers/filtercount', [RemoteUserController::class, 'filterCount'])->name('remoteusers.filtercount');
+Route::post('remoteusers/import', [RemoteUserController::class, 'importUser'])->name('remoteusers.import');
 
 // CRM
 Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');
@@ -76,10 +77,12 @@ Route::get('crm/opstine', [CRMController::class, 'getOpstine'])->name('crm.opsti
 Route::get('crm/tipoviKontakata', [CRMController::class, 'getTipoviKontakata'])->name('crm.tipoviKontakata');
 Route::post('crm/skole', [CRMController::class, 'getSkole'])->name('crm.skole');
 Route::get('crm/predmeti', [CRMController::class, 'getPredmeti'])->name('crm.predmeti');
+Route::get('crm/arrayPredmeta', [CRMController::class, 'arrayPredmeta'])->name('crm.arrayPredmeta');
 
 // User imports.
 Route::get('userimports', [UserImportController::class, 'index'])->name('userimports.index');
 Route::get('userimports/data', [UserImportController::class, 'data'])->name('userimports.data');
+Route::get('userimports/updateImported/{user}', [UserImportController::class, 'updateImported'])->name('userimports.updateImported');
 
 // Language-Localization.p
 Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');

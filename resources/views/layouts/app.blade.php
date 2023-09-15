@@ -40,6 +40,9 @@
                         <li class="nav-item" >
                             <a class="nav-link" href="{{ route('remoteusers')}}">Korisnici platforme</a>
                         </li>
+                        <li class="nav-item" >
+                            <a class="nav-link" href="{{ route('userimports.index')}}">Uvoz korisnika</a>
+                        </li>
                         @auth
                             @can('manage_app_users')
                                 <li class="nav-item" >
