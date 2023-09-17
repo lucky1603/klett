@@ -34,6 +34,7 @@ return [
     'city' => 'City',
     'country' => 'Country',
     'teacher' => 'Teacher',
+    'user' => 'User',
     'usersList' => 'Users List',
     'username' => "Username",
     'enabled' => 'Enabled',

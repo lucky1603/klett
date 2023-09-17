@@ -16,6 +16,8 @@ Vue.prototype._ = str => _.get(window.i18n, str);
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
+window.Dispecer = new Vue();
+
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(VueApexCharts);
@@ -45,6 +47,7 @@ Vue.component('change-password-form', require('./components/ChangePasswordForm.v
 Vue.component('user-admin-form', require('./components/UserAdminForm.vue').default);
 Vue.component('key-cloak-pagination', require('./components/KeyCloakPagination.vue').default);
 Vue.component('import-users-panel', require('./components/ImportUsersPanel.vue').default);
+Vue.component('progress-bar', require('./components/ProgressBar.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -31,69 +31,78 @@
                 <div class="d-flex align-items-center justify-content-center">
                     <h3>NASTAVNICI U CRM-u</h3>
                 </div>
-                <table class="w-100 bordered">
-                    <thead>
-                        <tr class="bg-dark text-light text-center">
-                            <th colspan="2" style="font-size: 14px; padding: 7px">NASTAVNIK - CRM</th>
-                        </tr>
-                    </thead>
-                    <tbody style="font-size: 11px">
-                        <tr>
-                            <td><strong>ID:</strong></td>
-                            <td class="px-3">{{ crm.id }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ime:</strong></td>
-                            <td class="px-3">{{ crm.ime }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Prezime:</strong></td>
-                            <td class="px-3">{{ crm.prezime }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>EMail:</strong></td>
-                            <td class="px-3">{{ crm.email }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Adresa:</strong></td>
-                            <td class="px-3">{{ crm.adresa }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>PB::</strong></td>
-                            <td class="px-3">{{ crm.pb }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Mesto:</strong></td>
-                            <td class="px-3">{{ crm.mesto }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Telefon1:</strong></td>
-                            <td class="px-3">{{ crm.telefon1 }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Telefon2:</strong></td>
-                            <td class="px-3">{{ crm.telefon2 }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div v-if="crm.predmeti.length > 0" >
-                    <table class="w-100">
-                        <thead class="bg-light">
-                            <tr>
-                                <th colspan="2" class="text-center">PREDMETI</th>
+                <div class="shadow">
+                    <table class="w-100 bordered">
+                        <thead>
+                            <tr class="bg-dark text-light text-center">
+                                <th colspan="2" style="font-size: 14px; padding: 7px">NASTAVNIK - CRM</th>
                             </tr>
                         </thead>
-                        <tbody style="font-size: 10px">
-                            <tr v-for="predmet in crm.predmeti" key="ext_predmetprofilaid">
-                                <td>{{ predmeti[predmet._ext_predmet_value] }}</td>
-                                <td>{{ predmet.ext_korisnik ? 'Korisnik' : 'Nije korisnik'}}</td>
+                        <tbody style="font-size: 11px">
+                            <tr>
+                                <td><strong>ID:</strong></td>
+                                <td class="px-3">{{ crm.id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ime:</strong></td>
+                                <td class="px-3">{{ crm.ime }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prezime:</strong></td>
+                                <td class="px-3">{{ crm.prezime }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>EMail:</strong></td>
+                                <td class="px-3">{{ crm.email }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Adresa:</strong></td>
+                                <td class="px-3">{{ crm.adresa }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PB::</strong></td>
+                                <td class="px-3">{{ crm.pb }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mesto:</strong></td>
+                                <td class="px-3">{{ crm.mesto }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Telefon1:</strong></td>
+                                <td class="px-3">{{ crm.telefon1 }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Telefon2:</strong></td>
+                                <td class="px-3">{{ crm.telefon2 }}</td>
                             </tr>
                         </tbody>
                     </table>
+                    <div v-if="crm.predmeti.length > 0" >
+                        <table class="w-100">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th colspan="2" class="text-center">PREDMETI</th>
+                                </tr>
+                            </thead>
+                            <tbody style="font-size: 10px">
+                                <tr v-for="predmet in crm.predmeti" key="ext_predmetprofilaid">
+                                    <td>{{ predmeti[predmet._ext_predmet_value] }}</td>
+                                    <td>{{ predmet.ext_korisnik ? 'Korisnik' : 'Nije korisnik'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <hr/>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <b-button variant="primary" type="button" class="my-2" size="sm" @click="importUser">Uvezi</b-button>
+                    </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-center">
-                    <b-button variant="primary" type="button" class="m-4" size="sm" @click="importUser">Uvezi</b-button>
+
+                <div class="shadow w-100 mt-4">
+                    <p class="text-center bg-dark text-light w-100">STATUS UVOZA</p>
+                    <progress-bar :max="total" :value="imported" class="mt-2 mx-2"></progress-bar>
                 </div>
+
             </b-col>
         </b-row>
     </div>
@@ -101,6 +110,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'ImportUsersPanel',
 
@@ -113,7 +124,7 @@ export default {
                 {
                     key: "username",
                     sortable: true,
-                    label: window.i18n.gui.username,
+                    label: window.i18n.gui.user,
                     thStyle: {
                         width: "15%"
                     }
@@ -175,13 +186,16 @@ export default {
                 lastName: '',
                 email: '',
                 isTeacher: false
-            }
+            },
+            total: 0,
+            imported: 0,
 
         };
     },
 
     async mounted() {
         await this.getPredmeti();
+        await this.getCounts();
     },
 
     methods: {
@@ -263,9 +277,18 @@ export default {
             await axios.post('/remoteusers/import', formData)
             .then(response => {
                 console.log(response.data);
+                this.total = response.data.total;
+                this.imported = response.data.imported;
             });
 
             this.$refs.myTable.refresh();
+        },
+        async getCounts() {
+            await axios.get('/userimports/counts')
+            .then(response => {
+                this.total = response.data.total;
+                this.imported = response.data.imported;
+            })
         }
     },
 };

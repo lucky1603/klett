@@ -35,6 +35,7 @@ return [
     'city' => 'Mesto',
     'country' => 'Država',
     'teacher' => 'Nastavnik',
+    'user' => 'Korisnik',
     'usersList' => 'Lista korisnika',
     'username' => "Korisničko ime",
     'enabled' => 'Omogućen',

@@ -853,10 +853,16 @@ class RemoteUserController extends Controller
             $userImport->imported = 1;
             $userImport->save();
 
+            $total = UserImport::count();
+            $imported = UserImport::where('imported', true)->count();
+
+
 
             return [
                 'status' => $response->status(),
-                'message' => "Success!!!"
+                'message' => "Success!!!",
+                'total' => $total,
+                'imported' => $imported
             ];
         }
 

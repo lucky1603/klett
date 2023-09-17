@@ -56,5 +56,18 @@ class UserImportController extends Controller
         return 0;
     }
 
+    public function counts() {
+        $total = UserImport::count();
+        $imported = UserImport::where('imported', true)->count();
+
+        $remains = $total - $imported;
+
+        return [
+            'total' => $total,
+            'imported' => $imported,
+            'remains' => $remains
+        ];
+    }
+
 
 }

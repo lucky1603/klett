@@ -83,6 +83,7 @@ Route::get('crm/arrayPredmeta', [CRMController::class, 'arrayPredmeta'])->name('
 Route::get('userimports', [UserImportController::class, 'index'])->name('userimports.index');
 Route::get('userimports/data', [UserImportController::class, 'data'])->name('userimports.data');
 Route::get('userimports/updateImported/{user}', [UserImportController::class, 'updateImported'])->name('userimports.updateImported');
+Route::get('userimports/counts', [UserImportController::class, 'counts'])->name('userimports.count');
 
 // Language-Localization.p
 Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');
