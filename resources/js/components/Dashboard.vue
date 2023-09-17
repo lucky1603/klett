@@ -1,22 +1,32 @@
 <template>
     <div>
-        <b-row>
-            <b-col>
-                <apexchart type="pie" width="500" :options="pieChart.options" :series="pieChart.series"></apexchart>
-            </b-col>
-            <b-col>
-                <apexchart width="500" type="bar" :options="horizontalChart.options" :series="horizontalChart.series"></apexchart>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col>
-                <apexchart type="pie" width="500" :options="pieChartLogged.options" :series="pieChartLogged.series"></apexchart>
-            </b-col>
-            <b-col>
-                <apexchart width="500" type="bar" :options="horizontalChartLogged.options" :series="horizontalChartLogged.series"></apexchart>
-            </b-col>
-        </b-row>
-
+        <b-tabs>
+            <b-tab title="Statistika">
+                <b-row>
+                    <b-col>
+                        <apexchart type="pie" height="300" :options="pieChart.options" :series="pieChart.series"></apexchart>
+                    </b-col>
+                    <b-col>
+                        <apexchart height="300" type="bar" :options="horizontalChart.options" :series="horizontalChart.series"></apexchart>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <apexchart type="pie" height="300" :options="pieChartLogged.options" :series="pieChartLogged.series"></apexchart>
+                    </b-col>
+                    <b-col>
+                        <apexchart height="300" type="bar" :options="horizontalChartLogged.options" :series="horizontalChartLogged.series"></apexchart>
+                    </b-col>
+                </b-row>
+            </b-tab>
+            <b-tab title="Uvoz">
+                <b-row>
+                    <b-col>
+                        <mass-import :interval="1000"></mass-import>
+                    </b-col>
+                </b-row>
+            </b-tab>
+        </b-tabs>
     </div>
 </template>
 
@@ -182,6 +192,7 @@ export default {
 
                 }
             },
+
 
 
         };

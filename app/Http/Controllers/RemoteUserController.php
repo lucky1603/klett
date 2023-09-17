@@ -750,6 +750,27 @@ class RemoteUserController extends Controller
 
     public function importUser(Request $request) {
         $data = $request->post();
+        return $this->import($data);
+
+        // Send ack-email
+        // TODO later
+    }
+
+    public function importFirstUser() {
+        $user = UserImport::where('imported', 0)->first();
+        $data = [
+            "userId" => $user->id,
+            'email' => $user->email,
+            'firstName' => $user->ime,
+            'lastName' => $user->prezime,
+            'username' => $user->username,
+            'isTeacher' => $user->is_teacher == 1 ? "true" : "false"
+        ];
+
+        return $this->import($data);
+    }
+
+    private function import($data) {
 
         $user = [
             'email' => $data['email'],
@@ -791,6 +812,7 @@ class RemoteUserController extends Controller
             }
         }
 
+
         // Add it to KeyCloak
         if(!array_key_exists('token',$data)) {
             $response = $this->connectKeyCloak();
@@ -807,7 +829,7 @@ class RemoteUserController extends Controller
                 "firstName" => $user['firstName'],
                 "lastName" => $user['lastName'],
                 "email" => $user["email"],
-                "enabled" => $user['enabled'],
+                "enabled" => $user['enabled'] ?? false,
                 "attributes" => [
                     "subjects" => $user['predmeti'] ?? null,
                     "subject_users" => $user['korisnici'] ?? null,
@@ -815,14 +837,15 @@ class RemoteUserController extends Controller
                     "township" => $user['township'] ??  null,
                     "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : 0,
                     "institution" => $user['institution'] ?? null,
-                    "billing_first_name" => $user['firstName'],
-                    "billing_last_name" => $user['lastName'],
-                    "billing_address_1" => $user['billing_address_1'],
-                    'billing_city' => $user['billing_city'],
-                    "billing_postcode" => $user['billing_postcode'],
-                    "billing_phone" => $user['billing_phone'],
+                    "billing_first_name" => $user['firstName'] ?? '',
+                    "billing_last_name" => $user['lastName'] ?? '',
+                    "billing_address_1" => $user['billing_address_1'] ?? '',
+                    'billing_city' => $user['billing_city'] ?? '',
+                    "billing_postcode" => $user['billing_postcode'] ?? '',
+                    "billing_phone" => $user['billing_phone'] ?? '',
                 ],
         ]);
+
 
         if($response->status() == 201 /* Created */) {
             $items = explode("/", $response->header("Location"));
@@ -848,6 +871,8 @@ class RemoteUserController extends Controller
             //         ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
             // }
 
+
+
             // Update the user in the user imports list as imported.
             $userImport = UserImport::find($data['userId']);
             $userImport->imported = 1;
@@ -856,8 +881,6 @@ class RemoteUserController extends Controller
             $total = UserImport::count();
             $imported = UserImport::where('imported', true)->count();
 
-
-
             return [
                 'status' => $response->status(),
                 'message' => "Success!!!",
@@ -865,9 +888,6 @@ class RemoteUserController extends Controller
                 'imported' => $imported
             ];
         }
-
-        // Send ack-email
-        // TODO later
     }
 }
 

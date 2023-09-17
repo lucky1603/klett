@@ -92,9 +92,8 @@
                             </tbody>
                         </table>
                     </div>
-                    <hr/>
-                    <div class="d-flex align-items-center justify-content-center">
-                        <b-button variant="primary" type="button" class="my-2" size="sm" @click="importUser">Uvezi</b-button>
+                    <div class="d-flex align-items-center justify-content-center mt-1 mb-3 py-1">
+                        <b-button variant="primary" type="button" size="sm" @click="importUser">Uvezi</b-button>
                     </div>
                 </div>
 

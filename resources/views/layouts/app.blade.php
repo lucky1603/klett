@@ -35,7 +35,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route("home") }}">Statistika</a>
+                            <a class="nav-link" href="{{ route("home") }}">Kontrolna tabla</a>
                         </li>
                         <li class="nav-item" >
                             <a class="nav-link" href="{{ route('remoteusers')}}">Korisnici platforme</a>
