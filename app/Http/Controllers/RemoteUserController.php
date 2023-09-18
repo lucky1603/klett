@@ -668,6 +668,31 @@ class RemoteUserController extends Controller
             ->delete(env("KEYCLOAK_API_USERS_URL").$userId);
     }
 
+    public function deleteAll() {
+        $response = $this->connectKeyCloak();
+        $token = $response->json('access_token');
+
+        $response = Http::withToken($token)->get(env('KEYCLOAK_API_USERS_URL'));
+        $users = $response->json();
+        foreach($users as $user) {
+            $userId = $user['id'];
+
+            $request = new Request([],[
+                'token' => $token,
+                'userId' => $userId,
+            ], [], [], [], [], null);
+
+            $r1 = $this->delete($request);
+            echo $userId." deleted! Request status is ".$r1->status()."\n";
+        }
+
+        return [
+            'tokenResponseStatus' => $response->status(),
+            'deleteResponseStatus' => $r1->status(),
+            'message' => "Success!"
+        ];
+    }
+
     public function export() {
         return Excel::download(new RemoteUsersExport, 'remoteusers.xlsx');
     }
@@ -754,6 +779,12 @@ class RemoteUserController extends Controller
 
         // Send ack-email
         // TODO later
+    }
+
+    public function importAllUsers() {
+        for($i = 0; $i < 100; $i++) {
+            $this->importFirstUser();
+        }
     }
 
     public function importFirstUser() {
@@ -889,6 +920,8 @@ class RemoteUserController extends Controller
             ];
         }
     }
+
+
 }
 
 

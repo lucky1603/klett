@@ -15,6 +15,6 @@ class EucionicaSeeder extends Seeder
      */
     public function run()
     {
-        Excel::import(new EUcionicaImport, 'finaexport-short.xlsx', 'public');
+        Excel::import(new EUcionicaImport, 'nastavnici-eucionica.xlsx', 'public');
     }
 }

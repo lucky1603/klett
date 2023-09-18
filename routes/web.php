@@ -70,6 +70,8 @@ Route::post('remoteusers/count', [RemoteUserController::class, 'getCount'])->nam
 Route::post('remoteusers/filtercount', [RemoteUserController::class, 'filterCount'])->name('remoteusers.filtercount');
 Route::post('remoteusers/import', [RemoteUserController::class, 'importUser'])->name('remoteusers.import');
 Route::get('remoteusers/importFirstUser', [RemoteUserController::class, 'importFirstUser'])->name('remoteusers.importFirstUser');
+Route::get('remoteusers/deleteall', [RemoteUserController::class, 'deleteAll'])->name('remoteusers.deleteAll');
+Route::get('remoteusers/importall', [RemoteUserController::class, 'importAllUsers'])->name('remoteusers.importAll');
 
 // CRM
 Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');
