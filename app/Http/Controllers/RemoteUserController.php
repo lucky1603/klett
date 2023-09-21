@@ -879,7 +879,7 @@ class RemoteUserController extends Controller
                     'billing_city' => $user['billing_city'] ?? '',
                     "billing_postcode" => $user['billing_postcode'] ?? '',
                     "billing_phone" => $user['billing_phone'] ?? '',
-                    "klf_user" => $user['klf_korisnik'] ?? false
+                    "klf_user" => $user['klf_korisnik'] == "true" ? true : false,
                 ],
         ]);
 
