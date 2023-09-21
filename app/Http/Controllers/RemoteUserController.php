@@ -835,17 +835,19 @@ class RemoteUserController extends Controller
                 $korisnici = [];
                 foreach($crmPredmeti as $crmPredmet) {
                     $predmeti[] = $crmPredmet['_ext_predmet_value'];
-                    $korisnici[] = $crmPredmet['ext_korisnik'];
+
+                    if(isset($crmPredmet['ext_korisnik']) && !array_key_exists('klf_korisnik', $user)) {
+                        $user['klf_korisnik'] = $crmPredmet['ext_korisnik'];
+                    }
+
                     if(isset($crmPredmet['_ext_skola_value']) && !array_key_exists('institution', $user)) {
                         $user['institution'] = $crmPredmet['_ext_skola_value'];
                     }
                 }
 
                 $user['predmeti'] = serialize($predmeti);
-                $user['korisnici'] = serialize($korisnici);
             }
         }
-
 
         // Add it to KeyCloak
         if(!array_key_exists('token',$data)) {
@@ -877,6 +879,7 @@ class RemoteUserController extends Controller
                     'billing_city' => $user['billing_city'] ?? '',
                     "billing_postcode" => $user['billing_postcode'] ?? '',
                     "billing_phone" => $user['billing_phone'] ?? '',
+                    "klf_user" => $user['klf_korisnik'] ?? false
                 ],
         ]);
 
@@ -915,22 +918,22 @@ class RemoteUserController extends Controller
             $total = UserImport::count();
             $imported = UserImport::where('imported', true)->count();
 
-            if($data['sendEmail'] == "true") {
+            // if($data['sendEmail'] == "true") {
 
-                // Send data varification link.
-                $scheduledEdit = ScheduledEdit::create([
-                    "user_id" => $userId,
-                    "token" => Str::random(60)
-                ]);
+            //     // Send data varification link.
+            //     $scheduledEdit = ScheduledEdit::create([
+            //         "user_id" => $userId,
+            //         "token" => Str::random(60)
+            //     ]);
 
-                Mail::to($user['email'])->send(new RequestEdit($user['firstName']." ".$user['lastName'], $scheduledEdit->token));
+            //     Mail::to($user['email'])->send(new RequestEdit($user['firstName']." ".$user['lastName'], $scheduledEdit->token));
 
-                // // Send password reset link.
-                // if($data['updatePassword'] == 'true') {
-                //     Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
-                //         ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
-                // }
-            }
+            //     // // Send password reset link.
+            //     // if($data['updatePassword'] == 'true') {
+            //     //     Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+            //     //         ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+            //     // }
+            // }
 
             return [
                 'status' => $response->status(),
