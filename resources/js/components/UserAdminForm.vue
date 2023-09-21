@@ -131,7 +131,7 @@
 
             <hr />
             <div v-if="!anonimous">
-                <b-form-checkbox v-model="klf_korisnik" :value="true" disabled>KLF Korisnik</b-form-checkbox>
+                <b-form-checkbox v-model="form.klf_korisnik" :value="true" disabled>KLF Korisnik</b-form-checkbox>
                 <b-form-checkbox v-model="form.pedagoska_sveska" :value="true">Pedagoška sveska</b-form-checkbox>
                 <b-form-checkbox v-model="form.testomat" :value="true">Testomat</b-form-checkbox>
                 <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
@@ -182,10 +182,10 @@ export default {
                 captcha: '',
                 rola: 'a32c8e1b-a442-458c-9889-3567e19797ea',
                 testomat: false,
-                pedagoska_sveska: false
+                pedagoska_sveska: false,
+                klf_korisnik: false
 
             },
-            klf_korisnik: false,
             accessToken: '',
             errors: {},
             formAction: '/remoteusers/create',
@@ -420,7 +420,6 @@ export default {
                         this.form[property] = resultObject[property];
                     }
 
-                    this.klf_korisnik = resultObject['klf_korisnik'];
                 }
 
                 this.showSpinner = false;
