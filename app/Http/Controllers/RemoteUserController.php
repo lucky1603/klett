@@ -879,7 +879,7 @@ class RemoteUserController extends Controller
                     'billing_city' => $user['billing_city'] ?? '',
                     "billing_postcode" => $user['billing_postcode'] ?? '',
                     "billing_phone" => $user['billing_phone'] ?? '',
-                    "klf_user" => array_key_exists('klf_korisnik', $user) && $user['kfl_korisnik'] == "true" ? 1 : 0 ,
+                    "klf_korisnik" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
                     "testomat" => array_key_exists('testomat', $user) && $user['testomat'] == "true" ? 1 : 0 ,
                     "pedagoska_sveska" => array_key_exists('pedagoska_sveska', $user) && $user['pedagoska_sveska'] == "true" ? 1 : 0 ,
                 ],
