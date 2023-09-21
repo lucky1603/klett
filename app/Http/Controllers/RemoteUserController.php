@@ -314,6 +314,8 @@ class RemoteUserController extends Controller
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
                     "billing_phone" => $data['telefon1'],
+                    "testomat" => $data['testomat'],
+                    "pedagoska_sveska" => $data["pedagoska_sveska"]
                 ],
         ]);
 
@@ -512,7 +514,10 @@ class RemoteUserController extends Controller
             'drzava' => isset($retObject->attributes) && isset($retObject->attributes->billing_country) ?  $retObject->attributes->billing_country[0] : '',
             'telefon1' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
             'telefon2' => isset($retObject->attributes) && isset($retObject->attributes->billing_phone) ? $retObject->attributes->billing_phone[0] : '',
-            'rola' => $rola
+            'rola' => $rola,
+            'testomat' => isset($retObject->attributes) && isset($retObject->attributes->testomat) ? $retObject->attributes->testomat[0] : false,
+            'pedagoska_sveska' => isset($retObject->attributes) && isset($retObject->attributes->pedagoska_sveska) ? $retObject->attributes->pedagoska_sveska[0] : false,
+            'klf_korisnik' => isset($retObject->attributes) && isset($retObject->attributes->klf_korisnik) ? $retObject->attributes->klf_korisnik[0] : false,
         ];
     }
 
@@ -541,7 +546,10 @@ class RemoteUserController extends Controller
                     "billing_address_1" => $data['adresa'],
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
-                    "billing_phone" => $data['telefon1']
+                    "billing_phone" => $data['telefon1'],
+                    "klf_korisnik" => $data['klfKorisnik'],
+                    "testomat" => $data['testomat'],
+                    "pedagoska_sveska" => $data["pedagoska_sveska"]
                 ],
         ]);
 

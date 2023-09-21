@@ -176,6 +176,8 @@ export default {
                 mesto: '',
                 captcha: '',
                 isTeacher: false,
+                testomat: false,
+                pedagoska_sveska: false,
             },
             accessToken: '',
             errors: {},
@@ -191,6 +193,8 @@ export default {
             tipoviKontakata: [],
             predmeti: [],
             captchaImg: null,
+            klf_korisnik: false
+
         };
     },
 
@@ -408,10 +412,12 @@ export default {
                     }
                     if(property == 'predmeti') {
                         this.form['predmeti'] = resultObject['subjects'];
-                    } else {
+                    }
+                    else {
                         this.form[property] = resultObject[property];
                     }
 
+                    this.klf_korisnik = resultObject['klf_korisnik'];
                 }
 
                 this.showSpinner = false;
