@@ -410,6 +410,8 @@ class RemoteUserController extends Controller
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
                     "billing_phone" => $data['telefon1'],
+                    "testomat" => $data['testomat'] == "true" ? 1 : 0,
+                    "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0
                 ],
         ]);
 
@@ -622,7 +624,9 @@ class RemoteUserController extends Controller
                     "billing_address_1" => $data['adresa'],
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
-                    "billing_phone" => $data['telefon1']
+                    "billing_phone" => $data['telefon1'],
+                    "testomat" => $data['testomat'] == "true" ? 1 : 0,
+                    "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0
                 ],
         ]);
 
