@@ -86,6 +86,7 @@ return [
     /**
      * Register user form.
      */
-    'registerUserFormTitle' => "Регистрација новог корисника"
+    'registerUserFormTitle' => "Регистрација новог корисника",
+    'updateUserFormTitle' => "Ажурирајте своје податке"
 
 ];

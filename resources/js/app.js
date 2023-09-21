@@ -49,6 +49,7 @@ Vue.component('key-cloak-pagination', require('./components/KeyCloakPagination.v
 Vue.component('import-users-panel', require('./components/ImportUsersPanel.vue').default);
 Vue.component('progress-bar', require('./components/ProgressBar.vue').default);
 Vue.component('mass-import', require('./components/MassImportControl.vue').default);
+Vue.component('update-user-form', require('./components/UpdateUserForm.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

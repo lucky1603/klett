@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NoCRMInfo;
+use App\Mail\RequestEdit;
 use App\Models\UserImport;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ScheduledEdit;
 use App\Exports\RemoteUsersExport;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -912,6 +915,23 @@ class RemoteUserController extends Controller
             $total = UserImport::count();
             $imported = UserImport::where('imported', true)->count();
 
+            if($data['sendEmail'] == "true") {
+
+                // Send data varification link.
+                $scheduledEdit = ScheduledEdit::create([
+                    "user_id" => $userId,
+                    "token" => Str::random(60)
+                ]);
+
+                Mail::to($user['email'])->send(new RequestEdit($user['firstName']." ".$user['lastName'], $scheduledEdit->token));
+
+                // // Send password reset link.
+                // if($data['updatePassword'] == 'true') {
+                //     Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                //         ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+                // }
+            }
+
             return [
                 'status' => $response->status(),
                 'message' => "Success!!!",
@@ -919,6 +939,29 @@ class RemoteUserController extends Controller
                 'imported' => $imported
             ];
         }
+    }
+
+    public function editScheduled($token)
+    {
+        $scheduledEdit = ScheduledEdit::where(
+            [
+                'token' => $token,
+                'validated' => false
+            ]
+        )->firstOrFail();
+
+        if($scheduledEdit != null) {
+            $userId = $scheduledEdit->user_id;
+            $response = $this->connectKeyCloak();
+            $accessToken = $response->json('access_token');
+            $response = Http::withToken($accessToken)
+                ->get(env("KEYCLOAK_API_USERS_URL").$userId);
+            $user = $response->json();
+
+            return view('appusers.update', ['user' => $user['id']]);
+        }
+
+        return view('appusers.expired');
     }
 
 

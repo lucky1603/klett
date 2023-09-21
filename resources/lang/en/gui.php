@@ -86,7 +86,8 @@ return [
     /**
      * Register user form.
      */
-    'registerUserFormTitle' => "New User Registration"
+    'registerUserFormTitle' => "New User Registration",
+    'updateUserFormTitle' => "Update your data"
 
 
 ];

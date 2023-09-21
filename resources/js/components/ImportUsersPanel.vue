@@ -273,6 +273,8 @@ export default {
                 formData.append(property, this.selectedUser[property]);
             }
 
+            formData.append('sendEmail', true);
+
             await axios.post('/remoteusers/import', formData)
             .then(response => {
                 console.log(response.data);

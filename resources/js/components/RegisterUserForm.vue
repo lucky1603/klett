@@ -10,6 +10,7 @@
                 u našoj politika privatnosti. Ukoliko se registrujete kao nastavnik,
                 tačnost podataka omogućiće Vam da imate pristup nastavnim materijalima
                 i da budete na vreme obavešteni o novim izdanjima i stručnim skupovima.
+
             </div>
             <div class="container">
                 <remote-user-form ref="userForm" :anonimous="true" style="width: 55%"></remote-user-form>

@@ -151,6 +151,7 @@ export default {
     props: {
         userId: {typeof: String, default: ''},
         anonimous: {typeof: Boolean, default: false},
+        update: { type: Boolean, default: false}
     },
     data() {
         return {

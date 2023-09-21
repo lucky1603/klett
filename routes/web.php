@@ -72,6 +72,7 @@ Route::post('remoteusers/import', [RemoteUserController::class, 'importUser'])->
 Route::get('remoteusers/importFirstUser', [RemoteUserController::class, 'importFirstUser'])->name('remoteusers.importFirstUser');
 Route::get('remoteusers/deleteall', [RemoteUserController::class, 'deleteAll'])->name('remoteusers.deleteAll');
 Route::get('remoteusers/importall', [RemoteUserController::class, 'importAllUsers'])->name('remoteusers.importAll');
+Route::get('remoteusers/scheduledEdit/{token}', [RemoteUserController::class, 'editScheduled'])->name('remoteusers.scheduledEdit');
 
 // CRM
 Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');
