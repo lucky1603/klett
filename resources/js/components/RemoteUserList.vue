@@ -67,7 +67,7 @@
                 aria-controls="profileTable"
                 align="right"
                 ></b-pagination> -->
-            <key-cloak-pagination v-model="currentPosition" :count="rowsCount"></key-cloak-pagination>
+            <key-cloak-pagination v-model="currentPosition" ref="nav" :count="rowsCount"></key-cloak-pagination>
             <div class="d-flex align-items-center justify-content-center">
                 <b-button variant="primary" @click="createUser" class="m-1" size="sm"><i class="bi bi-person-fill-add mr-1"></i>{{ _('gui.Add')}}</b-button>
                 <a class="btn btn-sm btn-primary float-right m-1" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
@@ -180,9 +180,8 @@ export default {
             },
             roles: [
                 { value: 0, text: "Po tipu korisnika"},
-                { value: 1, text: "Pratioci"},
-                { value: 2, text: "Nastavnici"},
-                { value: 3, text: "Ucenici" }
+                { value: 1, text: "Nastavnici"},
+                { value: 2, text: "Ucenici" }
             ],
             statuses: [
                 { value: 0, text: "Po statusu"},
@@ -204,6 +203,7 @@ export default {
         async submitFilter() {
             this.isFilter = true;
             await this.getFilter();
+            this.$refs.nav.start();
         },
         async cancelFilter() {
             this.isFilter = false;
@@ -355,6 +355,7 @@ export default {
             this.searchForm.lastName = '';
             this.searchForm.userStatus = 0;
             await this.getData();
+            this.$refs.nav.start();
         },
 
 

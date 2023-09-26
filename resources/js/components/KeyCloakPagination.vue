@@ -2,7 +2,7 @@
     <div class="d-flex align-items-center justify-content-center w-100 my-2">
         <b-button variant="dark" class="mx-1" size="sm" @click="start"><b-icon icon="skip-start-fill"></b-icon></b-button>
         <b-button variant="outline-dark" class="mx-1" size="sm" @click="prev"><b-icon icon="skip-backward-fill"></b-icon></b-button>
-        <label style="width: 50px" class="text-center">{{ page }}</label>
+        <label style="width: 50px" class="text-center">{{ page }} / {{ pages }}</label>
         <b-button variant="outline-dark" class="mx-1" size="sm" @click="next"><b-icon icon="skip-forward-fill"></b-icon></b-button>
         <b-button variant="dark" class="mx-1" size="sm" @click="end"><b-icon icon="skip-end-fill"></b-icon></b-button>
     </div>

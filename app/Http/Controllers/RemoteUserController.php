@@ -209,6 +209,18 @@ class RemoteUserController extends Controller
             $requestUrl .= "enabled=".$val;
         }
 
+        // if($data['userRole'] != 0) {
+        //     $isTeacher = $data['userRole'] == 1 ? true : false;
+        //     if(!str_contains($requestUrl, "?")) {
+        //         $requestUrl .= "?";
+        //     } else {
+        //         $requestUrl .= "&&";
+        //     }
+
+        //     $val = $data['userRole'] == 1 ? "true" : "false";
+        //     $requestUrl .= "enabled=".$val;
+        // }
+
         return Http::withToken($token)
             ->get($requestUrl);
     }

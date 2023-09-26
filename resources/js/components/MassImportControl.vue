@@ -11,6 +11,10 @@
                     <p class="text-center bg-dark text-light">PROGRES UVOZA</p>
                     <progress-bar :max="total" :value="imported" class="mx-2"></progress-bar>
                 </div>
+                <div class="d-flex align-items-center justify-content-center">
+                    <label>Import interval:</label>
+                    <b-form-select v-model="pace" :options="intervals" class="mx-1"></b-form-select>
+                </div>
                 <div class="d-flex align-items-center justify-content-center my-2">
                     <b-button variant="primary" size="sm" class="m-1" type="button" @click="startMultipleImport">Pokreni</b-button>
                     <b-button variant="danger" size="sm" class="m-1" type="button" @click="stopMultipleImport">Zustavi</b-button>
@@ -48,7 +52,17 @@ export default {
             },
             total: 0,
             imported: 0,
-            stop: true
+            stop: true,
+            intervals: [
+                { value:500,  text: "0.5 sec" },
+                { value:1000, text: "1 sec" },
+                { value:1500, text: "1.5 sec" },
+                { value:2000, text: "2 sec" },
+                { value:2500, text: "2.5 sec" },
+                { value:3000, text: "3 sec" },
+
+            ],
+            pace: this.interval
         };
     },
 
@@ -82,7 +96,7 @@ export default {
             if(this.stop)
                 return;
             await this.importOne();
-            setTimeout(this.importMore, this.interval);
+            setTimeout(this.importMore, this.pace);
         },
         startMultipleImport() {
             this.stop = false;
