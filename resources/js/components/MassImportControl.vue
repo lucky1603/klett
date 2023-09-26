@@ -54,6 +54,7 @@ export default {
             imported: 0,
             stop: true,
             intervals: [
+                { value:250,  text: "0.25 sec"},
                 { value:500,  text: "0.5 sec" },
                 { value:1000, text: "1 sec" },
                 { value:1500, text: "1.5 sec" },
