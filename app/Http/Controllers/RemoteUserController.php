@@ -699,10 +699,14 @@ class RemoteUserController extends Controller
         $response = $this->connectKeyCloak();
         $token = $response->json('access_token');
 
-        $response = Http::withToken($token)->get(env('KEYCLOAK_API_USERS_URL'));
-        $users = $response->json();
-        foreach($users as $user) {
-            $userId = $user['id'];
+        $response = Http::withToken($token)
+            ->get(env('KEYCLOAK_API_USERS_URL')."?briefRepresentation=true");
+
+        $userIds = collect($response->json())->map(function($user) {
+            return $user['id'];
+        });
+
+        foreach($userIds as $userId) {
 
             $request = new Request([],[
                 'token' => $token,

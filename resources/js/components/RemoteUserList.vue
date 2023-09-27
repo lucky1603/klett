@@ -41,11 +41,14 @@
         <div class="d-flex align-items-center justify-content-center flex-column w-100">
             <b-table
                 responsive
-                small striped bordered hover
+                small bordered hover
+                selectable
+                select-mode="multi"
                 :items="items"
                 :fields="fields"
                 head-variant="dark"
                 class="w-100 h-100"
+                @row-selected="onTableSelected"
                 >
                 <template #cell(enabled)="data">
                     <div class="d-flex align-items-center justify-content-center">
@@ -70,6 +73,16 @@
             <key-cloak-pagination v-model="currentPosition" ref="nav" :count="rowsCount"></key-cloak-pagination>
             <div class="d-flex align-items-center justify-content-center">
                 <b-button variant="primary" @click="createUser" class="m-1" size="sm"><i class="bi bi-person-fill-add mr-1"></i>{{ _('gui.Add')}}</b-button>
+                <b-button variant="warning" size="sm" title="Obriši izabrane" class="m-1" @click="onDeleteSelected" :disabled="busy">
+                    <b-spinner small v-if="busy"></b-spinner>
+                    <i class="bi bi-database-dash mr-1"></i>
+                    {{_('gui.DeleteSelected')}}
+                </b-button>
+                <b-button variant="danger" size="sm" title="Obriši sve" class="m-1" @click="onDeleteAll" :disabled="busyDeleteAll">
+                    <b-spinner small v-if="busyDeleteAll"></b-spinner>
+                    <i class="bi bi-database-dash mr-1"></i>
+                    {{ _('gui.DeleteAll') }}
+                </b-button>
                 <a class="btn btn-sm btn-primary float-right m-1" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
             </div>
 
@@ -187,7 +200,10 @@ export default {
                 { value: 0, text: "Po statusu"},
                 { value: 1, text: "Neaktivan(-na)"},
                 { value: 2, text: "Aktivan(-na)"}
-            ]
+            ],
+            selected: [],
+            busy: false,
+            busyDeleteAll: false
         };
     },
 
@@ -199,6 +215,9 @@ export default {
     methods: {
         pageChanged(ctx) {
             console.log("Page changed " + this.currentPage);
+        },
+        onTableSelected(items) {
+            this.selected = items;
         },
         async submitFilter() {
             this.isFilter = true;
@@ -254,6 +273,8 @@ export default {
                 console.log(error);
             });
 
+            this.items = [];
+
             let formData = new FormData();
             formData.append('token', this.accessToken);
             await axios.post('/remoteusers/count', formData)
@@ -268,7 +289,6 @@ export default {
             await axios.post('/remoteusers/data', formData)
             .then(response => {
                 console.log(response.data);
-                this.items.length = 0;
                 for(let i = 0; i < response.data.length; i++) {
                     this.items.push(response.data[i]);
                 }
@@ -345,6 +365,44 @@ export default {
             })
 
         },
+        async onDeleteSelected() {
+            if(this.selected.length == 0)
+                return;
+
+            this.busy = true;
+
+            await axios.get('/remoteusers/keycloak')
+            .then(response => {
+                this.accessToken = response.data.access_token;
+            });
+
+            for(var i = 0; i < this.selected.length; i++) {
+                let selectedItem = this.selected[i];
+
+                let formData = new FormData();
+                formData.append('token', this.accessToken);
+                formData.append('userId', selectedItem.id);
+
+                await axios.post('/remoteusers/delete', formData)
+                .then(response => {
+                    console.log(response.data);
+                });
+            }
+
+            await this.getData();
+            this.busy = false;
+        },
+        async onDeleteAll() {
+            this.busyDeleteAll = true;
+
+            await axios.get('/remoteusers/deleteall')
+            .then(response => {
+                console.log(response.data);
+            });
+
+            await this.getData();
+            this.busyDeleteAll = false;
+        },
         onCancelDelete() {
             this.$refs.deleteDialog.hide();
             this.selectedUserId = 0;
@@ -357,7 +415,6 @@ export default {
             await this.getData();
             this.$refs.nav.start();
         },
-
 
     },
 };

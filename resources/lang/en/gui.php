@@ -23,6 +23,8 @@ return [
     "No" => "No",
     "Send" => "Send",
     "PasswordFormat" => "Wrong password format -> At least 8 chars, at least one uppercase letter and one number.",
+    "DeleteSelected" => "Delete selected",
+    "DeleteAll" => "Delete All",
 
     /**
      * Users list
