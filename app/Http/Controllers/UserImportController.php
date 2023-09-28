@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use file;
 use App\Models\UserImport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class UserImportController extends Controller
 {
@@ -67,6 +69,26 @@ class UserImportController extends Controller
             'imported' => $imported,
             'remains' => $remains
         ];
+    }
+
+    public function reset() {
+            return UserImport::where('imported', true)
+                ->update([
+                    'imported' => false
+                ]);
+    }
+
+    public function setImport(Request $request)  {
+        $data = $request->post();
+        var_dump($data);
+    }
+
+    public function files() {
+        return collect(Storage::disk('public')->listContents())->map(function($file) {
+            return $file['basename'];
+        });
+
+
     }
 
 

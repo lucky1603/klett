@@ -88,6 +88,9 @@ Route::get('userimports', [UserImportController::class, 'index'])->name('userimp
 Route::get('userimports/data', [UserImportController::class, 'data'])->name('userimports.data');
 Route::get('userimports/updateImported/{user}', [UserImportController::class, 'updateImported'])->name('userimports.updateImported');
 Route::get('userimports/counts', [UserImportController::class, 'counts'])->name('userimports.count');
+Route::get('userimports/reset', [UserImportController::class, 'reset'])->name('userimports.reset');
+Route::get('userimports/files', [UserImportController::class, 'files'])->name('userimports.files');
+Route::post('userimports/setimport', [UserImportController::class, 'setImport'])->name('userimports.setimport');
 
 // Language-Localization.p
 Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');

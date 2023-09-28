@@ -2,24 +2,67 @@
     <div>
         <b-row>
             <b-col>
-                <div class="shadow my-2">
-                    <apexchart type="pie" height="380" :options="importChart.options" :series="importChart.series"></apexchart>
-                </div>
+                <b-card bg-variant="white" header="STANJE TABELE UVOZA" header-bg-variant="dark" header-text-variant="white" class="mb-2">
+                    <div class="my-2">
+                        <apexchart type="pie" height="380" :options="importChart.options" :series="importChart.series"></apexchart>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-center my-2">
+                        <b-button variant="primary" size="sm" class="m-1" type="button" @click="reset">
+                            <b-spinner small v-if="busy" class="mr-1"></b-spinner>
+                            Reset
+                        </b-button>
+                    </div>
+                </b-card>
+
+
             </b-col>
             <b-col>
-                <div class="w-100 shadow my-2">
+                <!-- <div class="w-100 shadow my-2 py-2">
                     <p class="text-center bg-dark text-light">PROGRES UVOZA</p>
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <label class="mr-1">interval:</label>
+                        <b-form-select v-model="pace" :options="intervals" class="mx-1 w-50"></b-form-select>
+                    </div>
                     <progress-bar :max="total" :value="imported" class="mx-2"></progress-bar>
-                </div>
-                <div class="d-flex align-items-center justify-content-center">
-                    <label>Import interval:</label>
-                    <b-form-select v-model="pace" :options="intervals" class="mx-1"></b-form-select>
-                </div>
-                <div class="d-flex align-items-center justify-content-center my-2">
-                    <b-button variant="primary" size="sm" class="m-1" type="button" @click="startMultipleImport">Pokreni</b-button>
-                    <b-button variant="danger" size="sm" class="m-1" type="button" @click="stopMultipleImport">Zustavi</b-button>
-                    <b-button variant="success" size="sm" class="m-1" type="button" @click="importOne">Uvezi jednog</b-button>
-                </div>
+
+                    <div class="d-flex align-items-center justify-content-center my-2">
+                        <b-button variant="primary" size="sm" class="m-1" type="button" @click="startMultipleImport">Pokreni</b-button>
+                        <b-button variant="danger" size="sm" class="m-1" type="button" @click="stopMultipleImport">Zustavi</b-button>
+                        <b-button variant="success" size="sm" class="m-1" type="button" @click="importOne">Uvezi jednog</b-button>
+                    </div>
+                </div> -->
+
+                <b-card bg-variant="white" header="PROGRES UVOZA" header-bg-variant="dark" header-text-variant="white" class="mb-2">
+                    <div class="d-flex align-items-center justify-content-center mb-2">
+                        <label class="mr-1">interval:</label>
+                        <b-form-select v-model="pace" :options="intervals" class="mx-1 w-50"></b-form-select>
+                    </div>
+                    <progress-bar :max="total" :value="imported" class="mx-2"></progress-bar>
+
+                    <div class="d-flex align-items-center justify-content-center my-2">
+                        <b-button variant="primary" size="sm" class="m-1" type="button" @click="startMultipleImport">Pokreni</b-button>
+                        <b-button variant="danger" size="sm" class="m-1" type="button" @click="stopMultipleImport">Zustavi</b-button>
+                        <b-button variant="success" size="sm" class="m-1" type="button" @click="importOne">Uvezi jednog</b-button>
+                    </div>
+                </b-card>
+
+
+                <b-card bg-variant="white" header="PODEŠAVANJE UVOZA" header-bg-variant="dark" header-text-variant="white" class="mt-2">
+                    <b-form @submit.prevent="send">
+                        <b-form-group label="Izaberi fajl">
+                            <b-form-select v-model="selectedFile" :options="files"></b-form-select>
+                        </b-form-group>
+
+                        <b-form-checkbox v-model="append" value="true" unchecked-value="false">Dodaj na postojeće</b-form-checkbox>
+
+                        <div class="d-flex align-items-center justify-content-center my-2">
+                            <b-button type="submit" variant="primary">Podesi</b-button>
+                        </div>
+
+                    </b-form>
+                </b-card>
+
+
             </b-col>
         </b-row>
     </div>
@@ -43,13 +86,12 @@ export default {
                         type: "pie"
                     },
                     labels: ["Uvezeni", "Preostali"],
-                    title: {
-                        text: "Odnos izmedju uvezenih i preostalih"
-                    },
+
                     colors: ['#546E7A', '#E91E63']
 
                 }
             },
+
             total: 0,
             imported: 0,
             stop: true,
@@ -63,15 +105,44 @@ export default {
                 { value:3000, text: "3 sec" },
 
             ],
-            pace: this.interval
+            pace: this.interval,
+            busy: false,
+            files: [],
+            selectedFile: '',
+            append: "true"
         };
     },
 
     async mounted() {
+        await this.getFiles();
         await this.getData();
     },
 
     methods: {
+        async send() {
+            let formData = new FormData();
+            formData.append('file', this.selectedFile);
+            formData.append('append', this.append);
+            await axios.post('/userimports/setimport', formData)
+            .then(response => {
+                console.log(response.data);
+            })
+        },
+        async getFiles() {
+            await axios.get('/userimports/files')
+            .then(response => {
+                var files = response.data;
+
+                files.splice(0,1);
+                console.log(files);
+                for(var i = 0; i < files.length; i++) {
+                    this.files.push({
+                        value: files[i],
+                        text: files[i]
+                    });
+                }
+            });
+        },
         async getData() {
             await axios.get('/userimports/counts')
             .then(response => {
@@ -105,6 +176,12 @@ export default {
         },
         stopMultipleImport() {
             this.stop = true;
+        },
+        async reset() {
+            this.busy = true;
+            await axios.get('/userimports/reset');
+            await this.getData();
+            this.busy = false;
         }
     },
 };
