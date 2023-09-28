@@ -73,12 +73,12 @@
             <key-cloak-pagination v-model="currentPosition" ref="nav" :count="rowsCount"></key-cloak-pagination>
             <div class="d-flex align-items-center justify-content-center">
                 <b-button variant="primary" @click="createUser" class="m-1" size="sm"><i class="bi bi-person-fill-add mr-1"></i>{{ _('gui.Add')}}</b-button>
-                <b-button variant="warning" size="sm" title="Obriši izabrane" class="m-1" @click="onDeleteSelected" :disabled="busy">
+                <b-button variant="warning" size="sm" title="Obriši izabrane" class="m-1" @click="deleteSelectedClicked" :disabled="busy">
                     <b-spinner small v-if="busy"></b-spinner>
                     <i class="bi bi-database-dash mr-1"></i>
                     {{_('gui.DeleteSelected')}}
                 </b-button>
-                <b-button variant="danger" size="sm" title="Obriši sve" class="m-1" @click="onDeleteAll" :disabled="busyDeleteAll">
+                <b-button variant="danger" size="sm" title="Obriši sve" class="m-1" @click="deleteAllClicked" :disabled="busyDeleteAll">
                     <b-spinner small v-if="busyDeleteAll"></b-spinner>
                     <i class="bi bi-database-dash mr-1"></i>
                     {{ _('gui.DeleteAll') }}
@@ -97,7 +97,7 @@
         </b-modal>
         <b-modal ref="deleteDialog" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>Brisanje korisnika</template>
-            <p>Da li ste sigurni da hoćete da obrišete korisnika <strong>{{ selectedUsername }}</strong>?</p>
+            <p>{{ deleteDialogMessage }}</p>
             <template #modal-footer>
                 <b-button type="button" variant="primary" @click="onDelete">{{ _('gui.Yes')}}</b-button>
                 <b-button type="button" @click="onCancelDelete">{{ _('gui.No')}}</b-button>
@@ -125,6 +125,8 @@ export default {
     data() {
         return {
             isFilter: false,
+            deleteDialogMessage: '',
+            deleteMode: 1,
             currentPage: 1,
             currentPosition: 0,
             pageSize: 15,
@@ -339,11 +341,38 @@ export default {
             this.showForm();
         },
         deleteClicked(id, username) {
+            this.deleteMode = 1;
             this.selectedUserId = id;
             this.selectedUsername = username;
+            this.deleteDialogMessage = "Da li ste sigurni da hoćete da obrišete korisnike '" + this.selectedUsername + "'?";
+            this.$refs.deleteDialog.show();
+        },
+        deleteSelectedClicked() {
+
+            this.deleteMode = 2;
+            this.deleteDialogMessage = "Da li ste sigurni da hoćete da obrišete odabrane korisnike?";
+            this.$refs.deleteDialog.show();
+
+        },
+        deleteAllClicked() {
+
+            this.deleteMode = 3;
+            this.deleteDialogMessage = "Da li ste sigurni da hoćete da obrišete sve korisnike?";
             this.$refs.deleteDialog.show();
         },
         async onDelete() {
+
+            this.$refs.deleteDialog.hide();
+            if(this.deleteMode == 1) {
+                await this.deleteFromIcon();
+            } else if (this.deleteMode == 2) {
+                await this.onDeleteSelected();
+            } else {
+                await this.onDeleteAll();
+            }
+
+        },
+        async deleteFromIcon() {
             await axios.get('/remoteusers/keycloak')
             .then(response => {
                 this.accessToken = response.data.access_token;
