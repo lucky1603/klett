@@ -15,14 +15,15 @@ class EUcionicaImport implements ToModel
     */
     public function model(array $row)
     {
+
+        // var_dump($row);
+        if($row[0] == null && $row[1] == null)
+            return null;
+
         $teacher = false;
         if($row[10] == 'teacher') {
             $teacher = true;
         }
-
-        // var_dump($row);
-        if($row[0] == NULL)
-            return NULL;
 
         return UserImport::create([
             'username' => $row[2],

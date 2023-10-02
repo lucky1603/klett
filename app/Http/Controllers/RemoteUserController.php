@@ -516,7 +516,7 @@ class RemoteUserController extends Controller
             'ime' => $retObject->firstName ?? '',
             'prezime' => $retObject->lastName ?? '',
             'email' => $retObject->email ?? '',
-            'skola' => isset($retObject->attributes) ? $retObject->attributes->institution[0] : null,
+            'skola' => isset($retObject->attributes) ? ( $retObject->attributes->institution[0] ?? null) : null,
             'institutionType' => isset($retObject->attributes) ? $retObject->attributes->institution_type[0] : null,
             'township' => isset($retObject->attributes->township)  ? $retObject->attributes->township[0] : null,
             'subjects' => isset($retObject->attributes->subjects) ? unserialize($retObject->attributes->subjects[0]) : [],

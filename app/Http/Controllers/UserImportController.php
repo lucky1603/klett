@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\EUcionicaImport;
 use file;
 use App\Models\UserImport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserImportController extends Controller
 {
@@ -80,7 +83,15 @@ class UserImportController extends Controller
 
     public function setImport(Request $request)  {
         $data = $request->post();
-        var_dump($data);
+
+        if($data['append'] == 'false') {
+            // Delete existing imports.
+            DB::table('user_imports')->delete();
+        }
+
+        Excel::import(new EUcionicaImport, $data['file'], 'public');
+
+        return true;
     }
 
     public function files() {

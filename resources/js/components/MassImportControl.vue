@@ -41,7 +41,7 @@
 
                     <div class="d-flex align-items-center justify-content-center my-2">
                         <b-button variant="primary" size="sm" class="m-1" type="button" @click="startMultipleImport">Pokreni</b-button>
-                        <b-button variant="danger" size="sm" class="m-1" type="button" @click="stopMultipleImport">Zustavi</b-button>
+                        <b-button variant="danger" size="sm" class="m-1" type="button" @click="stopMultipleImport">Zaustavi</b-button>
                         <b-button variant="success" size="sm" class="m-1" type="button" @click="importOne">Uvezi jednog</b-button>
                     </div>
                 </b-card>
@@ -56,7 +56,10 @@
                         <b-form-checkbox v-model="append" value="true" unchecked-value="false">Dodaj na postojeće</b-form-checkbox>
 
                         <div class="d-flex align-items-center justify-content-center my-2">
-                            <b-button type="submit" variant="primary">Podesi</b-button>
+                            <b-button type="submit" variant="primary">
+                                <b-spinner small v-if="busyImport" class="mr-1"></b-spinner>
+                                Podesi
+                            </b-button>
                         </div>
 
                     </b-form>
@@ -109,7 +112,8 @@ export default {
             busy: false,
             files: [],
             selectedFile: '',
-            append: "true"
+            append: "true",
+            busyImport: false
         };
     },
 
@@ -120,13 +124,16 @@ export default {
 
     methods: {
         async send() {
+            this.busyImport = true;
             let formData = new FormData();
             formData.append('file', this.selectedFile);
             formData.append('append', this.append);
             await axios.post('/userimports/setimport', formData)
             .then(response => {
                 console.log(response.data);
-            })
+                this.getData();
+            });
+            this.busyImport = false;
         },
         async getFiles() {
             await axios.get('/userimports/files')
