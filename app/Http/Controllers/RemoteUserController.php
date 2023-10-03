@@ -866,9 +866,10 @@ class RemoteUserController extends Controller
             if(count($crmUserData['ext_Predmetprofila_Nastavnik_Contact']) > 0) {
                 $crmPredmeti = $crmUserData['ext_Predmetprofila_Nastavnik_Contact'];
                 $predmeti = [];
-                $korisnici = [];
                 foreach($crmPredmeti as $crmPredmet) {
-                    $predmeti[] = $crmPredmet['_ext_predmet_value'];
+                    if(!in_array($crmPredmet['_ext_predmet_value'], $predmeti)) {
+                        $predmeti[] = $crmPredmet['_ext_predmet_value'];
+                    }
 
                     if(isset($crmPredmet['ext_korisnik']) && !array_key_exists('klf_korisnik', $user)) {
                         $user['klf_korisnik'] = $crmPredmet['ext_korisnik'];
