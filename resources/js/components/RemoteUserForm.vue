@@ -479,6 +479,8 @@ export default {
                     }
                 }
 
+                formData.append('source', 'Klett');
+
                 if(this.userId != null && this.userId != '') {
                     formData.append('userId', this.userId);
                     this.formAction = '/remoteusers/update';

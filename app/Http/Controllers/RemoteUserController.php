@@ -327,7 +327,8 @@ class RemoteUserController extends Controller
                     "billing_postcode" => $data['postanskiBroj'],
                     "billing_phone" => $data['telefon1'],
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
-                    "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0
+                    "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
+                    "source" => $data['source']
                 ],
         ]);
 
@@ -424,7 +425,8 @@ class RemoteUserController extends Controller
                     "billing_phone" => $data['telefon1'],
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
-                    "klf_korisnik" => $data["klf_korisnik"] == "true" ? 1 : 0
+                    "klf_korisnik" => $data["klf_korisnik"] == "true" ? 1 : 0,
+                    "source" => $data['source']
                 ],
         ]);
 
@@ -562,7 +564,8 @@ class RemoteUserController extends Controller
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
-                    "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0
+                    "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
+                    "source" => $data["Source"]
                 ],
         ]);
 
@@ -640,7 +643,8 @@ class RemoteUserController extends Controller
                     "billing_phone" => $data['telefon1'],
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
-                    "klf_korisnik" => $data["klf_korisnik"] == "true" ? 1 : 0
+                    "klf_korisnik" => $data["klf_korisnik"] == "true" ? 1 : 0,
+                    "source" => $data['source']
                 ],
         ]);
 
@@ -842,6 +846,7 @@ class RemoteUserController extends Controller
             'username' => $data['username'],
             'isTeacher' => $data['isTeacher'],
             'source' => $data['source'],
+            'enabled' => true
         ];
 
         // Get user data from CRM
@@ -849,7 +854,6 @@ class RemoteUserController extends Controller
         if(count($users) > 0) {
             $crmUserData = $users[0];
 
-            $user['enabled'] = false;
             $user['firstName'] = $crmUserData['firstname'];
             $user['lastName'] = $crmUserData['lastname'];
             $user['billing_address_1'] = $crmUserData['address1_line1'];
