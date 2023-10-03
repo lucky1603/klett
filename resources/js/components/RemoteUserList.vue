@@ -62,6 +62,9 @@
                         <a href="#" @click.prevent="deleteClicked(data.item.id, data.item.username)" class="mx-1"><b-icon icon="trash"></b-icon></a>
                     </div>
                 </template>
+                <template #cell(source)="data">
+                    {{ data.item.attributes.source[0] }}
+                </template>
             </b-table>
             <!-- <b-pagination
                 v-model="currentPage"
@@ -139,9 +142,9 @@ export default {
                 {
                     key: "username",
                     sortable: true,
-                    label: window.i18n.gui.username,
+                    label: 'Korisnik',
                     thStyle: {
-                        width: "20%"
+                        width: "10%"
                     }
                 },
                 {
@@ -149,7 +152,7 @@ export default {
                     sortable: true,
                     label: window.i18n.gui.firstName,
                     thStyle: {
-                        width: "25%"
+                        width: "15%"
                     }
                 },
                 {
@@ -157,7 +160,7 @@ export default {
                     sortable: true,
                     label: window.i18n.gui.lastName,
                     thStyle: {
-                        width: "25%"
+                        width: "15%"
                     }
                 },
                 {
@@ -166,6 +169,13 @@ export default {
                     label: window.i18n.gui.email,
                     thStyle: {
                         width: "30%"
+                    }
+                },
+                {
+                    key: "source",
+                    label: "Poreklo",
+                    thStyle: {
+                        width: "20%"
                     }
                 },
                 {
@@ -180,9 +190,10 @@ export default {
                     key: "activity",
                     label: window.i18n.gui.activity,
                     thStyle: {
-                        width: '10%'
+                        width: '5%'
                     }
-                }
+                },
+
 
 
             ],

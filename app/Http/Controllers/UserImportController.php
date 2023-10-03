@@ -37,6 +37,7 @@ class UserImportController extends Controller
                 'ime' => $user->ime,
                 'prezime' => $user->prezime,
                 'isTeacher' => $user->is_teacher == 0 ?  'NE' : 'DA',
+                'source' => $user->source
             ];
         });
 

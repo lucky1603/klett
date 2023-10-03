@@ -171,7 +171,7 @@ class RemoteUserController extends Controller
         $max = $request->post('max');
         return Http::withToken($token)
             // ->withOptions(['verify' => false])
-            ->get(ENV("KEYCLOAK_API_USERS_URL")."?briefRepresentation=true&first=".$first."&max=".$max);
+            ->get(ENV("KEYCLOAK_API_USERS_URL")."?briefRepresentation=false&first=".$first."&max=".$max);
     }
 
     public function getCount(Request $request) {
@@ -826,7 +826,8 @@ class RemoteUserController extends Controller
             'firstName' => $user->ime,
             'lastName' => $user->prezime,
             'username' => $user->username,
-            'isTeacher' => $user->is_teacher == 1 ? "true" : "false"
+            'isTeacher' => $user->is_teacher == 1 ? "true" : "false",
+            'source' => $user->source,
         ];
 
         return $this->import($data);
@@ -840,6 +841,7 @@ class RemoteUserController extends Controller
             'lastName' => $data['lastName'],
             'username' => $data['username'],
             'isTeacher' => $data['isTeacher'],
+            'source' => $data['source'],
         ];
 
         // Get user data from CRM
@@ -910,6 +912,7 @@ class RemoteUserController extends Controller
                     "klf_korisnik" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
                     "testomat" => array_key_exists('testomat', $user) && $user['testomat'] == "true" ? 1 : 0 ,
                     "pedagoska_sveska" => array_key_exists('pedagoska_sveska', $user) && $user['pedagoska_sveska'] == "true" ? 1 : 0 ,
+                    'source' => $user['source']
                 ],
         ]);
 
@@ -921,7 +924,7 @@ class RemoteUserController extends Controller
             if($data['isTeacher'] == "true") {
                 $groupId = $this->getGroupIdByName("Teacher");
             } else {
-                $groupId = $this->getGroupIdByName('Subscriber');
+                $groupId = $this->getGroupIdByName('Student');
             }
 
             $setGroupRequest = new Request([],[

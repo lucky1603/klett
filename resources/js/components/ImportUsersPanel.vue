@@ -184,7 +184,8 @@ export default {
                 firstName: '',
                 lastName: '',
                 email: '',
-                isTeacher: false
+                isTeacher: false,
+                source: ''
             },
             total: 0,
             imported: 0,
@@ -232,6 +233,7 @@ export default {
             this.selectedUser.lastName = item.prezime;
             this.selectedUser.username = item.username;
             this.selectedUser.isTeacher = item.isTeacher == "DA" ? true : false;
+            this.selectedUser.source = item.source;
         },
         async checkUser(email) {
             await axios.get('/crm/checkUser/' + email)

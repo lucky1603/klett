@@ -25,12 +25,15 @@ class EUcionicaImport implements ToModel
             $teacher = true;
         }
 
+        $source = $row[11];
+
         return UserImport::create([
             'username' => $row[2],
             'ime' => $row[8],
             'prezime' => $row[9],
             'email' => $row[3],
-            'is_teacher' => $teacher
+            'is_teacher' => $teacher,
+            'source' => $source,
         ]);
     }
 }
