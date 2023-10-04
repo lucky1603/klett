@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ScheduledEdit;
 use App\Exports\RemoteUsersExport;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
@@ -268,7 +269,7 @@ class RemoteUserController extends Controller
         } else {
             $requestUrl .= "&&";
         }
-        $requestUrl .= "briefRepresentation=true&&first=".$data['first']."&&max=".$data['max'];
+        $requestUrl .= "briefRepresentation=false&&first=".$data['first']."&&max=".$data['max'];
 
         return Http::withToken($token)
             // ->withOptions(['verify' => false])
@@ -820,6 +821,30 @@ class RemoteUserController extends Controller
         for($i = 0; $i < 100; $i++) {
             $this->importFirstUser();
         }
+    }
+
+    public function getUnimportedUserIds() {
+        return UserImport::where('imported', false)->get()->map(function($user) {
+            return $user->id;
+        });
+    }
+
+    public function importUserById($userId) {
+        // $user = UserImport::find($userId);
+
+        $user = DB::table('user_imports')->where('id', $userId)->first();
+
+        $data = [
+            "userId" => $user->id,
+            'email' => $user->email,
+            'firstName' => $user->ime,
+            'lastName' => $user->prezime,
+            'username' => $user->username,
+            'isTeacher' => $user->is_teacher == 1 ? "true" : "false",
+            'source' => $user->source,
+        ];
+
+        return $this->import($data);
     }
 
     public function importFirstUser() {

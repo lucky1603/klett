@@ -73,7 +73,8 @@ Route::get('remoteusers/importFirstUser', [RemoteUserController::class, 'importF
 Route::get('remoteusers/deleteall', [RemoteUserController::class, 'deleteAll'])->name('remoteusers.deleteAll');
 Route::get('remoteusers/importall', [RemoteUserController::class, 'importAllUsers'])->name('remoteusers.importAll');
 Route::get('remoteusers/scheduledEdit/{token}', [RemoteUserController::class, 'editScheduled'])->name('remoteusers.scheduledEdit');
-
+Route::get('remoteusers/unimporteduserids', [RemoteUserController::class, 'getUnimportedUserIds'])->name('remoteusers.unimporteduserids');
+Route::get('remoteusers/importuserbyid/{user}', [RemoteUserController::class, 'importUserById'])->name('remoteusers.importeduserbyid');
 // CRM
 Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');
 Route::get('crm/checkUser/{email}', [CRMController::class, 'checkUser'])->name('crm.checkUser');

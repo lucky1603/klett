@@ -113,7 +113,8 @@ export default {
             files: [],
             selectedFile: '',
             append: "true",
-            busyImport: false
+            busyImport: false,
+            ids: [],
         };
     },
 
@@ -134,6 +135,12 @@ export default {
                 this.getData();
             });
             this.busyImport = false;
+        },
+        async getIds() {
+            await axios.get('/remoteusers/unimporteduserids')
+            .then(response => {
+                this.ids = response.data;
+            })
         },
         async getFiles() {
             await axios.get('/userimports/files')
@@ -171,18 +178,38 @@ export default {
                 this.importChart.series.push(this.total - this.imported);
             });
         },
+        async importId(id) {
+            await axios.get('/remoteusers/importuserbyid/' + id)
+            .then(response => {
+                this.total = response.data.total;
+                this.imported = response.data.imported;
+                this.importChart.series.length = 0;
+                this.importChart.series.push(this.imported);
+                this.importChart.series.push(this.total - this.imported);
+            });
+        },
         async importMore() {
             if(this.stop)
                 return;
             await this.importOne();
             setTimeout(this.importMore, this.pace);
         },
-        startMultipleImport() {
+        async importMoreIds() {
+            if(this.stop)
+                return;
+            await this.importId(this.ids[0]);
+            this.ids.shift();
+            setTimeout(this.importMoreIds, this.pace);
+        },
+        async startMultipleImport() {
             this.stop = false;
+            // await this.getIds();
+            // await this.importMoreIds();
             this.importMore();
         },
         stopMultipleImport() {
             this.stop = true;
+            // this.ids = [];
         },
         async reset() {
             this.busy = true;
