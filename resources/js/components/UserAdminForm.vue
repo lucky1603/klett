@@ -201,8 +201,8 @@ export default {
             predmeti: [],
             captchaImg: null,
             role: [
-                { value: "a32c8e1b-a442-458c-9889-3567e19797ea", text: "Subscriber" },
-                { value: "bab78444-87f6-45e9-86fc-fd1b1d5b6530", text: "Teacher" },
+                { value: "207b176d-39d6-4861-b9fb-232ead68ff15", text: "Student" },
+                { value: "bab78444-87f6-45e9-86fc-fd1b1d5b6530", text: "Nastavnik" },
                 { value: "db2be6cb-aec0-4995-8e78-f69889a11e10", text: "Administrator" },
             ]
         };
