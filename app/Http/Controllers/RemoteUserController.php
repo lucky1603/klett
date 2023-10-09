@@ -288,7 +288,7 @@ class RemoteUserController extends Controller
         if($data['userRole'] != "0") {
 
             $response = Http::withToken($token)
-                ->get(env('KEYCLOAK_REALM_URL').'groups/'.$roleId.'/members');
+                ->get(env('KEYCLOAK_REALM_URL').'groups/'.$roleId.'/members?first=0&max=50000');
             $users = collect($response->json());
 
             $users = $users->filter(function($user) use($data) {
