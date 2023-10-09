@@ -199,28 +199,15 @@ class RemoteUserController extends Controller
             $requestUrl .= "lastName=".$data['lastName'];
         }
 
-        if($data['userStatus'] != 0) {
+        if($data['email'] != '') {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
                 $requestUrl .= "&&";
             }
 
-            $val = $data['userStatus'] == 1 ? "false" : "true";
-            $requestUrl .= "enabled=".$val;
+            $requestUrl .= "email=".$data['email'];
         }
-
-        // if($data['userRole'] != 0) {
-        //     $isTeacher = $data['userRole'] == 1 ? true : false;
-        //     if(!str_contains($requestUrl, "?")) {
-        //         $requestUrl .= "?";
-        //     } else {
-        //         $requestUrl .= "&&";
-        //     }
-
-        //     $val = $data['userRole'] == 1 ? "true" : "false";
-        //     $requestUrl .= "enabled=".$val;
-        // }
 
         return Http::withToken($token)
             ->get($requestUrl);
@@ -253,15 +240,14 @@ class RemoteUserController extends Controller
             $requestUrl .= "lastName=".$data['lastName'];
         }
 
-        if($data['userStatus'] != 0) {
+        if($data['email'] != '') {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
                 $requestUrl .= "&&";
             }
 
-            $val = $data['userStatus'] == 1 ? "false" : "true";
-            $requestUrl .= "enabled=".$val;
+            $requestUrl .= "email=".$data['email'];
         }
 
         if(!str_contains($requestUrl, "?")) {
@@ -275,72 +261,6 @@ class RemoteUserController extends Controller
             // ->withOptions(['verify' => false])
             ->get($requestUrl);
 
-    }
-
-    public function filterUsers1(Request $request) {
-        $data = $request->post();
-        $roleId = $data['userRole'];
-        $response = $this->connectKeyCloak();
-        $token = $response->json('access_token');
-
-        $users = [];
-
-        if($data['userRole'] != "0") {
-
-            $response = Http::withToken($token)
-                ->get(env('KEYCLOAK_REALM_URL').'groups/'.$roleId.'/members?first=0&max=50000');
-            $users = collect($response->json());
-
-            $users = $users->filter(function($user) use($data) {
-                $result = true;
-                if($data['firstName'] != '') {
-                    $result &= str_contains($user['firstName'], $data['firstName']);
-                } else {
-                    $result &= true;
-                }
-
-                if($data['lastName'] != '') {
-                    $result &= str_contains($user['lastName'], $data['lastName']);
-                } else {
-                    $result &= true;
-                }
-
-                if($data['userStatus'] != 0) {
-                    $status = $data['userStatus'] == 1 ? false : true;
-                    $result &= $user['enabled'] == $status;
-                } else {
-                    $result &= true;
-                }
-
-                return $result;
-
-            });
-
-            $count = $users->count();
-            if($count > 0) {
-                // Odradi paginaciju.
-                $chunks = $users->chunk($data['max']);
-                $index = $data['first']/$data['max'];
-                $users = $chunks[$index];
-            }
-
-            return [
-                'users' => $users,
-                'count' => $count
-            ];
-
-        } else {
-            $response = $this->filterUsers($request);
-            $users = $response->json();
-            $count = count($users);
-
-            return [
-                'users' => $users,
-                'count' => $count,
-            ];
-        }
-
-        // return $users;
     }
 
     public function create() {

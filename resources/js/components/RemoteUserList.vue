@@ -25,8 +25,18 @@
                                 <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
                             </template>
                         </b-input-group>
-                        <b-form-select v-model="searchForm.userRole" :options="roles" class="m-1" size="sm"></b-form-select>
-                        <b-form-select v-model="searchForm.userStatus" :options="statuses" class="m-1" size="sm"></b-form-select>
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-input
+                                type="search"
+                                id="searchLastName"
+                                placeholder="Po email adresi ..."
+                                v-model="searchForm.email"
+                            ></b-form-input>
+                            <template #append>
+                                <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
+                            </template>
+                        </b-input-group>
+
                     </b-form>
                 </b-col>
                 <b-col lg="2">
@@ -201,20 +211,8 @@ export default {
             searchForm: {
                 firstName: '',
                 lastName: '',
-                userRole: 0,
-                userStatus: 0
+                email: '',
             },
-            roles: [
-                { value: 0, text: "Po tipu korisnika" },
-                { value: "207b176d-39d6-4861-b9fb-232ead68ff15", text: "Student" },
-                { value: "bab78444-87f6-45e9-86fc-fd1b1d5b6530", text: "Teacher" },
-                { value: "db2be6cb-aec0-4995-8e78-f69889a11e10", text: "Administrator" }
-            ],
-            statuses: [
-                { value: 0, text: "Po statusu"},
-                { value: 1, text: "Neaktivan(-na)"},
-                { value: 2, text: "Aktivan(-na)"}
-            ],
             selected: [],
             busy: false,
             busyDeleteAll: false
@@ -273,25 +271,19 @@ export default {
                 formData.append(property, this.searchForm[property]);
             }
 
-            // await axios.post('/remoteusers/filtercount', formData)
-            // .then(response => {
-            //     console.log(response.data);
-            //     this.rowsCount = response.data;
-            // });
-
-            await axios.post('/remoteusers/filterUsers1', formData)
+            await axios.post('/remoteusers/filtercount', formData)
             .then(response => {
                 console.log(response.data);
+                this.rowsCount = response.data;
+            });
 
+            await axios.post('/remoteusers/filterUsers', formData)
+            .then(response => {
+                console.log(response.data);
                 this.items = [];
-                this.rowsCount = response.data.count;
-
-
-                for(let property in response.data.users) {
-                    this.items.push(response.data.users[property]);
+                for(let property in response.data) {
+                    this.items.push(response.data[property]);
                 }
-
-                // this.items = response.data;
 
             });
         },
