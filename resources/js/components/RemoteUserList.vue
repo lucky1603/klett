@@ -72,9 +72,6 @@
                         <a href="#" @click.prevent="deleteClicked(data.item.id, data.item.username)" class="mx-1"><b-icon icon="trash"></b-icon></a>
                     </div>
                 </template>
-                <template #cell(source)="data">
-                    {{ data.item.attributes.source[0] }}
-                </template>
             </b-table>
             <!-- <b-pagination
                 v-model="currentPage"
@@ -179,13 +176,6 @@ export default {
                     label: window.i18n.gui.email,
                     thStyle: {
                         width: "30%"
-                    }
-                },
-                {
-                    key: "source",
-                    label: "Poreklo",
-                    thStyle: {
-                        width: "20%"
                     }
                 },
                 {
