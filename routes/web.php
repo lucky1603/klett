@@ -63,6 +63,7 @@ Route::post("remoteusers/user_group", [RemoteUserController::class, 'userGroup']
 Route::post("remoteusers/setUserGroup", [RemoteUserController::class, 'setUserGroup'])->name('remoteusers.setUserGroup');
 Route::get("remoteusers/getGroupIdByName/{user}/{group}", [RemoteUserController::class, 'getGroupIdByName'])->name('remoteusers.getGroupIdByName');
 Route::post('remoteusers/filterUsers', [RemoteUserController::class, 'filterUsers'])->name('remoteusers.filterUsers');
+Route::post('remoteusers/filterUsers1', [RemoteUserController::class, 'filterUsers1'])->name('remoteusers.filterUsers1');
 Route::get('remoteusers/testmail/{email}', [RemoteUserController::class, 'testMail'])->name('remoteusers.testmail');
 Route::post('remoteusers/adminupdate', [RemoteUserController::class, 'adminUpdate'])->name('remoteusers.adminupdate');
 Route::post('remoteusers/adminstore', [RemoteUserController::class, 'adminStore'])->name('remoteusers.adminstore');

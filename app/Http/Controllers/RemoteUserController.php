@@ -277,6 +277,72 @@ class RemoteUserController extends Controller
 
     }
 
+    public function filterUsers1(Request $request) {
+        $data = $request->post();
+        $roleId = $data['userRole'];
+        $response = $this->connectKeyCloak();
+        $token = $response->json('access_token');
+
+        $users = [];
+
+        if($data['userRole'] != "0") {
+
+            $response = Http::withToken($token)
+                ->get(env('KEYCLOAK_REALM_URL').'groups/'.$roleId.'/members');
+            $users = collect($response->json());
+
+            $users = $users->filter(function($user) use($data) {
+                $result = true;
+                if($data['firstName'] != '') {
+                    $result &= str_contains($user['firstName'], $data['firstName']);
+                } else {
+                    $result &= true;
+                }
+
+                if($data['lastName'] != '') {
+                    $result &= str_contains($user['lastName'], $data['lastName']);
+                } else {
+                    $result &= true;
+                }
+
+                if($data['userStatus'] != 0) {
+                    $status = $data['userStatus'] == 1 ? false : true;
+                    $result &= $user['enabled'] == $status;
+                } else {
+                    $result &= true;
+                }
+
+                return $result;
+
+            });
+
+            $count = $users->count();
+            if($count > 0) {
+                // Odradi paginaciju.
+                $chunks = $users->chunk($data['max']);
+                $index = $data['first']/$data['max'];
+                $users = $chunks[$index];
+            }
+
+            return [
+                'users' => $users,
+                'count' => $count
+            ];
+
+        } else {
+            $response = $this->filterUsers($request);
+            $users = $response->json();
+            $count = count($users);
+
+            return [
+                'users' => $users,
+                'count' => $count,
+            ];
+        }
+
+        // return $users;
+    }
+
     public function create() {
         return view('remoteusers.create');
     }

@@ -7,7 +7,7 @@
                         <apexchart type="pie" height="380" :options="importChart.options" :series="importChart.series"></apexchart>
                     </div>
                     <div class="d-flex align-items-center justify-content-center my-2">
-                        <b-button variant="primary" size="sm" class="m-1" type="button" @click="reset">
+                        <b-button variant="primary" size="sm" class="m-1" type="button" @click="reset" :enabled="stop">
                             <b-spinner small v-if="busy" class="mr-1"></b-spinner>
                             Reset
                         </b-button>
@@ -40,9 +40,9 @@
                     <progress-bar :max="total" :value="imported" class="mx-2"></progress-bar>
 
                     <div class="d-flex align-items-center justify-content-center my-2">
-                        <b-button variant="primary" size="sm" class="m-1" type="button" @click="startMultipleImport">Pokreni</b-button>
-                        <b-button variant="danger" size="sm" class="m-1" type="button" @click="stopMultipleImport">Zaustavi</b-button>
-                        <b-button variant="success" size="sm" class="m-1" type="button" @click="importOne">Uvezi jednog</b-button>
+                        <b-button variant="primary" size="sm" class="m-1" type="button" @click="startMultipleImport" :enabled="stop">Pokreni</b-button>
+                        <b-button variant="danger" size="sm" class="m-1" type="button" @click="stopMultipleImport" :enabled="!stop">Zaustavi</b-button>
+                        <b-button variant="success" size="sm" class="m-1" type="button" @click="importOne" :enabled="stop">Uvezi jednog</b-button>
                     </div>
                 </b-card>
 
@@ -56,7 +56,7 @@
                         <b-form-checkbox v-model="append" value="true" unchecked-value="false">Dodaj na postojeće</b-form-checkbox>
 
                         <div class="d-flex align-items-center justify-content-center my-2">
-                            <b-button type="submit" variant="primary">
+                            <b-button type="submit" variant="primary" :enabled="stop">
                                 <b-spinner small v-if="busyImport" class="mr-1"></b-spinner>
                                 Podesi
                             </b-button>

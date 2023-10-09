@@ -25,7 +25,7 @@
                                 <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
                             </template>
                         </b-input-group>
-                        <!-- <b-form-select v-model="searchForm.userRole" :options="roles" class="m-1" size="sm"></b-form-select> -->
+                        <b-form-select v-model="searchForm.userRole" :options="roles" class="m-1" size="sm"></b-form-select>
                         <b-form-select v-model="searchForm.userStatus" :options="statuses" class="m-1" size="sm"></b-form-select>
                     </b-form>
                 </b-col>
@@ -48,7 +48,7 @@
                 :fields="fields"
                 head-variant="dark"
                 class="w-100 h-100"
-                @row-selected="onTableSelected"
+                @row-selected="onRowSelected"
                 >
                 <template #cell(enabled)="data">
                     <div class="d-flex align-items-center justify-content-center">
@@ -205,9 +205,10 @@ export default {
                 userStatus: 0
             },
             roles: [
-                { value: 0, text: "Po tipu korisnika"},
-                { value: 1, text: "Nastavnici"},
-                { value: 2, text: "Ucenici" }
+                { value: 0, text: "Po tipu korisnika" },
+                { value: "207b176d-39d6-4861-b9fb-232ead68ff15", text: "Student" },
+                { value: "bab78444-87f6-45e9-86fc-fd1b1d5b6530", text: "Teacher" },
+                { value: "db2be6cb-aec0-4995-8e78-f69889a11e10", text: "Administrator" }
             ],
             statuses: [
                 { value: 0, text: "Po statusu"},
@@ -226,21 +227,34 @@ export default {
     },
 
     methods: {
-        pageChanged(ctx) {
-            console.log("Page changed " + this.currentPage);
-        },
-        onTableSelected(items) {
+        /**
+         * Table row selected event
+         */
+        onRowSelected(items) {
             this.selected = items;
         },
+        /**
+         * Filter submitted from the search form
+         */
         async submitFilter() {
             this.isFilter = true;
-            await this.getFilter();
+            if(this.currentPosition != 0) {
+                this.currentPosition = 0;
+            } else {
+                await this.getFilter();
+            }
             this.$refs.nav.start();
         },
+        /**
+         * Reset filter
+         */
         async cancelFilter() {
             this.isFilter = false;
             await this.resetSearchForm();
         },
+        /**
+         * Get filtered data
+         */
         async getFilter() {
             await axios.get('/remoteusers/keycloak')
             .then(response => {
@@ -259,23 +273,31 @@ export default {
                 formData.append(property, this.searchForm[property]);
             }
 
-            await axios.post('/remoteusers/filtercount', formData)
-            .then(response => {
-                console.log(response.data);
-                this.rowsCount = response.data;
-            });
+            // await axios.post('/remoteusers/filtercount', formData)
+            // .then(response => {
+            //     console.log(response.data);
+            //     this.rowsCount = response.data;
+            // });
 
-            await axios.post('/remoteusers/filterUsers', formData)
+            await axios.post('/remoteusers/filterUsers1', formData)
             .then(response => {
                 console.log(response.data);
-                //this.items.length = 0;
+
                 this.items = [];
-                for(let i = 0; i < response.data.length; i++) {
-                    this.items.push(response.data[i]);
+                this.rowsCount = response.data.count;
+
+
+                for(let property in response.data.users) {
+                    this.items.push(response.data.users[property]);
                 }
+
+                // this.items = response.data;
 
             });
         },
+        /**
+         * Get unfiltered data
+         */
         async getData() {
             await axios.get('/remoteusers/keycloak')
             .then(response => {
@@ -310,13 +332,22 @@ export default {
 
             });
         },
+        /**
+         * Help function - show the user edit/create form
+         */
         showForm() {
             this.$refs.userFormDialog.show();
         },
+        /**
+         * Help function - Close the user edit/create form
+         */
         closeForm() {
             this.$refs.userFormDialog.hide();
             this.selectedUserId = '';
         },
+        /**
+         * Ok selected in user edit/create form
+         */
         onOk() {
             this.$refs.remoteUserForm.sendData()
             .then(response => {
@@ -334,23 +365,30 @@ export default {
                 console.log(error.message);
             });
         },
+        /**
+         * Shows the form for the user creation
+         */
         createUser() {
             this.userDialogTitle = window.i18n.gui.addUser;
             this.showForm();
         },
+        /**
+         * Cancel edit/create form
+         */
         onCancel() {
             this.closeForm();
         },
-        tableClick(item, index) {
-            this.selectedUserId = item.id;
-            this.userDialogTitle = window.i18n.gui.changeUser;
-            this.showForm();
-        },
+        /**
+         * Edit icon clicked
+         */
         editClicked(id)  {
             this.selectedUserId = id;
             this.userDialogTitle = window.i18n.gui.changeUser;
             this.showForm();
         },
+        /**
+         * Delete icon clicked
+         */
         deleteClicked(id, username) {
             this.deleteMode = 1;
             this.selectedUserId = id;
@@ -358,6 +396,9 @@ export default {
             this.deleteDialogMessage = "Da li ste sigurni da hoćete da obrišete korisnike '" + this.selectedUsername + "'?";
             this.$refs.deleteDialog.show();
         },
+        /**
+         * Delete selected rows/users
+         */
         deleteSelectedClicked() {
 
             this.deleteMode = 2;
@@ -365,12 +406,18 @@ export default {
             this.$refs.deleteDialog.show();
 
         },
+        /**
+         * Delete all rows/users.
+         */
         deleteAllClicked() {
 
             this.deleteMode = 3;
             this.deleteDialogMessage = "Da li ste sigurni da hoćete da obrišete sve korisnike?";
             this.$refs.deleteDialog.show();
         },
+        /**
+         * Confim action selected in the delete dialog
+         */
         async onDelete() {
 
             this.$refs.deleteDialog.hide();
@@ -383,6 +430,9 @@ export default {
             }
 
         },
+        /**
+         * Afirmative callback from the deletion from icon.
+         */
         async deleteFromIcon() {
             await axios.get('/remoteusers/keycloak')
             .then(response => {
@@ -405,6 +455,9 @@ export default {
             })
 
         },
+        /**
+         * Afirmative callback from the deletion of the selected ones.
+         */
         async onDeleteSelected() {
             if(this.selected.length == 0)
                 return;
@@ -432,6 +485,9 @@ export default {
             await this.getData();
             this.busy = false;
         },
+        /**
+         * Afirmative callback from the deletion of everything.
+         */
         async onDeleteAll() {
             this.busyDeleteAll = true;
 
@@ -443,18 +499,43 @@ export default {
             await this.getData();
             this.busyDeleteAll = false;
         },
+        /**
+         * Negative callback from the deletion dialog.
+         */
         onCancelDelete() {
             this.$refs.deleteDialog.hide();
             this.selectedUserId = 0;
             this.selectedUsername = '';
         },
+        /**
+         * Reset search form fields, and get the data.
+         */
         async resetSearchForm() {
             this.searchForm.firstName = '';
             this.searchForm.lastName = '';
             this.searchForm.userStatus = 0;
+            this.searchForm.userRole = 0;
             await this.getData();
             this.$refs.nav.start();
         },
+        /**
+         * Enable all selected
+         */
+        enableSelected() {
+
+        },
+        /**
+         * Disable all selected
+         */
+        disableSelected() {
+
+        },
+        /**
+         * Send the password reset mail to all selected\
+         */
+        sendMailSelected() {
+
+        }
 
     },
 };
