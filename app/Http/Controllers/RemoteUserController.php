@@ -38,7 +38,7 @@ class RemoteUserController extends Controller
         ->post(env('KEYCLOAK_TOKEN_URL'), [
             "client_id" => "admin-cli",
             "username" => "admin",
-            "password" => "BiloKoji12@",
+            "password" => "dimitrijepro12",
             "grant_type" => "password"
         ]);
     }
