@@ -53,7 +53,7 @@
                 responsive
                 small bordered hover
                 selectable
-                select-mode="multi"
+                select-mode="range"
                 :items="items"
                 :fields="fields"
                 head-variant="dark"
@@ -94,6 +94,19 @@
                     {{ _('gui.DeleteAll') }}
                 </b-button>
                 <a class="btn btn-sm btn-primary float-right m-1" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
+            </div>
+            <div class="d-flex align-items-center justify-content-center">
+                <b-button variant="outline-success" class="m-1" size="sm" @click="sendMailSelected">
+                    <div class="d-flex flex-column">
+                        <b-progress v-if="mailToSendCount > 0" :max="mailToSendCount" show-value>
+                            <b-progress-bar :value="mailSentCount" variant="success"></b-progress-bar>
+                        </b-progress>
+                        <div class="d-flex">
+                            <i class="bi bi-envelope-check mr-2"></i>Pošalji mail izabranima
+                        </div>
+                    </div>
+                </b-button>
+                <b-button variant="success" class="m-1" size="sm" @click="sendMailToEverybody"><i class="bi bi-envelope mr-2"></i>Pošalji mail svima</b-button>
             </div>
 
         </div>
@@ -205,7 +218,9 @@ export default {
             },
             selected: [],
             busy: false,
-            busyDeleteAll: false
+            busyDeleteAll: false,
+            mailToSendCount: 0,
+            mailSentCount: 0
         };
     },
 
@@ -515,7 +530,42 @@ export default {
         /**
          * Send the password reset mail to all selected\
          */
-        sendMailSelected() {
+        async sendMailSelected() {
+            console.log('Pressed send mail selected ...');
+            console.log("There are " + this.selected.length + " selected users.");
+            this.mailToSendCount = this.selected.length;
+            this.mailSentCount = 0;
+            if(this.mailToSendCount > 0) {
+                for(let i = 0; i < this.selected.length; i++) {
+                    let user = this.selected[i];
+                    await axios.get('remoteusers/' + user.id + '/updatePassword')
+                    .then(response => {
+                        this.mailSentCount ++;
+                    })
+                }
+
+                this.mailSentCount = 0;
+                this.mailToSendCount = 0;
+
+            }
+        },
+        async sendMailToEverybody() {
+            console.log(this.rowsCount);
+            let formData = new FormData();
+            formData.append('token', this.accessToken);
+            formData.append('first', 0);
+            formData.append('max', this.rowsCount);
+
+            axios.post('/remoteusers/data', formData)
+            .then(response => {
+                let users = response.data;
+                var userids = [];
+                for(let i = 0; i < users.length; i++) {
+                    userids.push(users[i].id);
+                }
+
+                console.log(userids);
+            });
 
         }
 

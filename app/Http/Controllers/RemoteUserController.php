@@ -38,7 +38,7 @@ class RemoteUserController extends Controller
         ->post(env('KEYCLOAK_TOKEN_URL'), [
             "client_id" => "admin-cli",
             "username" => "admin",
-            "password" => "dimitrijepro12",
+            "password" => "BiloKoji12@",
             "grant_type" => "password"
         ]);
     }
@@ -1015,6 +1015,7 @@ class RemoteUserController extends Controller
 
         return view('appusers.expired');
     }
+
 
 
 }

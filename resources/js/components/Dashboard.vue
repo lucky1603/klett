@@ -19,7 +19,7 @@
                     </b-col>
                 </b-row>
             </b-tab>
-            <b-tab title="Uvoz">
+            <b-tab v-if="isAdmin == 'true'" title="Uvoz">
                 <b-row>
                     <b-col>
                         <mass-import :interval="1000"></mass-import>
@@ -33,7 +33,9 @@
 <script>
 export default {
     name: 'Dashboard',
-
+    props: {
+        isAdmin: { typeof: String, default: "false" }
+    },
     data() {
         return {
             verticalChart: {
