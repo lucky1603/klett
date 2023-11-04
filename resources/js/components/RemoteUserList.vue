@@ -106,7 +106,17 @@
                         </div>
                     </div>
                 </b-button>
-                <b-button variant="success" class="m-1" size="sm" @click="sendMailToEverybody"><i class="bi bi-envelope mr-2"></i>Pošalji mail svima</b-button>
+                <b-button variant="success" class="m-1" size="sm" @click="sendMailToEverybody">
+                    <div class="d-flex flex-column">
+                        <b-progress v-if="requestingUserIds" :max="rowsCount" show-value>
+                            <b-progress-bar :value="userIds.length" variant="success"></b-progress-bar>
+                        </b-progress>
+                        <div class="d-flex">
+                            <i class="bi bi-envelope mr-2"></i>Pošalji mail svima
+                        </div>
+                    </div>
+
+                </b-button>
             </div>
 
         </div>
@@ -220,7 +230,10 @@ export default {
             busy: false,
             busyDeleteAll: false,
             mailToSendCount: 0,
-            mailSentCount: 0
+            mailSentCount: 0,
+            userIds: [],
+            requestingUserIds: false
+
         };
     },
 
@@ -551,22 +564,39 @@ export default {
         },
         async sendMailToEverybody() {
             console.log(this.rowsCount);
-            let formData = new FormData();
-            formData.append('token', this.accessToken);
-            formData.append('first', 0);
-            formData.append('max', this.rowsCount);
 
-            axios.post('/remoteusers/data', formData)
-            .then(response => {
-                let users = response.data;
-                var userids = [];
-                for(let i = 0; i < users.length; i++) {
-                    userids.push(users[i].id);
+            let intervals = [];
+            this.userIds = [];
+            this.requestingUserIds = true;
+            if(this.rowsCount > 100) {
+                for(let i = 0; i < this.rowsCount; i += 100) {
+                    intervals.push({
+                        first: i,
+                        max: 100
+                    });
                 }
 
-                console.log(userids);
-            });
+                // console.log(intervals);
 
+                for(let i = 0; i < intervals.length; i ++) {
+                    let interval = intervals[i];
+                    let formData = new FormData();
+                    formData.append('token', this.accessToken);
+                    formData.append('first', interval.first);
+                    formData.append('max', interval.max);
+
+                    axios.post('/remoteusers/data', formData)
+                    .then(response => {
+                        let users = response.data;
+                        for(let i = 0; i < users.length; i++) {
+                            this.userIds.push(users[i].id);
+                        }
+                    });
+                }
+
+                this.requestingUserIds = false;
+                console.log(this.userIds);
+            }
         }
 
     },
