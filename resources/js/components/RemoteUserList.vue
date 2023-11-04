@@ -567,36 +567,37 @@ export default {
 
             let intervals = [];
             this.userIds = [];
+
             this.requestingUserIds = true;
-            if(this.rowsCount > 100) {
-                for(let i = 0; i < this.rowsCount; i += 100) {
-                    intervals.push({
-                        first: i,
-                        max: 100
-                    });
-                }
 
-                // console.log(intervals);
-
-                for(let i = 0; i < intervals.length; i ++) {
-                    let interval = intervals[i];
-                    let formData = new FormData();
-                    formData.append('token', this.accessToken);
-                    formData.append('first', interval.first);
-                    formData.append('max', interval.max);
-
-                    axios.post('/remoteusers/data', formData)
-                    .then(response => {
-                        let users = response.data;
-                        for(let i = 0; i < users.length; i++) {
-                            this.userIds.push(users[i].id);
-                        }
-                    });
-                }
-
-                this.requestingUserIds = false;
-                console.log(this.userIds);
+            for(let i = 0; i < this.rowsCount; i += 100) {
+                intervals.push({
+                    first: i,
+                    max: 100
+                });
             }
+
+            console.log(intervals);
+
+            for(let i = 0; i < intervals.length; i ++) {
+                let interval = intervals[i];
+                let formData = new FormData();
+                formData.append('token', this.accessToken);
+                formData.append('first', interval.first);
+                formData.append('max', interval.max);
+
+                await axios.post('/remoteusers/data', formData)
+                .then(response => {
+                    let users = response.data;
+                    for(let i = 0; i < users.length; i++) {
+                        this.userIds.push(users[i].id);
+                    }
+                });
+            }
+
+            this.requestingUserIds = false;
+            console.log(this.userIds);
+
         }
 
     },
