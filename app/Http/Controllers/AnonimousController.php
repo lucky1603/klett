@@ -100,7 +100,7 @@ class AnonimousController extends Controller
 
     }
 
-    public function testRequestEdit() {
-        return view('anonimous.testrequestedit');
+    public function testRequestEdit($email) {
+        return view('anonimous.testrequestedit', ['email' => $email]);
     }
 }
