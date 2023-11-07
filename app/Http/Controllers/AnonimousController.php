@@ -81,7 +81,7 @@ class AnonimousController extends Controller
             $userId = $users[0]['id'];
             $scheduledEdit = ScheduledEdit::create([
                 'user_id' => $userId,
-                'token' => Str::random(10),
+                'token' => Str::random(60),
                 'validated' => false,
             ]);
 
