@@ -392,13 +392,7 @@ export default {
             });
         },
         async getData() {
-            await axios.get('/remoteusers/keycloak')
-            .then(response => {
-                this.accessToken = response.data.access_token;
-            });
-
             let formData = new FormData();
-            formData.append('token', this.accessToken);
             formData.append('userId', this.userId);
             await axios.post('/remoteusers/userData', formData)
             .then(response => {

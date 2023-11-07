@@ -476,10 +476,11 @@ class RemoteUserController extends Controller
     }
 
     public function userData(Request $request) {
-        $data = $request->post();
+        $userId = $request->post('userId');
 
-        $userId = $data['userId'];
-        $token = $data['token'];
+        $response = $this->connectKeyCloak();
+        $token = $response->json('access_token');
+
         $response = Http::withToken($token)
             // ->withOptions(['verify' => false])
             ->get(env("KEYCLOAK_API_USERS_URL").$userId);
