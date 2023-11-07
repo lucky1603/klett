@@ -588,6 +588,10 @@ class RemoteUserController extends Controller
                     ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
             }
 
+            ScheduledEdit::where('user_id', $userId)->update([
+                'validated' => true
+            ]);
+
             return [
                 "status" => $response->status(),
                 "message" => "Success!!!"
