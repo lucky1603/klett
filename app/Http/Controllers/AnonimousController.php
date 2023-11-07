@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Mail\RequestEdit;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\ScheduledEdit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\ChangePasswordRequest;
 
 class AnonimousController extends Controller
@@ -62,5 +66,41 @@ class AnonimousController extends Controller
 
     public function refreshCaptcha() {
         return captcha_img('klett');
+    }
+
+    public function requestEditProfile($email) {
+        // Get user from database
+        $response = $this->connectKeyCloak();
+        $accessToken = $response->json('access_token');
+        $userResponse = Http::withToken($accessToken)
+            ->get(env('KEYCLOAK_API_USERS_URL').'?briefRepresentation=true&email='.$email);
+
+        $users = $userResponse->json();
+        if(count($users) > 0) {
+            // Do something
+            $userId = $users[0]['id'];
+            $scheduledEdit = ScheduledEdit::create([
+                'user_id' => $userId,
+                'token' => Str::random(10),
+                'validated' => false,
+            ]);
+
+            $name = $users[0]['firstName'].' '.$users[0]['lastName'];
+
+            Mail::to($email)->send(new RequestEdit($name, $scheduledEdit->token));
+            return view('anonimous.editconf');
+        }
+
+        return view('anonimous.editerr');
+
+        // $scheduledEdit = ScheduledEdit::create([
+
+        // ]);
+
+
+    }
+
+    public function testRequestEdit() {
+        return view('anonimous.testrequestedit');
     }
 }

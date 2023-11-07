@@ -29,6 +29,8 @@ Route::get('/', function () {
 Route::get('/anonimous/verify/{token}', [AnonimousController::class, 'verify'])->name('anonimous.verify');
 Route::post('anonimous/password', [AnonimousController::class, 'password'])->name('anonimous.password');
 Route::get('/refreshCaptcha', [AnonimousController::class, 'refreshCaptcha'])->name('anonimous.refreshCaptcha');
+Route::get('/testRequestEdit', [AnonimousController::class, 'testRequestEdit'])->name('anonimous.testrequestedit');
+Route::get('/requestEditProfile/{email}', [AnonimousController::class, 'requestEditProfile'])->name('anonimous.requesteditprofile');
 
 Auth::routes();
 

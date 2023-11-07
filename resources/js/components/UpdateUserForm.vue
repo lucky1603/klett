@@ -80,7 +80,7 @@ export default {
             this.$refs.userForm.sendData()
             .then(response => {
                 this.spinner = false;
-                if(response.data.status == 201) {
+                if(response.data.status == 201 || response.data.status == 204) {
                     this.sent = true;
                     this.success = true;
                 } else {

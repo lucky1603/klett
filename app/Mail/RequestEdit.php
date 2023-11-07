@@ -32,6 +32,6 @@ class RequestEdit extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.requestedit', ['user' => $this->user, 'token' => $this->token]);
+        return $this->view('emails.requesteditprofile', ['user' => $this->user, 'token' => $this->token]);
     }
 }

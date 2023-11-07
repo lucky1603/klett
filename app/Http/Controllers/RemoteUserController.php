@@ -552,7 +552,7 @@ class RemoteUserController extends Controller
                     "billing_postcode" => $data['postanskiBroj'],
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
-                    "source" => $data["Source"]
+                    "source" => $data["Source"] ?? 'Klett'
                 ],
         ]);
 
