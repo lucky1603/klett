@@ -332,7 +332,7 @@ class RemoteUserController extends Controller
             if($data['isTeacher'] == "true") {
                 $groupId = $this->getGroupIdByName("Teacher");
             } else {
-                $groupId = $this->getGroupIdByName('Subscriber');
+                $groupId = $this->getGroupIdByName('Student');
             }
 
             $setGroupRequest = new Request([],[
@@ -570,7 +570,7 @@ class RemoteUserController extends Controller
             if($data['isTeacher'] == "true") {
                 $groupId = $this->getGroupIdByName("Teacher");
             } else {
-                $groupId = $this->getGroupIdByName('Subscriber');
+                $groupId = $this->getGroupIdByName('Student');
             }
 
             $setGroupRequest = new Request([],[
