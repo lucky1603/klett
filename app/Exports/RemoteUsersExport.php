@@ -19,14 +19,14 @@ class RemoteUsersExport implements FromCollection,WithHeadings,WithStyles,WithCo
         $response = Http::asForm()->post(env('KEYCLOAK_TOKEN_URL'), [
             "client_id" => "admin-cli",
             "username" => "admin",
-            "password" => "BiloKoji12@",
+            "password" => env('KEYCLOAK_AUTH_PASSWORD'),
             "grant_type" => "password"
         ]);
 
         $accessToken = $response->json("access_token");
-
-        $response = Http::withToken($accessToken)->get(env('KEYCLOAK_API_URL'));
+        $response = Http::withToken($accessToken)->get(env('KEYCLOAK_API_USERS_URL'));
         $rows = json_decode($response->body());
+
 
         $output = collect([]);
         foreach($rows as $row) {

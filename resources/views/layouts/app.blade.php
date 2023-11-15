@@ -34,9 +34,14 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route("home") }}">Kontrolna tabla</a>
-                        </li>
+                        @auth
+                            @can('analyze_dashboard')
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route("home") }}">Kontrolna tabla</a>
+                                </li>
+                            @endcan
+                        @endauth
+
                         <li class="nav-item" >
                             <a class="nav-link" href="{{ route('remoteusers')}}">Korisnici platforme</a>
                         </li>

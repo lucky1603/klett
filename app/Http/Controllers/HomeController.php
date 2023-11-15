@@ -30,6 +30,9 @@ class HomeController extends Controller
         if(Auth::user() != null) {
             $user = User::find(Auth::user()->id);
             $isAdmin = $user->isAdmin();
+            if(!$isAdmin) {
+                return redirect(route('remoteusers'));
+            }
         }
 
         return view('home', ['is_admin' => $isAdmin]);

@@ -95,7 +95,7 @@
                 </b-button>
                 <a class="btn btn-sm btn-primary float-right m-1" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
             </div>
-            <div class="d-flex align-items-center justify-content-center">
+            <!-- <div class="d-flex align-items-center justify-content-center">
                 <b-button variant="outline-success" class="m-1" size="sm" @click="sendMailSelected">
                     <div class="d-flex flex-column">
                         <b-progress v-if="mailToSendCount > 0" :max="mailToSendCount" show-value>
@@ -117,7 +117,7 @@
                     </div>
 
                 </b-button>
-            </div>
+            </div> -->
 
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
