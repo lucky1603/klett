@@ -73,13 +73,6 @@
                     </div>
                 </template>
             </b-table>
-            <!-- <b-pagination
-                v-model="currentPage"
-                :total-rows="items.length"
-                :per-page="pageSize"
-                aria-controls="profileTable"
-                align="right"
-                ></b-pagination> -->
             <key-cloak-pagination v-model="currentPosition" ref="nav" :count="rowsCount"></key-cloak-pagination>
             <div class="d-flex align-items-center justify-content-center">
                 <b-button variant="primary" @click="createUser" class="m-1" size="sm"><i class="bi bi-person-fill-add mr-1"></i>{{ _('gui.Add')}}</b-button>
@@ -95,30 +88,6 @@
                 </b-button>
                 <a class="btn btn-sm btn-primary float-right m-1" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
             </div>
-            <!-- <div class="d-flex align-items-center justify-content-center">
-                <b-button variant="outline-success" class="m-1" size="sm" @click="sendMailSelected">
-                    <div class="d-flex flex-column">
-                        <b-progress v-if="mailToSendCount > 0" :max="mailToSendCount" show-value>
-                            <b-progress-bar :value="mailSentCount" variant="success"></b-progress-bar>
-                        </b-progress>
-                        <div class="d-flex">
-                            <i class="bi bi-envelope-check mr-2"></i>Pošalji mail izabranima
-                        </div>
-                    </div>
-                </b-button>
-                <b-button variant="success" class="m-1" size="sm" @click="sendMailToEverybody">
-                    <div class="d-flex flex-column">
-                        <b-progress v-if="requestingUserIds" :max="rowsCount" show-value>
-                            <b-progress-bar :value="userIds.length" variant="success"></b-progress-bar>
-                        </b-progress>
-                        <div class="d-flex">
-                            <i class="bi bi-envelope mr-2"></i>Pošalji mail svima
-                        </div>
-                    </div>
-
-                </b-button>
-            </div> -->
-
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
@@ -130,10 +99,12 @@
         </b-modal>
         <b-modal ref="deleteDialog" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>Brisanje korisnika</template>
-            <p>{{ deleteDialogMessage }}</p>
+            <p>{{ deleteMessage }}</p>
+            <b-progress v-if="userToDeleteCount > 0" :value="deletedUsers" :max="deleteUsersMax" show-progress></b-progress>
             <template #modal-footer>
-                <b-button type="button" variant="primary" @click="onDelete">{{ _('gui.Yes')}}</b-button>
-                <b-button type="button" @click="onCancelDelete">{{ _('gui.No')}}</b-button>
+                <b-button v-if="!cancelMode" type="button" variant="primary" @click="onDelete">{{ _('gui.Yes')}}</b-button>
+                <b-button v-if="!cancelMode" type="button" @click="onCancelDelete">{{ _('gui.No')}}</b-button>
+                <b-button v-if="cancelMode" type="button" @click="onStopDelete">Stop</b-button>
             </template>
         </b-modal>
     </div>
@@ -153,6 +124,15 @@ export default {
                     this.getData();
                 }
             }
+        }
+    },
+    computed: {
+        deleteMessage() {
+            if(this.cancelMode) {
+                return "Molimo, sačekajte, brisanje je u toku. Možete prekinuti pritiskom na dugme.";
+            }
+
+            return "Da li stvarno želite da obrišete sve korisnike?";
         }
     },
     data() {
@@ -232,17 +212,37 @@ export default {
             mailToSendCount: 0,
             mailSentCount: 0,
             userIds: [],
-            requestingUserIds: false
-
+            requestingUserIds: false,
+            userToDeleteCount: 0,
+            deletedUsers: 0,
+            deleteUsersMax: 0,
+            cancelMode: false,
+            stopDelete: false,
         };
     },
 
     async mounted() {
         console.log('mounted!!!');
         await this.getData();
+        let userCount = await this.getCount();
+        console.log("User count is " + userCount);
     },
 
     methods: {
+        /**
+         * Dohvati trenutni broj korisnika platforme.
+         */
+        async getCount() {
+            let formData = new FormData();
+            formData.append('token', this.accessToken);
+            var userCount = 0;
+            await axios.post('/remoteusers/count', formData)
+            .then(response => {
+                userCount = response.data;
+            });
+
+            return userCount;
+        },
         /**
          * Table row selected event
          */
@@ -430,11 +430,13 @@ export default {
          */
         async onDelete() {
 
-            this.$refs.deleteDialog.hide();
+
             if(this.deleteMode == 1) {
                 await this.deleteFromIcon();
+                this.$refs.deleteDialog.hide();
             } else if (this.deleteMode == 2) {
                 await this.onDeleteSelected();
+                this.$refs.deleteDialog.hide();
             } else {
                 await this.onDeleteAll();
             }
@@ -501,13 +503,26 @@ export default {
         async onDeleteAll() {
             this.busyDeleteAll = true;
 
-            await axios.get('/remoteusers/deleteall')
-            .then(response => {
-                console.log(response.data);
-            });
+            this.userToDeleteCount = await this.getCount();
+            this.deleteUsersMax = this.userToDeleteCount;
+            this.deletedUsers = 0;
+            this.cancelMode = true;
+
+            while(this.userToDeleteCount > 0 && !this.stopDelete) {
+                await axios.get('/remoteusers/deleteall');
+                this.userToDeleteCount -= 100;
+                this.deletedUsers += 100;
+            }
+
+            this.stopDelete = false;
+            this.cancelMode = false;
+            this.$refs.deleteDialog.hide();
 
             await this.getData();
             this.busyDeleteAll = false;
+        },
+        onStopDelete() {
+            this.stopDelete = true;
         },
         /**
          * Negative callback from the deletion dialog.
