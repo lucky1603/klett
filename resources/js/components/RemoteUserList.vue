@@ -145,7 +145,14 @@ export default {
                 return "Molimo, sačekajte, brisanje je u toku. Možete prekinuti pritiskom na dugme.";
             }
 
-            return "Da li stvarno želite da obrišete sve korisnike?";
+            switch(this.deleteMode) {
+                case 1:
+                    return "Da li ste sigurni da hoćete da obrišete korisnike '" + this.selectedUsername + "'?";
+                case 2:
+                    return "Da li ste sigurni da želite da obrišete izabrane korisnike?";
+                default:
+                    return "Da li ste sigurni da želite da obrišete sve korisnike?";
+            }
         }
     },
     data() {
