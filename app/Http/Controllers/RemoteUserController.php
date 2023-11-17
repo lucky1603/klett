@@ -216,6 +216,16 @@ class RemoteUserController extends Controller
     public function filterUsers(Request $request) {
         $data = $request->post();
 
+        $response = $this->getRealmGroups();
+        $groups = $response->json();
+        $roles = [];
+
+        foreach($groups as $group) {
+            if(in_array($group['name'], ["Administrator", "Teacher", "Student"])) {
+                $roles[$group['id']] = $group['name'];
+            }
+        }
+
         // Get access token.
         $token = '';
         if(isset($data['token']) && $data['token'] != '') {
@@ -248,6 +258,26 @@ class RemoteUserController extends Controller
             }
 
             $requestUrl .= "email=".$data['email'];
+        }
+
+        if($data['username'] != '') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $requestUrl .= "username=".$data['username'];
+        }
+
+        if($data['role'] != '0') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $requestUrl .= "q=role:".$roles[$data['role']];
         }
 
         if(!str_contains($requestUrl, "?")) {
@@ -315,7 +345,8 @@ class RemoteUserController extends Controller
                     "billing_phone" => $data['telefon1'],
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
-                    "source" => $data['source']
+                    "source" => $data['source'],
+                    "role" => $data['isTeacher'] == "true" ? "Teacher" : "Student"
                 ],
         ]);
 
@@ -369,7 +400,17 @@ class RemoteUserController extends Controller
 
         $inCRM = true;
 
-        if($data['rola'] == "bab78444-87f6-45e9-86fc-fd1b1d5b6530" /* Teacher */) {
+        $response = $this->getRealmGroups();
+        $groups = $response->json();
+        $roles = [];
+
+        foreach($groups as $group) {
+            if(in_array($group['name'], ["Administrator", "Teacher", "Student"])) {
+                $roles[$group['id']] = $group['name'];
+            }
+        }
+
+        if($data['rola'] == array_search('Teacher', $roles) /* Teacher */) {
             // Check CRM
             $inCRM = false;
             $value = $this->checkUser($data['email']);
@@ -413,7 +454,8 @@ class RemoteUserController extends Controller
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
                     "klf_korisnik" => $data["klf_korisnik"] == "true" ? 1 : 0,
-                    "source" => $data['source']
+                    "source" => $data['source'],
+                    "role" => $roles[$data['rola']],
                 ],
         ]);
 
@@ -553,7 +595,8 @@ class RemoteUserController extends Controller
                     "billing_postcode" => $data['postanskiBroj'],
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
-                    "source" => $data["Source"] ?? 'Klett'
+                    "source" => $data["Source"] ?? 'Klett',
+                    "role" => $data['isTeacher'] == "true" ? "Teacher" : "Student"
                 ],
         ]);
 
@@ -933,7 +976,8 @@ class RemoteUserController extends Controller
                     "klf_korisnik" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
                     "testomat" => array_key_exists('testomat', $user) && $user['testomat'] == "true" ? 1 : 0 ,
                     "pedagoska_sveska" => array_key_exists('pedagoska_sveska', $user) && $user['pedagoska_sveska'] == "true" ? 1 : 0 ,
-                    'source' => $user['source']
+                    'source' => $user['source'],
+                    'role' => $user['isTeacher'] == 'true' ? "Teacher" : "Student"
                 ],
         ]);
 

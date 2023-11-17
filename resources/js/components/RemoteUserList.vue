@@ -1,8 +1,18 @@
 <template>
-    <div class="container">
+    <div class="container-fluid">
             <b-row class="w-100 mt-4">
                 <b-col lg="10">
                     <b-form id="filterForm" ref="filterForm" inline class="w-100 m-2" @submit.prevent="submitFilter">
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-input
+                                type="search"
+                                id="searchUsername"
+                                placeholder="Po korisničkom imenu ..."
+                                v-model="searchForm.username"/>
+                            <template #append>
+                                <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
+                            </template>
+                        </b-input-group>
                         <b-input-group size="sm" class="m-1">
                             <b-form-input
                                 type="search"
@@ -35,6 +45,9 @@
                             <template #append>
                                 <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
                             </template>
+                        </b-input-group>
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-select v-model="searchForm.role" :options="roles"/>
                         </b-input-group>
 
                     </b-form>
@@ -205,6 +218,8 @@ export default {
                 firstName: '',
                 lastName: '',
                 email: '',
+                role: 0,
+                username: ''
             },
             selected: [],
             busy: false,
@@ -218,11 +233,12 @@ export default {
             deleteUsersMax: 0,
             cancelMode: false,
             stopDelete: false,
+            roles: [],
         };
     },
 
     async mounted() {
-        console.log('mounted!!!');
+        await this.getRoles();
         await this.getData();
         let userCount = await this.getCount();
         console.log("User count is " + userCount);
@@ -243,6 +259,31 @@ export default {
 
             return userCount;
         },
+
+        /**
+         * Daj grupe.
+         */
+        async getRoles() {
+            this.roles = [{
+                value: 0,
+                text: 'Svi'
+            }];
+
+            await axios.get('/remoteusers/getRealmGroups')
+            .then(response => {
+                console.log(response.data);
+                for(let property in response.data) {
+                    let group = response.data[property];
+                    if(['Administrator', 'Student', 'Teacher'].includes(group.name)) {
+                        this.roles.push({
+                            value: group.id,
+                            text: group.name
+                        });
+                    }
+                }
+            });
+        },
+
         /**
          * Table row selected event
          */
@@ -538,8 +579,8 @@ export default {
         async resetSearchForm() {
             this.searchForm.firstName = '';
             this.searchForm.lastName = '';
-            this.searchForm.userStatus = 0;
-            this.searchForm.userRole = 0;
+            this.searchForm.username = '';
+            this.searchForm.role = 0;
             await this.getData();
             this.$refs.nav.start();
         },

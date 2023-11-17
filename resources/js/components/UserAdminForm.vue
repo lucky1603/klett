@@ -201,9 +201,7 @@ export default {
             predmeti: [],
             captchaImg: null,
             role: [
-                { value: "207b176d-39d6-4861-b9fb-232ead68ff15", text: "Student" },
-                { value: "bab78444-87f6-45e9-86fc-fd1b1d5b6530", text: "Nastavnik" },
-                { value: "db2be6cb-aec0-4995-8e78-f69889a11e10", text: "Administrator" },
+
             ]
         };
     },
@@ -216,6 +214,7 @@ export default {
         await this.getTipoviKontakata();
         await this.getOpstine();
         await this.filtrirajSkole();
+        await this.getRoles();
 
         if(this.userId != null && this.userId != '') {
             await this.getData();
@@ -300,6 +299,23 @@ export default {
                     this.institutionTypes.push(element);
                 });
             })
+        },
+
+        async getRoles() {
+            this.role = [];
+            await axios.get('/remoteusers/getRealmGroups')
+            .then(response => {
+                console.log(response.data);
+                for(let property in response.data) {
+                    let group = response.data[property];
+                    if(['Administrator', 'Student', 'Teacher'].includes(group.name)) {
+                        this.role.push({
+                            value: group.id,
+                            text: group.name
+                        });
+                    }
+                }
+            });
         },
 
         async filtrirajSkole() {
