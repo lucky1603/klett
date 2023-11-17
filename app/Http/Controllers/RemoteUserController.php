@@ -653,6 +653,16 @@ class RemoteUserController extends Controller
     public function adminUpdate(AdminCreateUserRequest $request) {
         $data = $request->post();
 
+        $response = $this->getRealmGroups();
+        $groups = $response->json();
+        $roles = [];
+
+        foreach($groups as $group) {
+            if(in_array($group['name'], ["Administrator", "Teacher", "Student"])) {
+                $roles[$group['id']] = $group['name'];
+            }
+        }
+
         $userId = $data['userId'];
         $token = $data["token"];
         $response = Http::withToken($token)
@@ -679,7 +689,8 @@ class RemoteUserController extends Controller
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
                     "klf_korisnik" => $data["klf_korisnik"] == "true" ? 1 : 0,
-                    "source" => $data['source']
+                    "source" => $data['source'],
+                    "role" => $roles[$data['rola']],
                 ],
         ]);
 
