@@ -201,7 +201,7 @@ export default {
     async mounted() {
 
         this.showSpinner = true;
-        this.getCaptchaImage();
+        await this.getCaptchaImage();
         // await this.getSubjects();
         await this.getPredmeti();
         // await this.getProfessionalStatuses();

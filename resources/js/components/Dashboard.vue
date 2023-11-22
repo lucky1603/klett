@@ -26,6 +26,9 @@
                     </b-col>
                 </b-row>
             </b-tab>
+            <b-tab v-if="isAdmin == 'true'" title="E-Mail">
+                <send-mail></send-mail>
+            </b-tab>
         </b-tabs>
     </div>
 </template>
