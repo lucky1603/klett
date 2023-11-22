@@ -301,7 +301,7 @@ class RemoteUserController extends Controller
         $data = $request->post();
 
         // Communicate with CRM
-        $inCRM = true;
+        $inCRM = false;
         $crmContactId = null;
         if($data['isTeacher'] == "true") {
             // Check CRM
@@ -323,7 +323,7 @@ class RemoteUserController extends Controller
                 "firstName" => $data['ime'],
                 "lastName" => $data['prezime'],
                 "email" => $data["email"],
-                "enabled" => $data['enabled'] == "true" && $inCRM ? true : false,
+                "enabled" => $data['enabled'] == "true" && (($inCRM == true && $data['isTeacher'] == 'true') || $data['isTeacher'] == 'false')  ? true : false,
                 "attributes" => [
                     "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
                     // "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
