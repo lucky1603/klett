@@ -2,8 +2,8 @@
 
 @section('content')
     <register-user-form>
-        <div class="d-flex align-items-center justify-content-center w-100">
+        {{-- <div class="d-flex align-items-center justify-content-center w-100">
             {!! captcha_img('klett') !!}
-        </div>
+        </div> --}}
     </register-user-form>
 @endsection
