@@ -300,27 +300,20 @@ class RemoteUserController extends Controller
     public function store(CreateRemoteUserRequest $request) {
         $data = $request->post();
 
+        // Communicate with CRM
         $inCRM = true;
-
+        $crmContactId = null;
         if($data['isTeacher'] == "true") {
             // Check CRM
-            $inCRM = false;
             $value = $this->checkUser($data['email']);
             if(is_array($value) && count($value) > 0) {
                 $inCRM = true;
 
                 // TODO: Call positive CRM
-                $contactId = $value['contactid'];
-                $this->ackCRMPositive($data, $contactId);
-
-            } else {
-                // TODO: Call negative CRM
-                $this->ackCRMNegative($data);
-
-                // send email
-                Mail::to($data['email'])->send(new NoCRMInfo($data));
+                $crmContactId = $value['contactid'];
             }
         }
+        // End of communication with CRM
 
         $response = Http::withToken($data['token'])
             ->asJson()
@@ -356,9 +349,26 @@ class RemoteUserController extends Controller
         var_dump($response->status());
         */
 
+        $inCRM = false;
         if($response->status() == 201 /* Created */) {
             $items = explode("/", $response->header("Location"));
             $userId = $items[count($items) - 1];
+
+            // Communicate with CRM
+            $inCRM = true;
+            if($data['isTeacher'] == "true") {
+                // Check CRM
+                if($crmContactId != null) {
+                    $this->ackCRMPositive($data, $crmContactId, $userId);
+
+                } else {
+                    // TODO: Call negative CRM
+                    $this->ackCRMNegative($data, $userId);
+                    // send email
+                    Mail::to($data['email'])->send(new NoCRMInfo($data));
+                }
+            }
+            // End of communication with CRM
 
             if($data['isTeacher'] == "true") {
                 $groupId = $this->getGroupIdByName("Teacher");
@@ -374,10 +384,12 @@ class RemoteUserController extends Controller
 
             $this->setUserGroup($setGroupRequest);
 
-            // Send password reset link.
-            if($data['updatePassword'] == 'true') {
-                Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
-                    ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+            if(($data['isTeacher'] == true && $inCRM == true) || $data['isTeacher'] == false) {
+                // Send password reset link.
+                if($data['updatePassword'] == 'true') {
+                    Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                        ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+                }
             }
 
             return [
@@ -816,7 +828,7 @@ class RemoteUserController extends Controller
         return $response->json("value");
     }
 
-    public function ackCRMPositive($data, $userId) {
+    public function ackCRMPositive($data, $crmContactId, $keycloakUserId) {
         $response = $this->connectCRM();
         $token = $response->json('access_token');
 
@@ -831,12 +843,13 @@ class RemoteUserController extends Controller
                 'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['township'].")",
                 'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")",
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
-                'ext_Imekontakta@odata.bind' => '/contacts('.$userId.")",
-                "ext_verified" => true
+                'ext_Imekontakta@odata.bind' => '/contacts('.$crmContactId.")",
+                "ext_verified" => true,
+                "extreme_keycloakidkorisnika" => $keycloakUserId
             ]);
     }
 
-    public function ackCRMNegative($data) {
+    public function ackCRMNegative($data, $keycloakUserId) {
         $response = $this->connectCRM();
         $token = $response->json('access_token');
 
@@ -851,6 +864,7 @@ class RemoteUserController extends Controller
                 'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['township'].")",
                 'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")",
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
+                "extreme_keycloakidkorisnika" => $keycloakUserId
             ]);
     }
 
