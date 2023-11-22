@@ -201,7 +201,6 @@ export default {
     async mounted() {
 
         this.showSpinner = true;
-        await this.getCaptchaImage();
         // await this.getSubjects();
         await this.getPredmeti();
         // await this.getProfessionalStatuses();
@@ -211,6 +210,8 @@ export default {
         // await this.getCountries();
         await this.getOpstine();
         await this.filtrirajSkole();
+        // await this.getCaptchaImage();
+        setTimeout(this.getCaptchaImage, 1000);
 
         if(this.userId != null && this.userId != '') {
             await this.getData();
