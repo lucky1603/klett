@@ -97,9 +97,12 @@ Route::get('userimports/reset', [UserImportController::class, 'reset'])->name('u
 Route::get('userimports/files', [UserImportController::class, 'files'])->name('userimports.files');
 Route::post('userimports/setimport', [UserImportController::class, 'setImport'])->name('userimports.setimport');
 
-// Send Email
+// Send Email)
 Route::get('sendemail/list', [SendEmailController::class, 'list'])->name('sendEmail.list');
+Route::get('sendemail/listall', [SendEmailController::class, 'listAll'])->name('sendEmail.listAll');
 Route::get('sendemail/deleteall', [SendEmailController::class, 'deleteAll'])->name('sendEmail.deleteAll');
+Route::get('sendemail/setsent/{user}', [SendEmailController::class, 'setSent'])->name('sendEmail.setSent');
+Route::get('sendemail/testemail/{user}/{email}', [SendEmailController::class, 'sendTestMail'])->name('sendEmail.testEmail');
 Route::post('sendemail/create', [SendEmailController::class, 'store'])->name('sendEmail.store');
 
 // Language-Localization.p

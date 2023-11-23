@@ -32,9 +32,9 @@
                     ></b-pagination>
             </div>
             </div>
-
+            <b-progress v-if="showSendProgress" :value="mailsSent" :max="mailsToSend" show-progress class="my-2"></b-progress>
             <div id="sendMailPanel" class="d-flex align-items-center justify-content-center p-2">
-                <b-button variant="primary">Pošalji E-Mail</b-button>
+                <b-button variant="primary" @click="sendEmails">Pošalji E-Mail</b-button>
             </div>
         </b-card>
 
@@ -87,7 +87,10 @@ export default {
             totalCount: 0,
             currentPage: 1,
             pageSize: 10,
-            accessToken: ''
+            accessToken: '',
+            mailsSent: 0,
+            mailsToSend: 0,
+            showSendProgress: false,
 
         };
     },
@@ -158,6 +161,32 @@ export default {
             this.getTableData();
         },
         async sendEmails() {
+            console.log('started function');
+            this.showSendProgress = true;
+            this.mailsToSend = await this.getCountToSend();
+            this.mailsSent = this.rows.length - this.mailsToSend;
+            for(let i = 0; i < this.rows.length; i++) {
+                let row = this.rows[i];
+                if(!row.sent) {
+                    // await axios.get('/sendemail/testemail/' + row.user_id + '/' + row.email);
+                    await axios.get('/remoteusers/' + row.user_id + '/updatePassword');
+                    await axios.get('/sendemail/setsent/' + row.user_id);
+                    this.mailsSent ++;
+                }
+            }
+
+            this.showSendProgress = false;
+            this.$refs.table.refresh();
+        },
+        async getCountToSend() {
+            console.log('getting count');
+            this.rows = [];
+            await axios.get('/sendemail/listall')
+            .then(response => {
+                this.rows = response.data;
+            });
+
+            return this.rows.length;
 
         },
         async getToken() {
