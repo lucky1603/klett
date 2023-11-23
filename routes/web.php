@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\RemoteUserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserImportController;
 
@@ -95,6 +96,11 @@ Route::get('userimports/counts', [UserImportController::class, 'counts'])->name(
 Route::get('userimports/reset', [UserImportController::class, 'reset'])->name('userimports.reset');
 Route::get('userimports/files', [UserImportController::class, 'files'])->name('userimports.files');
 Route::post('userimports/setimport', [UserImportController::class, 'setImport'])->name('userimports.setimport');
+
+// Send Email
+Route::get('sendemail/list', [SendEmailController::class, 'list'])->name('sendEmail.list');
+Route::get('sendemail/deleteall', [SendEmailController::class, 'deleteAll'])->name('sendEmail.deleteAll');
+Route::post('sendemail/create', [SendEmailController::class, 'store'])->name('sendEmail.store');
 
 // Language-Localization.p
 Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');

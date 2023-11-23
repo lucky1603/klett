@@ -183,10 +183,28 @@ class RemoteUserController extends Controller
 
     public function filterCount(Request $request) {
         $token = $request->post('token');
+        if($token == null) {
+            $response = $this->connectKeyCloak();
+            $token = $response->json('access_token');
+        }
+
+        $response = $this->connectKeyCloak();
+        $token = $response->json('access_token');
+
         $data = $request->post();
         $requestUrl = ENV("KEYCLOAK_API_USERS_URL")."count";
         if($data['firstName'] != '') {
             $requestUrl .= "?firstName=".$data['firstName'];
+        }
+
+        $response = $this->getRealmGroups();
+        $groups = $response->json();
+        $roles = [];
+
+        foreach($groups as $group) {
+            if(in_array($group['name'], ["Administrator", "Teacher", "Student"])) {
+                $roles[$group['id']] = $group['name'];
+            }
         }
 
         if($data['lastName'] != '') {
@@ -199,6 +217,16 @@ class RemoteUserController extends Controller
             $requestUrl .= "lastName=".$data['lastName'];
         }
 
+        if($data['username'] != '') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $requestUrl .= "username=".$data['username'];
+        }
+
         if($data['email'] != '') {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
@@ -207,6 +235,16 @@ class RemoteUserController extends Controller
             }
 
             $requestUrl .= "email=".$data['email'];
+        }
+
+        if($data['role'] != '0') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $requestUrl .= "q=role:".$roles[$data['role']];
         }
 
         return Http::withToken($token)
