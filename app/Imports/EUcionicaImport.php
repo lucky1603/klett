@@ -21,17 +21,17 @@ class EUcionicaImport implements ToModel
             return null;
 
         $teacher = false;
-        if($row[10] == 'teacher') {
+        if($row[5] == 'teacher') {
             $teacher = true;
         }
 
-        $source = $row[11];
+        $source = $row[6];
 
         return UserImport::create([
-            'username' => $row[2],
-            'ime' => $row[8],
-            'prezime' => $row[9],
-            'email' => $row[3],
+            'username' => $row[1],
+            'ime' => $row[2],
+            'prezime' => $row[3],
+            'email' => $row[4],
             'is_teacher' => $teacher,
             'source' => $source,
         ]);
