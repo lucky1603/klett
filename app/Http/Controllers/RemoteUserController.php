@@ -873,13 +873,13 @@ class RemoteUserController extends Controller
                 'ext_prezime' => $data['prezime'],
                 'ext_emailadresa' => $data['email'],
                 'ext_kontakttelefon' => $data['telefon1'],
-                'ext_Tipustanove@odata.bind' => "ext_tipposlovnogkontaktas(".$data['institutionType'].")",
+                'ext_Tipustanove@odata.bind' => "/ext_tipposlovnogkontaktas(".$data['institutionType'].")",
                 'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['township'].")",
                 'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")",
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
                 'ext_Imekontakta@odata.bind' => '/contacts('.$crmContactId.")",
                 "ext_verified" => true,
-                "extreme_keycloakidkorisnika" => $keycloakUserId
+                "ext_keycloakidkorisnika" => $keycloakUserId
             ]);
     }
 
@@ -894,11 +894,11 @@ class RemoteUserController extends Controller
                 'ext_prezime' => $data['prezime'],
                 'ext_emailadresa' => $data['email'],
                 'ext_kontakttelefon' => $data['telefon1'],
-                'ext_Tipustanove@odata.bind' => "ext_tipposlovnogkontaktas(".$data['institutionType'].")",
+                'ext_Tipustanove@odata.bind' => "/ext_tipposlovnogkontaktas(".$data['institutionType'].")",
                 'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['township'].")",
                 'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")",
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
-                "extreme_keycloakidkorisnika" => $keycloakUserId
+                "ext_keycloakidkorisnika" => $keycloakUserId
             ]);
     }
 
