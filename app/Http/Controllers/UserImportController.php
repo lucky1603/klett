@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\CustomUserImport;
 use App\Imports\EUcionicaImport;
 use file;
 use App\Models\UserImport;
