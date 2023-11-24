@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpParser\Node\Expr\Cast\Array_;
 use App\Http\Requests\AdminCreateUserRequest;
+use App\Http\Requests\AdminUpdateUserRequest;
 use App\Http\Requests\CreateRemoteUserRequest;
 
 class RemoteUserController extends Controller
@@ -696,7 +697,7 @@ class RemoteUserController extends Controller
 
     }
 
-    public function adminUpdate(AdminCreateUserRequest $request) {
+    public function adminUpdate(AdminUpdateUserRequest $request) {
         $data = $request->post();
 
         $response = $this->getRealmGroups();
