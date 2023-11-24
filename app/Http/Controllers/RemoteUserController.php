@@ -381,19 +381,12 @@ class RemoteUserController extends Controller
                 ],
         ]);
 
-        /* test
-        var_dump($response->ok());
-        var_dump($response->failed());
-        var_dump($response->status());
-        */
-
-        $inCRM = false;
+        // $inCRM = false;
         if($response->status() == 201 /* Created */) {
             $items = explode("/", $response->header("Location"));
             $userId = $items[count($items) - 1];
 
             // Communicate with CRM
-            $inCRM = true;
             if($data['isTeacher'] == "true") {
                 // Check CRM
                 if($crmContactId != null) {
