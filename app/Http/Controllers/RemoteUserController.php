@@ -441,7 +441,8 @@ class RemoteUserController extends Controller
     public function adminStore(AdminCreateUserRequest $request) {
         $data = $request->post();
 
-        $inCRM = true;
+        $inCRM = false;
+        $crmContactId = null;
 
         $response = $this->getRealmGroups();
         $groups = $response->json();
@@ -455,21 +456,12 @@ class RemoteUserController extends Controller
 
         if($data['rola'] == array_search('Teacher', $roles) /* Teacher */) {
             // Check CRM
-            $inCRM = false;
             $value = $this->checkUser($data['email']);
             if(is_array($value) && count($value) > 0) {
                 $inCRM = true;
 
                 // TODO: Call positive CRM
-                $contactId = $value['contactid'];
-                $this->ackCRMPositive($data, $contactId, $userId);
-
-            } else {
-                // TODO: Call negative CRM
-                $this->ackCRMNegative($data, $userId);
-
-                // send email
-                Mail::to($data['email'])->send(new NoCRMInfo($data));
+                $crmContactId = $value['contactid'];
             }
         }
 
@@ -511,6 +503,17 @@ class RemoteUserController extends Controller
         if($response->status() == 201 /* Created */) {
             $items = explode("/", $response->header("Location"));
             $userId = $items[count($items) - 1];
+
+            if($data['rola'] == array_search('Teacher', $roles) /* Teacher */) {
+                if($inCRM) {
+                    $this->ackCRMPositive($data, $crmContactId, $userId);
+                } else {
+                    // TODO: Call negative CRM
+                    $this->ackCRMNegative($data, $userId);
+                    // send email
+                    Mail::to($data['email'])->send(new NoCRMInfo($data));
+                }
+            }
 
             $groupId = $data['rola'];
 
