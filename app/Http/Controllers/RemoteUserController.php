@@ -462,11 +462,11 @@ class RemoteUserController extends Controller
 
                 // TODO: Call positive CRM
                 $contactId = $value['contactid'];
-                $this->ackCRMPositive($data, $contactId);
+                $this->ackCRMPositive($data, $contactId, $userId);
 
             } else {
                 // TODO: Call negative CRM
-                $this->ackCRMNegative($data);
+                $this->ackCRMNegative($data, $userId);
 
                 // send email
                 Mail::to($data['email'])->send(new NoCRMInfo($data));
