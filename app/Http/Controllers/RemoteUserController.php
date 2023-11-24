@@ -415,7 +415,7 @@ class RemoteUserController extends Controller
 
             $this->setUserGroup($setGroupRequest);
 
-            if(($data['isTeacher'] == true && $inCRM == true) || $data['isTeacher'] == false) {
+            if(($data['isTeacher'] == "true" && $inCRM == true) || $data['isTeacher'] == "false") {
                 // Send password reset link.
                 if($data['updatePassword'] == 'true') {
                     Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
