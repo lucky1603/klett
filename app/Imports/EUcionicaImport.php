@@ -27,11 +27,16 @@ class EUcionicaImport implements ToModel
 
         $source = $row[6];
 
+        $email = $row[4];
+        if(!str_contains($row[4], '@')) {
+            $email = $row[7];
+        }
+
         return UserImport::create([
             'username' => $row[1],
             'ime' => $row[2],
             'prezime' => $row[3],
-            'email' => $row[4],
+            'email' => $email,
             'is_teacher' => $teacher,
             'source' => $source,
         ]);
