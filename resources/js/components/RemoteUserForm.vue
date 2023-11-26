@@ -46,10 +46,9 @@
                     </div>
                 </b-col>
                 <b-col>
-                    <div class="form-input">
-                        <label for="tel2">Telefon 2</label>
+                    <b-form-group label="Telefon 2" label-for="tel2">
                         <b-input id="tel2" placeholder="Unesite alternativni broj telefona" v-model="form.telefon2"></b-input>
-                    </div>
+                    </b-form-group>
                 </b-col>
             </b-row>
 
