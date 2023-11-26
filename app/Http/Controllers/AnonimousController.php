@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Mail\NoCRMInfo;
 use App\Mail\RequestEdit;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -12,8 +13,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\ChangePasswordRequest;
+use App\Http\Requests\CreateRemoteUserRequest;
 
-class AnonimousController extends Controller
+class AnonimousController extends AbstractUserController
 {
     public function verify($token) {
         $user = User::where('remember_token', $token)->firstOrFail();
@@ -92,15 +94,196 @@ class AnonimousController extends Controller
         }
 
         return view('anonimous.editerr');
-
-        // $scheduledEdit = ScheduledEdit::create([
-
-        // ]);
-
-
     }
 
     public function testRequestEdit($email) {
         return view('anonimous.testrequestedit', ['email' => $email]);
+    }
+
+
+    /// create & update
+    public function store(CreateRemoteUserRequest $request) {
+        $data = $request->post();
+
+        // Communicate with CRM
+        $inCRM = false;
+        $crmContactId = null;
+        if($data['isTeacher'] == "true") {
+            // Check CRM
+            $value = $this->checkUser($data['email']);
+            if(is_array($value) && count($value) > 0) {
+                $inCRM = true;
+
+                // TODO: Call positive CRM
+                $crmContactId = $value['contactid'];
+            }
+        }
+        // End of communication with CRM
+
+        $response = Http::withToken($data['token'])
+            ->asJson()
+            // ->withOptions(['verify' => false])
+            ->post(env("KEYCLOAK_API_USERS_URL"), [
+                "username" => $data['korisnickoIme'],
+                "firstName" => $data['ime'],
+                "lastName" => $data['prezime'],
+                "email" => $data["email"],
+                "enabled" => $data['enabled'] == "true" && (($inCRM == true && $data['isTeacher'] == 'true') || $data['isTeacher'] == 'false')  ? true : false,
+                "attributes" => [
+                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
+                    // "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
+                    "township" => isset($data['township']) ?  $data['township'] : null,
+                    "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
+                    "institution" => isset($data['skola']) ? $data['skola'] : null,
+                    "billing_first_name" => $data['ime'],
+                    "billing_last_name" => $data['prezime'],
+                    "billing_address_1" => $data['adresa'],
+                    'billing_city' => $data['mesto'],
+                    "billing_postcode" => $data['postanskiBroj'],
+                    "billing_phone" => $data['telefon1'],
+                    "testomat" => $data['testomat'] == "true" ? 1 : 0,
+                    "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
+                    "source" => $data['source'],
+                    "role" => $data['isTeacher'] == "true" ? "Teacher" : "Student"
+                ],
+        ]);
+
+        // $inCRM = false;
+        if($response->status() == 201 /* Created */) {
+            $items = explode("/", $response->header("Location"));
+            $userId = $items[count($items) - 1];
+
+            // Communicate with CRM
+            if($data['isTeacher'] == "true") {
+                // Check CRM
+                if($crmContactId != null) {
+                    $this->ackCRMPositive($data, $crmContactId, $userId);
+
+                } else {
+                    // TODO: Call negative CRM
+                    $this->ackCRMNegative($data, $userId);
+                    // send email
+                    Mail::to($data['email'])->send(new NoCRMInfo($data));
+                }
+            }
+            // End of communication with CRM
+
+            if($data['isTeacher'] == "true") {
+                $groupId = $this->getGroupIdByName("Teacher");
+            } else {
+                $groupId = $this->getGroupIdByName('Student');
+            }
+
+            $setGroupRequest = new Request([],[
+                'groupId' => $groupId,
+                'userId' => $userId,
+                'token' => $data['token']
+            ], [], [], [], [], null);
+
+            $this->setUserGroup($setGroupRequest);
+
+            if(($data['isTeacher'] == "true" && $inCRM == true) || $data['isTeacher'] == "false") {
+                // Send password reset link.
+                if($data['updatePassword'] == 'true') {
+                    Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                        ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+                }
+            }
+
+            return [
+                'status' => $response->status(),
+                'message' => "Success!!!"
+            ];
+        }
+
+
+        // $response->status() = 209 - Failed.
+        return [
+            'status' => $response->status(),
+            'message' => $response->json('errorMessage')
+        ];
+    }
+
+    public function update(CreateRemoteUserRequest $request) {
+        $data = $request->post();
+
+        $userId = $data['userId'];
+        $token = $data["token"];
+        $response = Http::withToken($token)
+            ->asJson()
+            // ->withOptions(['verify' => false])
+            ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
+                "username" => $data['korisnickoIme'],
+                "firstName" => $data['ime'],
+                "lastName" => $data['prezime'],
+                "email" => $data["email"],
+                "enabled" => $data['enabled'] == "true" ? true : false,
+                "attributes" => [
+                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
+                    "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
+                    "township" => isset($data['township']) ?  $data['township'] : null,
+                    "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
+                    "institution" => isset($data['skola']) ? $data['skola'] : null,
+                    "billing_first_name" => $data['ime'],
+                    "billing_last_name" => $data['prezime'],
+                    "billing_address_1" => $data['adresa'],
+                    'billing_city' => $data['mesto'],
+                    "billing_postcode" => $data['postanskiBroj'],
+                    "billing_phone" => $data['telefon1'],
+                    "testomat" => $data['testomat'] == "true" ? 1 : 0,
+                    "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
+                    "source" => $data["Source"] ?? 'Klett',
+                    "role" => $data['isTeacher'] == "true" ? "Teacher" : "Student"
+                ],
+        ]);
+
+        if($response->status() == 204) {
+
+            // Get current user group.
+            $getGroupRequest = new Request([], [
+                'userId' => $userId,
+                'token' => $token
+            ], [], [], [], [], null);
+
+            $oldGroup = $this->userGroup($getGroupRequest);
+
+            if($data['isTeacher'] == "true") {
+                $groupId = $this->getGroupIdByName("Teacher");
+            } else {
+                $groupId = $this->getGroupIdByName('Student');
+            }
+
+            $setGroupRequest = new Request([],[
+                'groupId' => $groupId,
+                'userId' => $userId,
+                'token' => $data['token'],
+                'oldGroupId' => $oldGroup["id"]
+            ], [], [], [], [], null);
+
+            $this->setUserGroup($setGroupRequest);
+
+            if($data['updatePassword'] == "true") {
+                Http::withToken($data['token'])
+                    ->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                    // ->withOptions(['verify' => false])
+                    ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+            }
+
+            ScheduledEdit::where('user_id', $userId)->update([
+                'validated' => true
+            ]);
+
+            return [
+                "status" => $response->status(),
+                "message" => "Success!!!"
+            ];
+
+        }
+
+        return [
+            "status" => $response->status(),
+            "message" => $response->json("errorMessage")
+        ];
+
     }
 }

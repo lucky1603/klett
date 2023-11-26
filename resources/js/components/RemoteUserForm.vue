@@ -171,7 +171,7 @@ export default {
             },
             accessToken: '',
             errors: {},
-            formAction: '/remoteusers/create',
+            formAction: '/anonimous/create',
             subjects: [],
             townships: [],
             schools: [],
@@ -415,7 +415,7 @@ export default {
         },
         async getUserGroup() {
             let token = '';
-            await axios.get('remoteusers/keycloak')
+            await axios.get('/keycloak')
             .then(response => {
                 token = response.data.access_token;
             });
@@ -424,7 +424,7 @@ export default {
                 let formData = new FormData();
                 formData.append('token', token);
                 formData.append('userId', this.userId);
-                await axios.post('/remoteusers/user_group', formData)
+                await axios.post('/user_group', formData)
                 .then(response => {
                     let group = response.data;
                     console.log(group);
@@ -438,7 +438,7 @@ export default {
             }
         },
         async sendData() {
-            await axios.get('/remoteusers/keycloak')
+            await axios.get('/keycloak')
             .then(response => {
                 this.accessToken = response.data.access_token;
             });
@@ -468,9 +468,9 @@ export default {
 
                 if(this.userId != null && this.userId != '') {
                     formData.append('userId', this.userId);
-                    this.formAction = '/remoteusers/update';
+                    this.formAction = '/anonimous/edit';
                 } else {
-                    this.formAction = '/remoteusers/create';
+                    this.formAction = '/anonimous/create';
                 }
 
                 axios.post(this.formAction, formData)

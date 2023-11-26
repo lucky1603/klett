@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbstractUserController;
 use App\Http\Controllers\AnonimousController;
 use App\Http\Controllers\AppUserController;
 use App\Http\Controllers\CRMController;
@@ -27,11 +28,22 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/keycloak', [AbstractUserController::class, 'connectKeyCloak'])->name('keycloak');
+Route::get("getRealmGroups", [AbstractUserController::class, 'getRealmGroups'])->name('getRealmGroups');
+Route::post("user_groups", [AbstractUserController::class, 'userGroups'])->name('userGroups');
+Route::post("user_group", [AbstractUserController::class, 'userGroup'])->name('userGroup');
+Route::post("setUserGroup", [AbstractUserController::class, 'setUserGroup'])->name('setUserGroup');
+Route::get("getGroupIdByName/{user}/{group}", [AbstractUserController::class, 'getGroupIdByName'])->name('getGroupIdByName');
+
 Route::get('/anonimous/verify/{token}', [AnonimousController::class, 'verify'])->name('anonimous.verify');
+Route::get("anonimous/keycloak", [AnonimousController::class, 'connectKeyCloak'])->name("anonimous.keycloak");
 Route::post('anonimous/password', [AnonimousController::class, 'password'])->name('anonimous.password');
 Route::get('/refreshCaptcha', [AnonimousController::class, 'refreshCaptcha'])->name('anonimous.refreshCaptcha');
 Route::get('/testRequestEdit/{email}', [AnonimousController::class, 'testRequestEdit'])->name('anonimous.testrequestedit');
 Route::get('/requestEditProfile/{email}', [AnonimousController::class, 'requestEditProfile'])->name('anonimous.requesteditprofile');
+Route::post('anonimous/edit', [AnonimousController::class, 'update'])->name('anonimoua.update');
+Route::post('anonimous/create', [AnonimousController::class, 'store'])->name('anonimoua.store');
+Route::get('anonimous/scheduledEdit/{token}', [AnonimousController::class, 'editScheduled'])->name('anonimoua.scheduledEdit');
 
 Auth::routes();
 
@@ -54,17 +66,11 @@ Route::get('remoteusers', [RemoteUserController::class, 'index'])->name('remoteu
 Route::get("remoteusers/keycloak", [RemoteUserController::class, 'connectKeyCloak'])->name("remoteusers.keycloak");
 Route::get("remoteusers/create", [RemoteUserController::class, 'create'])->name('remoteusers.create');
 Route::post("remoteusers/userData", [RemoteUserController::class, 'userData'])->name('remoteusers.userData');
-Route::post('remoteusers/update', [RemoteUserController::class, 'update'])->name('remoteusers.update');
-Route::post('remoteusers/create', [RemoteUserController::class, 'store'])->name('remoteusers.store');
+
 Route::post("remoteusers/data", [RemoteUserController::class, 'getData'])->name("remoteusers.data");
 Route::get("remoteusers/{user}/updatePassword", [RemoteUserController::class, 'sendUpdatePasswordNotice']);
 Route::post("remoteusers/delete", [RemoteUserController::class, 'delete'])->name('remoteusers.delete');
 Route::get("remoteusers/export", [RemoteUserController::class, 'export'])->name('remoteusers.export');
-Route::get("remoteusers/getRealmGroups", [RemoteUserController::class, 'getRealmGroups'])->name('remoteusers.getRealmGroups');
-Route::post("remoteusers/user_groups", [RemoteUserController::class, 'userGroups'])->name('remoteusers.userGroups');
-Route::post("remoteusers/user_group", [RemoteUserController::class, 'userGroup'])->name('remoteusers.userGroup');
-Route::post("remoteusers/setUserGroup", [RemoteUserController::class, 'setUserGroup'])->name('remoteusers.setUserGroup');
-Route::get("remoteusers/getGroupIdByName/{user}/{group}", [RemoteUserController::class, 'getGroupIdByName'])->name('remoteusers.getGroupIdByName');
 Route::post('remoteusers/filterUsers', [RemoteUserController::class, 'filterUsers'])->name('remoteusers.filterUsers');
 Route::post('remoteusers/filterUsers1', [RemoteUserController::class, 'filterUsers1'])->name('remoteusers.filterUsers1');
 Route::get('remoteusers/testmail/{email}', [RemoteUserController::class, 'testMail'])->name('remoteusers.testmail');
@@ -76,7 +82,6 @@ Route::post('remoteusers/import', [RemoteUserController::class, 'importUser'])->
 Route::get('remoteusers/importFirstUser', [RemoteUserController::class, 'importFirstUser'])->name('remoteusers.importFirstUser');
 Route::get('remoteusers/deleteall', [RemoteUserController::class, 'deleteAll'])->name('remoteusers.deleteAll');
 Route::get('remoteusers/importall', [RemoteUserController::class, 'importAllUsers'])->name('remoteusers.importAll');
-Route::get('remoteusers/scheduledEdit/{token}', [RemoteUserController::class, 'editScheduled'])->name('remoteusers.scheduledEdit');
 Route::get('remoteusers/unimporteduserids', [RemoteUserController::class, 'getUnimportedUserIds'])->name('remoteusers.unimporteduserids');
 Route::get('remoteusers/importuserbyid/{user}', [RemoteUserController::class, 'importUserById'])->name('remoteusers.importeduserbyid');
 // CRM

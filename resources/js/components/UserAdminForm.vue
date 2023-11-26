@@ -293,7 +293,7 @@ export default {
 
         async getRoles() {
             this.role = [];
-            await axios.get('/remoteusers/getRealmGroups')
+            await axios.get('/getRealmGroups')
             .then(response => {
                 console.log(response.data);
                 for(let property in response.data) {
@@ -438,7 +438,7 @@ export default {
         },
         async getUserGroup() {
             let token = '';
-            await axios.get('remoteusers/keycloak')
+            await axios.get('/keycloak')
             .then(response => {
                 token = response.data.access_token;
             });
@@ -447,7 +447,7 @@ export default {
                 let formData = new FormData();
                 formData.append('token', token);
                 formData.append('userId', this.userId);
-                await axios.post('/remoteusers/user_group', formData)
+                await axios.post('/user_group', formData)
                 .then(response => {
                     let group = response.data;
                     console.log(group);
@@ -461,7 +461,7 @@ export default {
             }
         },
         async sendData() {
-            await axios.get('/remoteusers/keycloak')
+            await axios.get('/keycloak')
             .then(response => {
                 this.accessToken = response.data.access_token;
             });

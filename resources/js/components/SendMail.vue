@@ -197,7 +197,7 @@ export default {
 
         },
         async getToken() {
-            await axios.get('/remoteusers/keycloak')
+            await axios.get('/keycloak')
             .then(response => {
                 console.log(response.data);
                 this.accessToken = response.data.access_token;
@@ -219,7 +219,7 @@ export default {
                 text: 'Svi'
             }];
 
-            await axios.get('/remoteusers/getRealmGroups')
+            await axios.get('/getRealmGroups')
             .then(response => {
                 console.log(response.data);
                 for(let property in response.data) {
