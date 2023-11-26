@@ -110,7 +110,7 @@ class RemoteUserController extends AbstractUserController
 
         }
 
-        if($data['role'] != '0' || $data['source'] != null) {
+        if($data['role'] != '0' || $data['source'] != 'null') {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
@@ -123,7 +123,7 @@ class RemoteUserController extends AbstractUserController
                 $requestUrl .= "role:".$roles[$data['role']];
             }
 
-            if($data['source'] != null) {
+            if($data['source'] != 'null') {
                 if($data['role'] != '0') {
                     $requestUrl .= ' ';
                 }
@@ -210,7 +210,7 @@ class RemoteUserController extends AbstractUserController
 
         }
 
-        if($data['role'] != '0' || $data['source'] != null) {
+        if($data['role'] != '0' || $data['source'] != 'null') {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
@@ -223,7 +223,7 @@ class RemoteUserController extends AbstractUserController
                 $requestUrl .= "role:".$roles[$data['role']];
             }
 
-            if($data['source'] != null) {
+            if($data['source'] != 'null') {
                 if($data['role'] != '0') {
                     $requestUrl .= ' ';
                 }
