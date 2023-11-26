@@ -6,6 +6,7 @@
                     <b-form-input v-model="searchForm.username" placeholder="Korisničko ime ..." class="ml-1"/>
                     <b-form-input v-model="searchForm.email" placeholder="Email ..." class="ml-1"/>
                     <b-form-select v-model="searchForm.role" :options="roles" class="ml-1"></b-form-select>
+                    <b-form-select v-model="searchForm.status" :options="statuses" class="ml-1"></b-form-select>
                     <b-button variant="primary" class="ml-2" @click="setTable">Kreiraj tabelu</b-button>
                 </b-form>
                 <b-progress v-if="showImport" :value="imported" :max="count" show-progress class="my-2"></b-progress>
@@ -62,7 +63,8 @@ export default {
             searchForm : {
                 username: '',
                 email: '',
-                role: 0
+                role: 0,
+                status: 0
             },
             rows: [],
             fields: [
@@ -91,6 +93,11 @@ export default {
             mailsSent: 0,
             mailsToSend: 0,
             showSendProgress: false,
+            statuses: [
+                { value: 0, text: "Svi" },
+                { value: 1, text: "Omogućeni" },
+                { value: 2, text: "Onemogućeni" },
+            ]
 
         };
     },
