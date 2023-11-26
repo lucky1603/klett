@@ -47,6 +47,9 @@
                             </template>
                         </b-input-group>
                         <b-input-group size="sm" class="m-1">
+                            <b-form-select v-model="searchForm.status" :options="statuses"/>
+                        </b-input-group>
+                        <b-input-group size="sm" class="m-1">
                             <b-form-select v-model="searchForm.role" :options="roles"/>
                         </b-input-group>
 
@@ -226,7 +229,8 @@ export default {
                 lastName: '',
                 email: '',
                 role: 0,
-                username: ''
+                username: '',
+                status: 0,
             },
             selected: [],
             busy: false,
@@ -241,6 +245,11 @@ export default {
             cancelMode: false,
             stopDelete: false,
             roles: [],
+            statuses: [
+                { value: 0, text: "Svi statusi" },
+                { value: 1, text: "Omogućeni" },
+                { value: 2, text: "Onemogućeni" },
+            ]
         };
     },
 
@@ -273,7 +282,7 @@ export default {
         async getRoles() {
             this.roles = [{
                 value: 0,
-                text: 'Svi'
+                text: 'Sve role'
             }];
 
             await axios.get('/remoteusers/getRealmGroups')
@@ -339,6 +348,7 @@ export default {
 
             await axios.post('/remoteusers/filtercount', formData)
             .then(response => {
+                console.log("rows count...");
                 console.log(response.data);
                 this.rowsCount = response.data;
             });
@@ -588,6 +598,7 @@ export default {
             this.searchForm.lastName = '';
             this.searchForm.username = '';
             this.searchForm.role = 0;
+            this.searchForm.status = 0;
             await this.getData();
             this.$refs.nav.start();
         },

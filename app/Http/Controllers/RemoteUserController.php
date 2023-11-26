@@ -238,6 +238,21 @@ class RemoteUserController extends Controller
             $requestUrl .= "email=".$data['email'];
         }
 
+        if($data['status'] != '0') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            if($data['status'] == '1') {
+                $requestUrl .= "enabled=true";
+            } else {
+                $requestUrl .= "enabled=false";
+            }
+
+        }
+
         if($data['role'] != '0') {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
@@ -307,6 +322,21 @@ class RemoteUserController extends Controller
             }
 
             $requestUrl .= "username=".$data['username'];
+        }
+
+        if($data['status'] != '0') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            if($data['status'] == '1') {
+                $requestUrl .= "enabled=true";
+            } else {
+                $requestUrl .= "enabled=false";
+            }
+
         }
 
         if($data['role'] != '0') {
