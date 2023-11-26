@@ -52,6 +52,9 @@
                         <b-input-group size="sm" class="m-1">
                             <b-form-select v-model="searchForm.role" :options="roles"/>
                         </b-input-group>
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-select v-model="searchForm.source" :options="sources"/>
+                        </b-input-group>
 
                     </b-form>
                 </b-col>
@@ -231,6 +234,7 @@ export default {
                 role: 0,
                 username: '',
                 status: 0,
+                source: null,
             },
             selected: [],
             busy: false,
@@ -249,6 +253,12 @@ export default {
                 { value: 0, text: "Svi statusi" },
                 { value: 1, text: "Omogućeni" },
                 { value: 2, text: "Onemogućeni" },
+            ],
+            sources: [
+                { value: null, text: "Svi izvori" },
+                { value: 'Klett', text: 'Klett' },
+                { value: 'E-Uci', text: "eUči" },
+                { value: 'E-Ucionica', text: "eUčionica" }
             ]
         };
     },

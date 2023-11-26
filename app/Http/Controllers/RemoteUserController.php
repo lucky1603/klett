@@ -3,20 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Mail\NoCRMInfo;
-use App\Mail\RequestEdit;
 use App\Models\UserImport;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\ScheduledEdit;
 use App\Exports\RemoteUsersExport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
-use PhpParser\Node\Expr\Cast\Array_;
 use App\Http\Requests\AdminCreateUserRequest;
 use App\Http\Requests\AdminUpdateUserRequest;
-use App\Http\Requests\CreateRemoteUserRequest;
 
 class RemoteUserController extends AbstractUserController
 {
@@ -115,14 +110,28 @@ class RemoteUserController extends AbstractUserController
 
         }
 
-        if($data['role'] != '0') {
+        if($data['role'] != '0' || $data['source'] != null) {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
                 $requestUrl .= "&&";
             }
 
-            $requestUrl .= "q=role:".$roles[$data['role']];
+            $requestUrl .= "q=";
+
+            if($data['role'] != '0') {
+                $requestUrl .= "role:".$roles[$data['role']];
+            }
+
+            if($data['source'] != null) {
+                if($data['role'] != 0) {
+                    $requestUrl .= ' ';
+                }
+
+                $requestUrl .= "source:".$data['source'];
+            }
+
+            // $requestUrl .= "q=role:".$roles[$data['role']];
         }
 
         return Http::withToken($token)
@@ -201,14 +210,28 @@ class RemoteUserController extends AbstractUserController
 
         }
 
-        if($data['role'] != '0') {
+        if($data['role'] != '0' || $data['source'] != null) {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
                 $requestUrl .= "&&";
             }
 
-            $requestUrl .= "q=role:".$roles[$data['role']];
+            $requestUrl .= "q=";
+
+            if($data['role'] != '0') {
+                $requestUrl .= "role:".$roles[$data['role']];
+            }
+
+            if($data['source'] != null) {
+                if($data['role'] != 0) {
+                    $requestUrl .= ' ';
+                }
+
+                $requestUrl .= "source:".$data['source'];
+            }
+
+            // $requestUrl .= "q=role:".$roles[$data['role']];
         }
 
         if(!str_contains($requestUrl, "?")) {
