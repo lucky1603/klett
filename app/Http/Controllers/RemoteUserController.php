@@ -124,7 +124,7 @@ class RemoteUserController extends AbstractUserController
             }
 
             if($data['source'] != null) {
-                if($data['role'] != 0) {
+                if($data['role'] != '0') {
                     $requestUrl .= ' ';
                 }
 
@@ -224,7 +224,7 @@ class RemoteUserController extends AbstractUserController
             }
 
             if($data['source'] != null) {
-                if($data['role'] != 0) {
+                if($data['role'] != '0') {
                     $requestUrl .= ' ';
                 }
 
@@ -240,6 +240,8 @@ class RemoteUserController extends AbstractUserController
             $requestUrl .= "&&";
         }
         $requestUrl .= "briefRepresentation=false&&first=".$data['first']."&&max=".$data['max'];
+
+        // var_dump($requestUrl);
 
         return Http::withToken($token)
             // ->withOptions(['verify' => false])
