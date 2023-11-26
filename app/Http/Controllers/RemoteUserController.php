@@ -20,10 +20,10 @@ use App\Http\Requests\CreateRemoteUserRequest;
 
 class RemoteUserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     public function index() {
         return view('remoteusers.index');
@@ -670,6 +670,7 @@ class RemoteUserController extends Controller
                     "billing_address_1" => $data['adresa'],
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
+                    "billing_phone" => $data['telefon1'],
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
                     "source" => $data["Source"] ?? 'Klett',

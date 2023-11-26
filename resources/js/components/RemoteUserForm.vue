@@ -14,7 +14,7 @@
                 </b-col>
                 <b-col>
                     <div class="form-input">
-                        <label for="email">E Mail</label>
+                        <label for="email">Imejl adresa</label>
                         <b-input id="email" v-model="form.email"></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </div>
@@ -35,20 +35,12 @@
                         <span v-if="errors.prezime" class="text-danger">{{ errors.prezime}}</span>
                     </div>
                 </b-col>
-            </b-row>
-
-            <b-row class="p-2">
                 <b-col>
                     <div class="form-input">
-                        <label for="tel1">Telefon 1</label>
+                        <label for="tel1">Kontakt telefon</label>
                         <b-input id="tel1" placeholder="Unesite broj telefona" v-model="form.telefon1"></b-input>
                         <span v-if="errors.telefon1" class="text-danger">{{ errors.telefon1}}</span>
                     </div>
-                </b-col>
-                <b-col>
-                    <b-form-group label="Telefon 2" label-for="tel2">
-                        <b-input id="tel2" placeholder="Unesite alternativni broj telefona" v-model="form.telefon2"></b-input>
-                    </b-form-group>
                 </b-col>
             </b-row>
 
@@ -56,7 +48,7 @@
 
             <b-row class="p-2">
                 <b-col cols="5">
-                    <b-form-group label="Adresa i broj" label-for="billingAddress">
+                    <b-form-group label="Ulica i broj" label-for="billingAddress">
                         <b-input id="billingAddress" v-model="form.adresa"></b-input>
                         <span v-if="errors.adresa" class="text-danger">{{ errors.adresa}}</span>
                     </b-form-group>
@@ -171,7 +163,6 @@ export default {
                 adresa: '',
                 postanskiBroj: '',
                 telefon1: '',
-                telefon2: '',
                 mesto: '',
                 captcha: '',
                 isTeacher: false,
