@@ -8,14 +8,14 @@
                 <b-col>
                     <div class="form-input">
                         <label for="username">Korisničko ime</label>
-                        <b-input id="username" v-model="form.korisnickoIme"></b-input>
+                        <b-input id="username" v-model="form.korisnickoIme" :enabled="this.userId == 0"></b-input>
                         <span v-if="errors.korisnickoIme" class="text-danger">{{ errors.korisnickoIme}}</span>
                     </div>
                 </b-col>
                 <b-col>
                     <div class="form-input">
                         <label for="email">Imejl adresa</label>
-                        <b-input id="email" v-model="form.email"></b-input>
+                        <b-input id="email" v-model="form.email" :enabled="this.userId == 0"></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </div>
                 </b-col>
