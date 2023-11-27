@@ -598,8 +598,9 @@ class RemoteUserController extends AbstractUserController
             'firstName' => $user->ime,
             'lastName' => $user->prezime,
             'username' => $user->username,
-            'isTeacher' => $user->is_teacher == 1 ? "true" : "false",
             'source' => $user->source,
+            'rola' => $user->rola,
+            'password' => $user->password,
         ];
 
         return $this->import($data);
@@ -613,22 +614,23 @@ class RemoteUserController extends AbstractUserController
             'firstName' => $user->ime,
             'lastName' => $user->prezime,
             'username' => $user->username,
-            'isTeacher' => $user->is_teacher == 1 ? "true" : "false",
             'source' => $user->source,
+            'rola' => $user->rola,
+            'password' => $user->password,
         ];
 
         return $this->import($data);
     }
 
     private function import($data) {
-
         $user = [
             'email' => $data['email'],
             'firstName' => $data['firstName'],
             'lastName' => $data['lastName'],
             'username' => $data['username'],
-            'isTeacher' => $data['isTeacher'],
             'source' => $data['source'],
+            'rola' => $data['rola'],
+            'password' => $data['password'],
             'enabled' => true
         ];
 
@@ -698,23 +700,25 @@ class RemoteUserController extends AbstractUserController
                     "billing_postcode" => $user['billing_postcode'] ?? '',
                     "billing_phone" => $user['billing_phone'] ?? '',
                     "klf_korisnik" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
-                    "testomat" => array_key_exists('testomat', $user) && $user['testomat'] == "true" ? 1 : 0 ,
-                    "pedagoska_sveska" => array_key_exists('pedagoska_sveska', $user) && $user['pedagoska_sveska'] == "true" ? 1 : 0 ,
+                    "testomat" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
+                    "pedagoska_sveska" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
                     'source' => $user['source'],
-                    'role' => $user['isTeacher'] == 'true' ? "Teacher" : "Student"
+                    "role" => $user['rola']
                 ],
+                "credentials" => $data['password'] != null ? [
+                    [
+                        "type" => "password",
+                        "value" => $data['password'],
+                        "temporary" => false,
+                    ]
+                ] : []
         ]);
 
 
         if($response->status() == 201 /* Created */) {
             $items = explode("/", $response->header("Location"));
             $userId = $items[count($items) - 1];
-
-            if($data['isTeacher'] == "true") {
-                $groupId = $this->getGroupIdByName("Teacher");
-            } else {
-                $groupId = $this->getGroupIdByName('Student');
-            }
+            $groupId = $this->getGroupIdByName($user['rola']);
 
             $setGroupRequest = new Request([],[
                 'groupId' => $groupId,

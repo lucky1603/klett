@@ -20,12 +20,8 @@ class EUcionicaImport implements ToModel
         if($row[0] == null && $row[1] == null)
             return null;
 
-        $teacher = false;
-        if($row[5] == 'teacher') {
-            $teacher = true;
-        }
-
         $source = $row[6];
+
 
         $email = $row[4];
         if(!str_contains($row[4], '@')) {
@@ -37,8 +33,9 @@ class EUcionicaImport implements ToModel
             'ime' => $row[2],
             'prezime' => $row[3],
             'email' => $email,
-            'is_teacher' => $teacher,
             'source' => $source,
+            'rola' => $row[5],
+            'password' => isset($row[8]) ? $row[8] : null
         ]);
     }
 }

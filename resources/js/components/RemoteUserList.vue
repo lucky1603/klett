@@ -258,7 +258,8 @@ export default {
                 { value: null, text: "Svi izvori" },
                 { value: 'Klett', text: 'Klett' },
                 { value: 'E-Uci', text: "eUči" },
-                { value: 'E-Ucionica', text: "eUčionica" }
+                { value: 'E-Ucionica', text: "eUčionica" },
+                { value: 'ZOUV', text: 'ZOUV' }
             ]
         };
     },
