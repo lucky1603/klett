@@ -43,7 +43,7 @@ Route::get('/testRequestEdit/{email}', [AnonimousController::class, 'testRequest
 Route::get('/requestEditProfile/{email}', [AnonimousController::class, 'requestEditProfile'])->name('anonimous.requesteditprofile');
 Route::post('anonimous/edit', [AnonimousController::class, 'update'])->name('anonimoua.update');
 Route::post('anonimous/create', [AnonimousController::class, 'store'])->name('anonimoua.store');
-Route::get('anonimous/scheduledEdit/{token}', [AnonimousController::class, 'editScheduled'])->name('anonimoua.scheduledEdit');
+Route::get('anonimous/scheduledEdit/{token}', [AnonimousController::class, 'editScheduled'])->name('anonimous.scheduledEdit');
 
 Auth::routes();
 

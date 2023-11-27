@@ -116,6 +116,7 @@ class AnonimousController extends AbstractUserController
 
                 // TODO: Call positive CRM
                 $crmContactId = $value[0]['contactid'];
+                $isUser = $value[0]['ext_Predmetprofila_Nastavnik_Contact'][0]['ext_korisnik'];
             }
         }
         // End of communication with CRM
@@ -141,8 +142,8 @@ class AnonimousController extends AbstractUserController
                     'billing_city' => $data['mesto'],
                     "billing_postcode" => $data['postanskiBroj'],
                     "billing_phone" => $data['telefon1'],
-                    "testomat" => $inCRM ? 1 : 0,
-                    "pedagoska_sveska" => $inCRM == "true" ? 1 : 0,
+                    "testomat" => $inCRM && $isUser ? 1 : 0,
+                    "pedagoska_sveska" => $inCRM && $isUser ? 1 : 0,
                     "source" => $data['source'],
                     "role" => $data['isTeacher'] == "true" ? "Teacher" : "Student"
                 ],
