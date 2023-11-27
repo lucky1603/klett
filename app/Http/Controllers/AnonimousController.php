@@ -70,6 +70,29 @@ class AnonimousController extends AbstractUserController
         return captcha_img('klett');
     }
 
+    public function editScheduled($token)
+    {
+        $scheduledEdit = ScheduledEdit::where(
+            [
+                'token' => $token,
+                'validated' => false
+            ]
+        )->firstOrFail();
+
+        if($scheduledEdit != null) {
+            $userId = $scheduledEdit->user_id;
+            $response = $this->connectKeyCloak();
+            $accessToken = $response->json('access_token');
+            $response = Http::withToken($accessToken)
+                ->get(env("KEYCLOAK_API_USERS_URL").$userId);
+            $user = $response->json();
+
+            return view('appusers.update', ['user' => $user['id']]);
+        }
+
+        return view('appusers.expired');
+    }
+
     public function requestEditProfile($username) {
         // Get user from database
         $response = $this->connectKeyCloak();
