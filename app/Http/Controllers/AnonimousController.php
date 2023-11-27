@@ -70,34 +70,38 @@ class AnonimousController extends AbstractUserController
         return captcha_img('klett');
     }
 
-    public function requestEditProfile($email) {
+    public function requestEditProfile($username) {
         // Get user from database
         $response = $this->connectKeyCloak();
         $accessToken = $response->json('access_token');
         $userResponse = Http::withToken($accessToken)
-            ->get(env('KEYCLOAK_API_USERS_URL').'?briefRepresentation=true&email='.$email);
+            ->get(env('KEYCLOAK_API_USERS_URL').'?briefRepresentation=true&username='.$username);
 
         $users = $userResponse->json();
+        $email = null;
         if(count($users) > 0) {
             // Do something
             $userId = $users[0]['id'];
+            $email = $users[0]['email'];
             $scheduledEdit = ScheduledEdit::create([
                 'user_id' => $userId,
                 'token' => Str::random(60),
                 'validated' => false,
             ]);
 
-            $name = $users[0]['firstName'].' '.$users[0]['lastName'];
-
-            Mail::to($email)->send(new RequestEdit($name, $scheduledEdit->token));
+            if($email != null) {
+                $name = $users[0]['firstName'].' '.$users[0]['lastName'];
+                Mail::to($email)->send(new RequestEdit($name, $scheduledEdit->token));
+            }
+            
             return view('anonimous.editconf');
         }
 
         return view('anonimous.editerr');
     }
 
-    public function testRequestEdit($email) {
-        return view('anonimous.testrequestedit', ['email' => $email]);
+    public function testRequestEdit($username) {
+        return view('anonimous.testrequestedit', ['username' => $username]);
     }
 
 
