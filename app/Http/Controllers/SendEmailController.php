@@ -19,15 +19,12 @@ class SendEmailController extends Controller
     }
 
     public function list() {
-        $paginator = SendEmail::paginate(10);
+        $paginator = SendEmail::where('sent', 0)->paginate(10);
         $currentPage = $paginator->currentPage();
         $perPage = $paginator->perPage();
         $count = $paginator->total();
 
         $returnData = $paginator->load("email_type")
-            ->filter(function($sendEmail) {
-                return !$sendEmail->sent;
-            })
             ->map(function($sendEmail) {
                 return [
                     "username" => $sendEmail->username,

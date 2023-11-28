@@ -677,6 +677,9 @@ class RemoteUserController extends AbstractUserController
             $token = $data['token'];
         }
 
+        // var_dump('before');
+        // var_dump($user['email']);
+
         $response = Http::withToken($token)
             ->asJson()
             // ->withOptions(['verify' => false])
@@ -684,7 +687,7 @@ class RemoteUserController extends AbstractUserController
                 "username" => $user['username'],
                 "firstName" => $user['firstName'],
                 "lastName" => $user['lastName'],
-                "email" => $user["email"],
+                "email" => trim($user["email"]),
                 "enabled" => $user['enabled'] ?? false,
                 "attributes" => [
                     "subjects" => $user['predmeti'] ?? null,
@@ -702,8 +705,8 @@ class RemoteUserController extends AbstractUserController
                     "klf_korisnik" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
                     "testomat" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
                     "pedagoska_sveska" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
-                    'source' => $user['source'],
-                    "role" => $user['rola']
+                    'source' => $user['source'] ?? '',
+                    "role" => $user['rola'] ?? ''
                 ],
                 "credentials" => $data['password'] != null ? [
                     [
@@ -713,6 +716,8 @@ class RemoteUserController extends AbstractUserController
                     ]
                 ] : []
         ]);
+
+        // var_dump($response->json());
 
 
         if($response->status() == 201 /* Created */) {
