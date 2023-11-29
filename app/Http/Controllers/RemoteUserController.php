@@ -35,6 +35,7 @@ class RemoteUserController extends AbstractUserController
         $userData = [];
         foreach($users as $user) {
             $userData[] = [
+                "id" => $user['id'],
                 "username" => $user['username'],
                 "firstName" => $user['firstName'],
                 "lastName" => $user['lastName'],
@@ -265,6 +266,7 @@ class RemoteUserController extends AbstractUserController
         $userData = [];
         foreach($users as $user) {
             $userData[] = [
+                "id" => $user['id'],
                 "username" => $user['username'],
                 "firstName" => $user['firstName'],
                 "lastName" => $user['lastName'],

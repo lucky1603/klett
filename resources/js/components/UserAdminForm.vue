@@ -198,7 +198,6 @@ export default {
     },
 
     async mounted() {
-
         this.showSpinner = true;
         this.getCaptchaImage();
         await this.getPredmeti();
@@ -206,6 +205,8 @@ export default {
         await this.getOpstine();
         await this.filtrirajSkole();
         await this.getRoles();
+
+        console.log("User id je " + this.userId);
 
         if(this.userId != null && this.userId != '') {
             await this.getData();

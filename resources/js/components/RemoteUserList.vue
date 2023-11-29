@@ -233,9 +233,6 @@ export default {
                         width: '5%'
                     }
                 },
-
-
-
             ],
             accessToken: '',
             searchForm: {
