@@ -49,6 +49,7 @@ Auth::routes();
 
 Route::get('/home',[ HomeController::class, 'index'])->name('home');
 Route::get('apply', [AppUserController::class, 'register'])->name('appusers.register');
+Route::get('register', [AppUserController::class, 'register'])->name('appusers.register');
 
 // App users
 Route::get('users', [UserController::class, 'index'])->name('users');
