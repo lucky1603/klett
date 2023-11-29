@@ -207,7 +207,15 @@ export default {
                     sortable: true,
                     label: window.i18n.gui.email,
                     thStyle: {
-                        width: "30%"
+                        width: "20%"
+                    }
+                },
+                {
+                    key: "role",
+                    sortable: true,
+                    label: "Tip korisnika",
+                    thStyle: {
+                        width: "10%"
                     }
                 },
                 {

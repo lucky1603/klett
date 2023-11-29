@@ -28,9 +28,23 @@ class RemoteUserController extends AbstractUserController
         $token = $request->post('token');
         $first = $request->post('first');
         $max = $request->post('max');
-        return Http::withToken($token)
+        $response = Http::withToken($token)
             // ->withOptions(['verify' => false])
             ->get(ENV("KEYCLOAK_API_USERS_URL")."?briefRepresentation=false&first=".$first."&max=".$max);
+        $users = $response->json();
+        $userData = [];
+        foreach($users as $user) {
+            $userData[] = [
+                "username" => $user['username'],
+                "firstName" => $user['firstName'],
+                "lastName" => $user['lastName'],
+                "email" => $user['email'],
+                "enabled" => $user['enabled'],
+                "role" => $user['attributes']['role'][0]
+            ];
+        }
+
+        return $userData;
     }
 
     public function getCount(Request $request) {
@@ -243,9 +257,24 @@ class RemoteUserController extends AbstractUserController
 
         // var_dump($requestUrl);
 
-        return Http::withToken($token)
+        $response = Http::withToken($token)
             // ->withOptions(['verify' => false])
             ->get($requestUrl);
+
+        $users = $response->json();
+        $userData = [];
+        foreach($users as $user) {
+            $userData[] = [
+                "username" => $user['username'],
+                "firstName" => $user['firstName'],
+                "lastName" => $user['lastName'],
+                "email" => $user['email'],
+                "enabled" => $user['enabled'],
+                "role" => $user['attributes']['role'][0]
+            ];
+        }
+
+        return $userData;
 
     }
 
