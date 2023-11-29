@@ -122,7 +122,7 @@
 
             <hr />
             <div v-if="!anonimous">
-                <b-form-checkbox v-model="form.klf_korisnik" :value="true" disabled>KLF Korisnik</b-form-checkbox>
+                <b-form-checkbox v-model="form.klf_korisnik" :value="true" :disabled="!superAdmin">KLF Korisnik</b-form-checkbox>
                 <b-form-checkbox v-model="form.pedagoska_sveska" :value="true">Pedagoška sveska</b-form-checkbox>
                 <b-form-checkbox v-model="form.testomat" :value="true">Testomat</b-form-checkbox>
                 <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
@@ -148,6 +148,7 @@ export default {
     props: {
         userId: {typeof: String, default: ''},
         anonimous: {typeof: Boolean, default: false},
+        superAdmin: {typeof: Boolean, default: false}
     },
     data() {
         return {

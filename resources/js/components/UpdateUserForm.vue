@@ -8,7 +8,7 @@
                 po potrebi izmenite i dopunite ono što nedostaje.
             </div>
             <div class="container">
-                <remote-user-form ref="userForm" :anonimous="true" :update="true" :user-id="userId" style="width: 55%"></remote-user-form>
+                <remote-user-form ref="userForm" :anonimous="true" :update="true" :user-id="userId" style="width: 55%" :super-admin="superAdmin"></remote-user-form>
             </div>
 
             <div class="d-flex align-items-center justify-content-center mt-2" >
@@ -51,7 +51,8 @@
 export default {
     name: 'UpdateUserForm',
     props: {
-        userId: { type: String, default: '' }
+        userId: { type: String, default: '' },
+        superAdmin: { typeof: Boolean, default: false}
     },
     data() {
         return {

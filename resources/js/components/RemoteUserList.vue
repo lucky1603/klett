@@ -100,7 +100,7 @@
                     <i class="bi bi-database-dash mr-1"></i>
                     {{_('gui.DeleteSelected')}}
                 </b-button>
-                <b-button variant="danger" size="sm" title="Obriši sve" class="m-1" @click="deleteAllClicked" :disabled="busyDeleteAll">
+                <b-button v-if="superAdmin" variant="danger" size="sm" title="Obriši sve" class="m-1" @click="deleteAllClicked" :disabled="busyDeleteAll">
                     <b-spinner small v-if="busyDeleteAll"></b-spinner>
                     <i class="bi bi-database-dash mr-1"></i>
                     {{ _('gui.DeleteAll') }}
@@ -110,7 +110,7 @@
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
-            <user-admin-form ref="remoteUserForm" :user-id="selectedUserId"></user-admin-form>
+            <user-admin-form ref="remoteUserForm" :user-id="selectedUserId" :super-admin="superAdmin"></user-admin-form>
             <template #modal-footer>
                 <b-button type="button" variant="primary" @click="onOk">{{ _('gui.Accept')}}</b-button>
                 <b-button type="button" @click="onCancel">{{ _('gui.Cancel')}}</b-button>
@@ -134,6 +134,9 @@ import axios from 'axios';
 
 export default {
     name: 'RemoteUserList',
+    props: {
+        superAdmin: { typeof: Boolean, default: false }
+    },
     watch: {
         currentPosition : {
             handler(oldVal, newVal) {

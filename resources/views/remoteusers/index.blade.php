@@ -2,6 +2,10 @@
 
 @section('content')
     <div class="container-fluid">
-        <remote-user-list></remote-user-list>
+        @can('manage_app_users')
+            <remote-user-list :super-admin="true"></remote-user-list>
+        @else
+            <remote-user-list></remote-user-list>
+        @endcan
     </div>
 @endsection
