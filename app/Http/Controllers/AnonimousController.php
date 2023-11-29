@@ -134,6 +134,7 @@ class AnonimousController extends AbstractUserController
 
         // Communicate with CRM
         $inCRM = false;
+        $isUser = false;
         $crmContactId = null;
         if($data['isTeacher'] == "true") {
             // Check CRM
@@ -143,7 +144,20 @@ class AnonimousController extends AbstractUserController
 
                 // TODO: Call positive CRM
                 $crmContactId = $value[0]['contactid'];
-                $isUser = $value[0]['ext_Predmetprofila_Nastavnik_Contact'][0]['ext_korisnik'];
+                $predmetiProfila = $value[0]['ext_Predmetprofila_Nastavnik_Contact'];
+                if(is_array($predmetiProfila) && count($predmetiProfila) > 0) {
+                    foreach($predmetiProfila as $predmetProfila) {
+                        // Kada je podešeno na tačno, ne može više ići nazad.
+                        // Ovo je važno jer korisnik može imati više predmetnih
+                        // profila, a samo na jednom da je označen kao KLF korisnik.
+                        // I taj jedan put je dovoljan.
+                        if(!$isUser) {
+                            $isUser = $predmetProfila['ext_korisnik'];
+                        }
+                    }
+                }
+
+                // $isUser = $value[0]['ext_Predmetprofila_Nastavnik_Contact'][0]['ext_korisnik'];
             }
         }
         // End of communication with CRM
