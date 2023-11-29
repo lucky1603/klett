@@ -116,7 +116,7 @@ class AnonimousController extends AbstractUserController
                 $name = $users[0]['firstName'].' '.$users[0]['lastName'];
                 Mail::to($email)->send(new RequestEdit($name, $scheduledEdit->token));
             }
-            
+
             return view('anonimous.editconf');
         }
 
@@ -171,6 +171,7 @@ class AnonimousController extends AbstractUserController
                     "billing_phone" => $data['telefon1'],
                     "testomat" => $inCRM && $isUser ? 1 : 0,
                     "pedagoska_sveska" => $inCRM && $isUser ? 1 : 0,
+                    "klf_korisnik" => $isUser,
                     "source" => $data['source'],
                     "role" => $data['isTeacher'] == "true" ? "Teacher" : "Student"
                 ],
