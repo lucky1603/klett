@@ -185,7 +185,7 @@ class AnonimousController extends AbstractUserController
                     "billing_phone" => $data['telefon1'],
                     "testomat" => $inCRM && $isUser ? 1 : 0,
                     "pedagoska_sveska" => $inCRM && $isUser ? 1 : 0,
-                    "klf_korisnik" => $isUser,
+                    "klf_korisnik" => $isUser ? 1 : 0,
                     "source" => $data['source'],
                     "role" => $data['isTeacher'] == "true" ? "Teacher" : "Student"
                 ],
