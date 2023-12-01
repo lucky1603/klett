@@ -501,18 +501,21 @@ class RemoteUserController extends AbstractUserController
         //check crm
         $klfMember = false;
         $crmUser = null;
-        $response = $this->checkUser($user['email']);
-        if(count($response) > 0) {
-            $crmUser = $response[0];
-            $predmeti = $crmUser['ext_Predmetprofila_Nastavnik_Contact'];
-            if(count($predmeti) > 0) {
-                foreach($predmeti as $predmet) {
-                    if(!$klfMember && $predmet['ext_korisnik'] == true) {
-                        $klfMember = true;
+        if($user['attributes']['role'][0] == 'Teacher') {
+            $response = $this->checkUser($user['email']);
+            if(count($response) > 0) {
+                $crmUser = $response[0];
+                $predmeti = $crmUser['ext_Predmetprofila_Nastavnik_Contact'];
+                if(count($predmeti) > 0) {
+                    foreach($predmeti as $predmet) {
+                        if(!$klfMember && $predmet['ext_korisnik'] == true) {
+                            $klfMember = true;
+                        }
                     }
                 }
             }
         }
+
 
         // test
         //$klfMember = true;
