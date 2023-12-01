@@ -29,6 +29,13 @@
             <b-tab v-if="isAdmin == 'true'" title="E-Mail">
                 <send-mail :table-height="400"></send-mail>
             </b-tab>
+            <b-tab v-if="isAdmin == 'true'" title="Sredjivanje KLF korisnika">
+                <change-user
+                    :table-height="500"
+                    :fields="changeKLFUserFields"
+                    action="remoteusers/proofuser">
+                </change-user>
+            </b-tab>
         </b-tabs>
     </div>
 </template>
@@ -41,6 +48,54 @@ export default {
     },
     data() {
         return {
+            changeKLFUserFields: [
+                {
+                    key: 'username',
+                    sortable: true,
+                    label: 'Korisničko ime'
+                },
+                {
+                    key: 'email',
+                    sortable: true,
+                    label: 'Imejl'
+                },
+                {
+                    key: 'firstName',
+                    sortable: true,
+                    label: 'Ime'
+                },
+                {
+                    key: 'lastName',
+                    sortable: true,
+                    label: 'Prezime'
+                },
+                {
+                    key: 'source',
+                    sortable: true,
+                    label: 'Izvor'
+                },
+                {
+                    key: 'role',
+                    sortable: true,
+                    label: 'Rola'
+                },
+                {
+                    key: 'klfKorisnik',
+                    sortable: true,
+                    label: 'KLF'
+                },
+                {
+                    key: 'pedagoskaSveska',
+                    sortable: true,
+                    label: 'Pedagoska sveska'
+                },
+                {
+                    key: 'testomat',
+                    sortable: true,
+                    label: 'Testomat'
+                },
+
+            ],
             verticalChart: {
                 options: {
                     chart: {

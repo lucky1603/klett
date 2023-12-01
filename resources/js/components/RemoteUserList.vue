@@ -55,6 +55,9 @@
                         <b-input-group size="sm" class="m-1">
                             <b-form-select v-model="searchForm.source" :options="sources"/>
                         </b-input-group>
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-select v-model="searchForm.klf" :options="klfs"/>
+                        </b-input-group>
 
                     </b-form>
                 </b-col>
@@ -219,6 +222,14 @@ export default {
                     }
                 },
                 {
+                    key: "klf_korisnik",
+                    sortable: true,
+                    label: "KLF",
+                    thStyle: {
+                        width: "5%",
+                    }
+                },
+                {
                     key: "enabled",
                     sortable: true,
                     label: window.i18n.gui.enabled,
@@ -243,6 +254,7 @@ export default {
                 username: '',
                 status: 0,
                 source: null,
+                klf: -1
             },
             selected: [],
             busy: false,
@@ -268,6 +280,11 @@ export default {
                 { value: 'E-Uci', text: "eUči" },
                 { value: 'E-Ucionica', text: "eUčionica" },
                 { value: 'ZOUV', text: 'ZOUV' }
+            ],
+            klfs: [
+                { value: -1, text: "Svi korisnici" },
+                { value: 0, text: "Nije KLF korisnik" },
+                { value: 1, text: "Jeste KLF korisnik" },
             ]
         };
     },

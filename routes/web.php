@@ -3,6 +3,7 @@
 use App\Http\Controllers\AbstractUserController;
 use App\Http\Controllers\AnonimousController;
 use App\Http\Controllers\AppUserController;
+use App\Http\Controllers\ChangeUserController;
 use App\Http\Controllers\CRMController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -67,7 +68,7 @@ Route::get('remoteusers', [RemoteUserController::class, 'index'])->name('remoteu
 Route::get("remoteusers/keycloak", [RemoteUserController::class, 'connectKeyCloak'])->name("remoteusers.keycloak");
 Route::get("remoteusers/create", [RemoteUserController::class, 'create'])->name('remoteusers.create');
 Route::post("remoteusers/userData", [RemoteUserController::class, 'userData'])->name('remoteusers.userData');
-
+Route::get("remoteusers/proofuser/{user}", [RemoteUserController::class, 'proofUser'])->name('remoteusers.proofUser');
 Route::post("remoteusers/data", [RemoteUserController::class, 'getData'])->name("remoteusers.data");
 Route::get("remoteusers/{user}/updatePassword", [RemoteUserController::class, 'sendUpdatePasswordNotice']);
 Route::post("remoteusers/delete", [RemoteUserController::class, 'delete'])->name('remoteusers.delete');
@@ -110,6 +111,15 @@ Route::get('sendemail/deleteall', [SendEmailController::class, 'deleteAll'])->na
 Route::get('sendemail/setsent/{user}', [SendEmailController::class, 'setSent'])->name('sendEmail.setSent');
 Route::get('sendemail/testemail/{user}/{email}', [SendEmailController::class, 'sendTestMail'])->name('sendEmail.testEmail');
 Route::post('sendemail/create', [SendEmailController::class, 'store'])->name('sendEmail.store');
+
+// Change user
+Route::get('changeusers/list', [ChangeUserController::class, 'list'])->name('changeUsers.list');
+Route::get('changeusers/listall', [ChangeUserController::class, 'listAll'])->name('changeUsers.listAll');
+Route::get('changeusers/deleteall', [ChangeUserController::class, 'deleteAll'])->name('changeUsers.deleteAll');
+Route::get('changeusers/count', [ChangeUserController::class, 'getCount'])->name('changeUsers.count');
+Route::get('changeusers/countDone', [ChangeUserController::class, 'getCountDone'])->name('changeUsers.countDone');
+Route::get('changeusers/setchanged/{user}', [ChangeUserController::class, 'setChanged'])->name('changeUsers.setSent');
+Route::post('changeusers/create', [ChangeUserController::class, 'store'])->name('changeUsers.store');
 
 // Language-Localization.p
 Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');

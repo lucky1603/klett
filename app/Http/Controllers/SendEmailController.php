@@ -10,10 +10,6 @@ use Illuminate\Support\Facades\Mail;
 
 class SendEmailController extends Controller
 {
-    public function makeTable(Request $request) {
-
-    }
-
     public function listAll() {
         return SendEmail::all();
     }
@@ -65,6 +61,7 @@ class SendEmailController extends Controller
     public function sendTestMail($userId, $userEmail) {
         $user = SendEmail::where('user_id', $userId)->firstOrFail();
         $user->sent = true;
+        $user->updated_at = now();
         $user->save();
 
         return Mail::to($userEmail)->send(new TestMail($userId));
@@ -73,6 +70,7 @@ class SendEmailController extends Controller
     public function setSent($userId) {
         $user = SendEmail::where('user_id', $userId)->firstOrFail();
         $user->sent = true;
+        $user->updated_at = now();
         $user->save();
     }
 

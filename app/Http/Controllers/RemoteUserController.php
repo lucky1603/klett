@@ -41,7 +41,12 @@ class RemoteUserController extends AbstractUserController
                 "lastName" => $user['lastName'],
                 "email" => $user['email'],
                 "enabled" => $user['enabled'],
-                "role" => $user['attributes']['role'][0]
+                "role" => $user['attributes']['role'][0],
+                "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : "Nije podeseno",
+                "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : "Nije podeseno",
+                "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
+                'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
+
             ];
         }
 
@@ -125,7 +130,7 @@ class RemoteUserController extends AbstractUserController
 
         }
 
-        if($data['role'] != '0' || $data['source'] != 'null') {
+        if($data['role'] != '0' || $data['source'] != 'null' || $data['klf'] != '-1') {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
@@ -144,6 +149,14 @@ class RemoteUserController extends AbstractUserController
                 }
 
                 $requestUrl .= "source:".$data['source'];
+            }
+
+            if($data['klf'] != -1) {
+                if($data['role'] != 0 || $data['source'] != 'null') {
+                    $requestUrl .= ' ';
+                }
+
+                $requestUrl .= 'klf_korisnik:'.$data['klf'];
             }
 
             // $requestUrl .= "q=role:".$roles[$data['role']];
@@ -225,7 +238,7 @@ class RemoteUserController extends AbstractUserController
 
         }
 
-        if($data['role'] != '0' || $data['source'] != 'null') {
+        if($data['role'] != '0' || $data['source'] != 'null' || $data['klf'] != '-1') {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
@@ -244,6 +257,14 @@ class RemoteUserController extends AbstractUserController
                 }
 
                 $requestUrl .= "source:".$data['source'];
+            }
+
+            if($data['klf'] != -1) {
+                if($data['role'] != 0 || $data['source'] != 'null') {
+                    $requestUrl .= ' ';
+                }
+
+                $requestUrl .= 'klf_korisnik:'.$data['klf'];
             }
 
             // $requestUrl .= "q=role:".$roles[$data['role']];
@@ -272,7 +293,11 @@ class RemoteUserController extends AbstractUserController
                 "lastName" => $user['lastName'],
                 "email" => $user['email'],
                 "enabled" => $user['enabled'],
-                "role" => $user['attributes']['role'][0]
+                "role" => $user['attributes']['role'][0],
+                "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : "Nije podeseno",
+                "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : "Nije podeseno",
+                "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
+                'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
             ];
         }
 
@@ -458,6 +483,78 @@ class RemoteUserController extends AbstractUserController
             'pedagoska_sveska' => isset($retObject->attributes) && isset($retObject->attributes->pedagoska_sveska) ? ($retObject->attributes->pedagoska_sveska[0] == 1 ? true : false) : false,
             'klf_korisnik' => isset($retObject->attributes) && isset($retObject->attributes->klf_korisnik) ? ($retObject->attributes->klf_korisnik[0] == 1 ? true : false) : false,
         ];
+    }
+
+    public function proofUser($userId) {
+        $response = $this->connectKeyCloak();
+        $token = $response->json('access_token');
+
+        $response = Http::withToken($token)
+            ->get(env('KEYCLOAK_API_USERS_URL').$userId);
+
+        if($response->status() >= 400) {
+            return $response->json();
+        }
+
+        $user = $response->json();
+
+        //check crm
+        $klfMember = false;
+        $response = $this->checkUser($user['email']);
+        $crmUser = $response[0];
+        $predmeti = $crmUser['ext_Predmetprofila_Nastavnik_Contact'];
+        if(count($predmeti) > 0) {
+            foreach($predmeti as $predmet) {
+                if(!$klfMember && $predmet['ext_korisnik'] == true) {
+                    $klfMember = true;
+                }
+            }
+        }
+
+        // test
+        //$klfMember = true;
+        // end test
+
+        if($klfMember) {
+            $user['attributes']['klf_korisnik'][0] = 1;
+            $user['attributes']['pedagoska_sveska'][0] = 1;
+            $user['attributes']['testomat'][0] = 1;
+        } else {
+            $user['attributes']['klf_korisnik'][0] = 0;
+            $user['attributes']['pedagoska_sveska'][0] = 0;
+            $user['attributes']['testomat'][0] = 0;
+        }
+
+        $response = Http::withToken($token)
+            ->asJson()
+            // ->withOptions(['verify' => false])
+            ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
+                "username" => $user['username'],
+                "firstName" => $user['firstName'],
+                "lastName" => $user['lastName'],
+                "email" => $user["email"],
+                "enabled" => $user['enabled'],
+                "attributes" => [
+                    "subjects" => isset($user['attributes']['subjects'][0]) ? $user['attributes']['subjects'][0] : '',
+                    "township" => isset($user['attributes']['township']) ?  $user['attributes']['township'][0] : '',
+                    "institution_type" => isset($user['attributes']['institution_type'][0]) ? $user['attributes']['institution_type'][0] : '',
+                    "institution" => isset($user['attributes']['institution']) ? $user['attributes']['institution'][0] : '',
+                    "billing_first_name" => isset($user['attributes']['billing_first_name']) ? $user['attributes']['billing_first_name'][0] : '',
+                    "billing_last_name" => isset($user['attributes']['billing_last_name']) ? $user['attributes']['billing_last_name'][0] : '',
+                    "billing_address_1" => isset($user['attributes']['billing_address_1']) ? $user['attributes']['billing_address_1'][0] : '',
+                    'billing_city' => isset($user['attributes']['billing_city']) ?  $user['attributes']['billing_city'][0] : '',
+                    "billing_postcode" => isset($user['attributes']['billing_postcode']) ? $user['attributes']['billing_postcode'][0] : '',
+                    "billing_phone" => isset($user['attributes']['billing_phone']) ? $user['attributes']['billing_phone'][0] : '',
+                    "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : '',
+                    "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : '',
+                    "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : '',
+                    "source" => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : '',
+                    "role" => isset($user['attributes']['role']) ? $user['attributes']['role'][0] : '',
+                ],
+        ]);
+
+        return $response->status();
+
     }
 
     public function adminUpdate(AdminUpdateUserRequest $request) {
@@ -733,9 +830,9 @@ class RemoteUserController extends AbstractUserController
                     'billing_city' => $user['billing_city'] ?? '',
                     "billing_postcode" => $user['billing_postcode'] ?? '',
                     "billing_phone" => $user['billing_phone'] ?? '',
-                    "klf_korisnik" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
-                    "testomat" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
-                    "pedagoska_sveska" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == "true" ? 1 : 0 ,
+                    "klf_korisnik" => array_key_exists('klf_korisnik', $user) && ($user['klf_korisnik'] == true) ? 1 : 0 ,
+                    "testomat" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == true ? 1 : 0 ,
+                    "pedagoska_sveska" => array_key_exists('klf_korisnik', $user) && $user['klf_korisnik'] == true ? 1 : 0 ,
                     'source' => $user['source'] ?? '',
                     "role" => $user['rola'] ?? ''
                 ],

@@ -8,6 +8,7 @@
                     <b-form-select v-model="searchForm.role" :options="roles" class="ml-1"></b-form-select>
                     <b-form-select v-model="searchForm.status" :options="statuses" class="ml-1"></b-form-select>
                     <b-form-select v-model="searchForm.source" :options="sources" class="ml-1"></b-form-select>
+                    <b-form-select v-model="searchForm.klf" :options="klfs" class="ml-1"></b-form-select>
                     <b-button variant="primary" class="ml-2" @click="setTable">Kreiraj tabelu</b-button>
                 </b-form>
                 <b-progress v-if="showImport" :value="imported" :max="count" show-progress class="my-2"></b-progress>
@@ -66,7 +67,8 @@ export default {
                 email: '',
                 role: 0,
                 status: 0,
-                source: null
+                source: null,
+                klf: -1
             },
             rows: [],
             fields: [
@@ -106,6 +108,11 @@ export default {
                 { value: 'E-Uci', text: "eUči" },
                 { value: 'E-Ucionica', text: "eUčionica" },
                 { value: 'ZOUV', text: 'ZOUV' }
+            ],
+            klfs: [
+                { value: -1, text: "Svi korisnici" },
+                { value: 0, text: "Nije KLF korisnik" },
+                { value: 1, text: "KLF korisnik" },
             ]
 
         };
@@ -161,6 +168,8 @@ export default {
                         users.push(response.data[property]);
                     }
                 });
+
+                console.log(users);
 
                 for(let j = 0; j < users.length; j++) {
                     let user = users[j];
