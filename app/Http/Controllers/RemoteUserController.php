@@ -907,6 +907,11 @@ class RemoteUserController extends AbstractUserController
                 'imported' => $imported
             ];
         }
+
+        return [
+            'status' => $response->status(),
+            'message' => $response->message(),
+        ];
     }
 
 }
