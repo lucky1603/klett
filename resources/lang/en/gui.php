@@ -91,7 +91,12 @@ return [
      * Register user form.
      */
     'registerUserFormTitle' => "New User Registration",
-    'updateUserFormTitle' => "Update your data"
+    'updateUserFormTitle' => "Update your data",
+    'registerIntro1' => "If You create an account You will have the possibility to access all of
+                        our sites and platforms with it. (",
+    'registerIntro2' => "You will need an account on our sites either as a student, in order to access
+                        the digital books on our platform, or as a teacher in order to have access to
+                        the teaching materials and to be informed of new releases and events."
 
 
 ];
