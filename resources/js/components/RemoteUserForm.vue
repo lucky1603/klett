@@ -67,7 +67,7 @@
                 </b-col>
             </b-row>
 
-            <b-form-checkbox v-model="form.isTeacher" :value="true">{{ _('gui.isTeacher') }}</b-form-checkbox>
+            <b-form-checkbox v-model="form.isTeacher" :value="true">{{ _('gui.registerAsTeacher') }}</b-form-checkbox>
             <div v-if="form.isTeacher">
                 <b-row>
                     <b-col>

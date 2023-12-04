@@ -70,6 +70,7 @@ return [
     'tel1' => 'Kontakt telefon #1',
     'tel2' => 'Kontakt telefon #2',
     'isTeacher' => "Da li je nastavnik?",
+    'registerAsTeacher' => "Registrujem se kao nastavnik",
     'subjects' => 'Predmeti',
     'subjectsSubtitle' => '(Možete odabrati više od jednog odgovora)',
     'professionalStatus' => 'Profesionalni status',

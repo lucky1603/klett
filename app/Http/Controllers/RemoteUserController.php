@@ -906,11 +906,28 @@ class RemoteUserController extends AbstractUserController
                 'total' => $total,
                 'imported' => $imported
             ];
+        } else if($response->status() == 409 /* User exists */) {            
+            // User exists in the keycloak.
+            // Update the user in the user imports list as imported.
+            $userImport = UserImport::find($data['userId']);
+            $userImport->imported = 1;
+            $userImport->save();
+
+            $total = UserImport::count();
+            $imported = UserImport::where('imported', true)->count();
+
+            return [
+                'status' => $response->status(),
+                'message' => 'User already exists!',
+                'total' => $total,
+                'imported' => $imported
+            ];
         }
 
+        
         return [
             'status' => $response->status(),
-            'message' => $response->message(),
+            'message' => $response->errorMessage()
         ];
     }
 

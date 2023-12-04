@@ -69,6 +69,7 @@ return [
     'tel1' => 'Phone Number #1',
     'tel2' => 'Phone Number #2',
     'isTeacher' => "Is Teacher?",
+    'registerAsTeacher' => "Register as the Teacher",
     'subjects' => 'Subjects',
     'subjectsSubtitle' => '(You can select more than one answer)',
     'professionalStatus' => 'Professional Status',
