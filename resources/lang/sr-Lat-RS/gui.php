@@ -31,9 +31,9 @@ return [
      * Users list
      */
     'firstName' => 'Ime',
-    'secondName' => 'Prezime',
+    'lastName' => 'Prezime',
     'email' => 'E-Mail',
-    'contactPhone' => 'Kontakt Telefon',
+    'contactPhone' => 'Kontakt telefon',
     'city' => 'Mesto',
     'country' => 'Država',
     'teacher' => 'Nastavnik',
@@ -66,6 +66,7 @@ return [
     'repeatPassword' => 'Ponovi lozinku',
     'repeatEmail' => 'Ponovi email',
     'addressAndNo' => 'Adresa i broj',
+    'streetAndNumber' => 'Ulica i broj',
     'postalCode' => 'Poštanski broj',
     'tel1' => 'Kontakt telefon #1',
     'tel2' => 'Kontakt telefon #2',

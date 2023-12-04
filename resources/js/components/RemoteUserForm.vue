@@ -7,14 +7,14 @@
             <b-row class="p-2">
                 <b-col>
                     <div class="form-input">
-                        <label for="username">Korisničko ime</label>
+                        <label for="username">{{ _('gui.username') }}</label>
                         <b-input id="username" v-model="form.korisnickoIme" :disabled="userId != 0"></b-input>
                         <span v-if="errors.korisnickoIme" class="text-danger">{{ errors.korisnickoIme}}</span>
                     </div>
                 </b-col>
                 <b-col>
                     <div class="form-input">
-                        <label for="email">Imejl adresa</label>
+                        <label for="email">{{ _('gui.email') }}</label>
                         <b-input id="email" v-model="form.email" :disabled="userId != 0"></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </div>
@@ -23,21 +23,21 @@
             <b-row class="p-2">
                 <b-col>
                     <div class="form-input">
-                        <label for="firstName">Ime</label>
+                        <label for="firstName">{{ _('gui.firstName') }}</label>
                         <b-input id="firstName" v-model="form.ime"></b-input>
                         <span v-if="errors.ime" class="text-danger">{{ errors.ime}}</span>
                     </div>
                 </b-col>
                 <b-col>
                     <div class="form-input">
-                        <label for="lastName">Prezime</label>
+                        <label for="lastName">{{ _('gui.lastName') }}</label>
                         <b-input id="lastName" v-model="form.prezime"></b-input>
                         <span v-if="errors.prezime" class="text-danger">{{ errors.prezime}}</span>
                     </div>
                 </b-col>
                 <b-col>
                     <div class="form-input">
-                        <label for="tel1">Kontakt telefon</label>
+                        <label for="tel1">{{ _('gui.contactPhone')}}</label>
                         <b-input id="tel1" placeholder="Unesite broj telefona" v-model="form.telefon1"></b-input>
                         <span v-if="errors.telefon1" class="text-danger">{{ errors.telefon1}}</span>
                     </div>
@@ -48,19 +48,19 @@
 
             <b-row class="p-2">
                 <b-col cols="5">
-                    <b-form-group label="Ulica i broj" label-for="billingAddress">
+                    <b-form-group :label="_('gui.streetAndNumber')" label-for="billingAddress">
                         <b-input id="billingAddress" v-model="form.adresa"></b-input>
                         <span v-if="errors.adresa" class="text-danger">{{ errors.adresa}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col cols="2">
-                    <b-form-group label="Poštanski broj" label-for="pb">
+                    <b-form-group :label="_('gui.postalCode')" label-for="pb">
                         <b-input id="pb" v-model="form.postanskiBroj"></b-input>
                         <span v-if="errors.postanskiBroj" class="text-danger">{{ errors.postanskiBroj}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col cols="5">
-                    <b-form-group label="Mesto" label-for="city">
+                    <b-form-group :label="_('gui.city')" label-for="city">
                         <b-input id="city" v-model="form.mesto"></b-input>
                         <span v-if="errors.mesto" class="text-danger">{{ errors.mesto}}</span>
                     </b-form-group>

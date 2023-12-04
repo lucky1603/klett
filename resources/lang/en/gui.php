@@ -30,7 +30,7 @@ return [
      * Users list
      */
     'firstName' => 'First Name',
-    'secondName' => 'Second Name',
+    'lastName' => 'Last Name',
     'email' => 'E-Mail',
     'contactPhone' => 'Contact Phone',
     'city' => 'City',
@@ -65,6 +65,7 @@ return [
     'repeatPassword' => 'Repeat Password',
     'repeatEmail' => 'Repeat Email',
     'addressAndNo' => 'Address and Number',
+    'streetAndNumber' => 'Street and Number',
     'postalCode' => 'Postal Code',
     'tel1' => 'Phone Number #1',
     'tel2' => 'Phone Number #2',

@@ -30,7 +30,7 @@ return [
      * Users list
      */
     'firstName' => 'Име',
-    'secondName' => 'Презиме',
+    'lastName' => 'Презиме',
     'email' => 'Имејл',
     'contactPhone' => 'Контакт телефон',
     'city' => 'Место',
@@ -65,6 +65,7 @@ return [
     'repeatPassword' => 'Понови лозинку',
     'repeatEmail' => 'Понови имејл',
     'addressAndNo' => 'Адреса и број',
+    'streetAndNumber' => 'Улица и број',
     'postalCode' => 'Поштански број',
     'tel1' => 'Контакт телефон #1',
     'tel2' => 'Контакт телефон #2',
@@ -91,5 +92,6 @@ return [
      */
     'registerUserFormTitle' => "Регистрација новог корисника",
     'updateUserFormTitle' => "Ажурирајте своје податке"
+
 
 ];
