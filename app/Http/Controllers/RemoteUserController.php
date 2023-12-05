@@ -36,8 +36,8 @@ class RemoteUserController extends AbstractUserController
         foreach($users as $user) {
             $userData[] = [
                 "id" => $user['id'],
-                "username" => $user['username'],
-                "firstName" => $user['firstName'],
+                "username" => $user['username'] ?? '',
+                "firstName" => $user['firstName'] ?? '',
                 "lastName" => $user['lastName'],
                 "email" => $user['email'],
                 "enabled" => $user['enabled'],
@@ -906,7 +906,7 @@ class RemoteUserController extends AbstractUserController
                 'total' => $total,
                 'imported' => $imported
             ];
-        } else if($response->status() == 409 /* User exists */) {            
+        } else if($response->status() == 409 /* User exists */) {
             // User exists in the keycloak.
             // Update the user in the user imports list as imported.
             $userImport = UserImport::find($data['userId']);
@@ -924,7 +924,7 @@ class RemoteUserController extends AbstractUserController
             ];
         }
 
-        
+
         return [
             'status' => $response->status(),
             'message' => $response->errorMessage()
