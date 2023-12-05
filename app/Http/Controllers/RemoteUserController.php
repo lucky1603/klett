@@ -37,8 +37,8 @@ class RemoteUserController extends AbstractUserController
             $userData[] = [
                 "id" => $user['id'],
                 "username" => $user['username'],
-                "firstName" => $user['firstName'],
-                "lastName" => $user['lastName'],
+                "firstName" => $user['firstName'] ?? '',
+                "lastName" => $user['lastName'] ?? '',
                 "email" => $user['email'],
                 "enabled" => $user['enabled'],
                 "role" => $user['attributes']['role'][0],
