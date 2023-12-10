@@ -5,8 +5,7 @@
             <hr/>
             <div class="d-flex flex-column align-items-center container p-4 border-top border-secondary">
                 <p>
-                    Registracijom korisničkog naloga imaćete mogućnost da istim nalogom lako
-                    pristupite svim našim sajtovima i platformama (
+                    {{ _('gui.registerIntro1') }}
                         <a href="https://klett.rs" target="_blank">klett.rs</a>,
                         <a href="https://freska.rs" target="_blank">freska.rs</a>,
                         <a href="https://euci.rs" target="_blank">euci.rs</a>,
@@ -14,11 +13,7 @@
                         <a href="https://eknjizara.rs" target="_blank">eknjizara.rs</a>).
                 </p>
                 <p>
-                    Korisnički nalog na našim sajtovima biće Vam potreban ukoliko želite kao
-                    učenik da koristite digitalne udžbenike na našoj platformi. Ukoliko se
-                    registrujete kao nastavnik, nakon provere podataka, korisnički nalog
-                    omogućiće Vam da imate pristup nastavnim materijalima i da budete na
-                    vreme obavešteni o novim izdanjima i stručnim skupovima.
+                    {{ _('gui.registerIntro2') }}
                 </p>
             </div>
             <div class="container">

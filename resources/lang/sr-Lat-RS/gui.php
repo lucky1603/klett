@@ -31,9 +31,9 @@ return [
      * Users list
      */
     'firstName' => 'Ime',
-    'secondName' => 'Prezime',
+    'lastName' => 'Prezime',
     'email' => 'E-Mail',
-    'contactPhone' => 'Kontakt Telefon',
+    'contactPhone' => 'Kontakt telefon',
     'city' => 'Mesto',
     'country' => 'Država',
     'teacher' => 'Nastavnik',
@@ -66,6 +66,7 @@ return [
     'repeatPassword' => 'Ponovi lozinku',
     'repeatEmail' => 'Ponovi email',
     'addressAndNo' => 'Adresa i broj',
+    'streetAndNumber' => 'Ulica i broj',
     'postalCode' => 'Poštanski broj',
     'tel1' => 'Kontakt telefon #1',
     'tel2' => 'Kontakt telefon #2',
@@ -91,5 +92,12 @@ return [
      * Register user form.
      */
     'registerUserFormTitle' => "Registracija novog korisnika",
-    'updateUserFormTitle' => "Ažurirajte svoje podatke"
+    'updateUserFormTitle' => "Ažurirajte svoje podatke",
+    'registerIntro1' => "Registracijom korisničkog naloga imaćete mogućnost da istim nalogom lako
+                        pristupite svim našim sajtovima i platformama (",
+    'registerIntro2' => "Korisnički nalog na našim sajtovima biće Vam potreban ukoliko želite kao
+                        učenik da koristite digitalne udžbenike na našoj platformi. Ukoliko se
+                        registrujete kao nastavnik, nakon provere podataka, korisnički nalog
+                        omogućiće Vam da imate pristup nastavnim materijalima i da budete na
+                        vreme obavešteni o novim izdanjima i stručnim skupovima."
 ];
