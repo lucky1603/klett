@@ -32,12 +32,12 @@
         </div> --}}
         <div class="shadow-sm bg-light mx-4" style="width: 98%">
             <div class="container-fluid px-0">
-                <div class="row w-100 mx-0">
+                <div class="row w-100 mx-0" style="height: 100px; margin: auto 0;">
                     <div class="col">
-                        <img src="/images/Header_KLF-logotipi.svg"/>
+                        <img src="/images/Header_KLF-logotipi.svg" width="500" class="float-right" style="margin-top: 20px"/>
                     </div>
                     <div class="col" style="background-color: #efefef">
-                        <img src="/images/Header_EEE-logotipi.svg"/>
+                        <img src="/images/Header_EEE-logotipi.svg" width="500" class="float-left" style="margin-top: 20px"/>
                     </div>
                 </div>
             </div>
