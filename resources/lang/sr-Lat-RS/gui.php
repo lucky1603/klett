@@ -32,7 +32,7 @@ return [
      */
     'firstName' => 'Ime',
     'lastName' => 'Prezime',
-    'email' => 'E-Mail',
+    'email' => 'Imejl adresa',
     'contactPhone' => 'Kontakt telefon',
     'city' => 'Mesto',
     'country' => 'Država',

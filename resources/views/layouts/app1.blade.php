@@ -19,17 +19,31 @@
     <!-- Localization -->
     <script src="/lang-{{ app()->getLocale() }}.js"></script>
 </head>
-<body>
+<body class="applyform">
     <div id="app">
         <!-- Header with logos -->
-        <div class="container-fluid d-flex align-items-center justify-content-center bg-warning" style="height: 200px">
+        {{-- <div class="container-fluid d-flex align-items-center justify-content-center bg-warning" style="height: 200px">
             <img src="/images/klett1.png" style="height: 60px; margin: 20px"/>
             <img src="/images/logos.png" style="height: 60px; margin: 20px"/>
             <img src="/images/freska.png" style="height: 60px; margin: 20px"/>
             <img src="/images/eucilogo1.png" style="height: 60px; margin: 20px"/>
             <img src="/images/eucionica.png" style="height: 60px; margin: 20px"/>
             <img src="/images/eknjizaralogo.svg" style="height: 60px; margin: 20px"/>
+        </div> --}}
+        <div class="shadow-sm bg-light mx-4" style="width: 98%">
+            <div class="container-fluid px-0">
+                <div class="row w-100 mx-0">
+                    <div class="col">
+                        <img src="/images/Header_KLF-logotipi.svg"/>
+                    </div>
+                    <div class="col" style="background-color: #efefef">
+                        <img src="/images/Header_EEE-logotipi.svg"/>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
 
         <main class="py-4">
             @yield('content')

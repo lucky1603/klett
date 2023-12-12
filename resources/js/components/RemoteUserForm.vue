@@ -7,15 +7,15 @@
             <b-row class="p-2">
                 <b-col>
                     <div class="form-input">
-                        <label for="username">{{ _('gui.username') }}</label>
-                        <b-input id="username" v-model="form.korisnickoIme" :disabled="userId != 0"></b-input>
+                        <label for="username" class="registerLabel">{{ _('gui.username') }}</label>
+                        <b-input id="username" v-model="form.korisnickoIme" :disabled="userId != 0" class="registerInput"></b-input>
                         <span v-if="errors.korisnickoIme" class="text-danger">{{ errors.korisnickoIme}}</span>
                     </div>
                 </b-col>
                 <b-col>
                     <div class="form-input">
-                        <label for="email">{{ _('gui.email') }}</label>
-                        <b-input id="email" v-model="form.email" :disabled="userId != 0"></b-input>
+                        <label for="email" class="registerLabel">{{ _('gui.email') }}</label>
+                        <b-input id="email" v-model="form.email" :disabled="userId != 0" class="registerInput"></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </div>
                 </b-col>
@@ -23,22 +23,22 @@
             <b-row class="p-2">
                 <b-col>
                     <div class="form-input">
-                        <label for="firstName">{{ _('gui.firstName') }}</label>
-                        <b-input id="firstName" v-model="form.ime"></b-input>
+                        <label for="firstName" class="registerLabel">{{ _('gui.firstName') }}</label>
+                        <b-input id="firstName" v-model="form.ime" class="registerInput"></b-input>
                         <span v-if="errors.ime" class="text-danger">{{ errors.ime}}</span>
                     </div>
                 </b-col>
                 <b-col>
                     <div class="form-input">
-                        <label for="lastName">{{ _('gui.lastName') }}</label>
-                        <b-input id="lastName" v-model="form.prezime"></b-input>
+                        <label for="lastName" class="registerLabel">{{ _('gui.lastName') }}</label>
+                        <b-input id="lastName" v-model="form.prezime" class="registerInput"></b-input>
                         <span v-if="errors.prezime" class="text-danger">{{ errors.prezime}}</span>
                     </div>
                 </b-col>
                 <b-col>
                     <div class="form-input">
-                        <label for="tel1">{{ _('gui.contactPhone')}}</label>
-                        <b-input id="tel1" placeholder="Unesite broj telefona" v-model="form.telefon1"></b-input>
+                        <label for="tel1" class="registerLabel">{{ _('gui.contactPhone')}}</label>
+                        <b-input id="tel1" v-model="form.telefon1" class="registerInput"></b-input>
                         <span v-if="errors.telefon1" class="text-danger">{{ errors.telefon1}}</span>
                     </div>
                 </b-col>
@@ -48,42 +48,42 @@
 
             <b-row class="p-2">
                 <b-col cols="5">
-                    <b-form-group :label="_('gui.streetAndNumber')" label-for="billingAddress">
-                        <b-input id="billingAddress" v-model="form.adresa"></b-input>
+                    <b-form-group :label="_('gui.streetAndNumber')" label-for="billingAddress" class="registerLabel">
+                        <b-input id="billingAddress" v-model="form.adresa" class="registerInput"></b-input>
                         <span v-if="errors.adresa" class="text-danger">{{ errors.adresa}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col cols="2">
-                    <b-form-group :label="_('gui.postalCode')" label-for="pb">
-                        <b-input id="pb" v-model="form.postanskiBroj"></b-input>
+                    <b-form-group :label="_('gui.postalCode')" label-for="pb" class="registerLabel">
+                        <b-input id="pb" v-model="form.postanskiBroj" class="registerInput"></b-input>
                         <span v-if="errors.postanskiBroj" class="text-danger">{{ errors.postanskiBroj}}</span>
                     </b-form-group>
                 </b-col>
                 <b-col cols="5">
-                    <b-form-group :label="_('gui.city')" label-for="city">
-                        <b-input id="city" v-model="form.mesto"></b-input>
+                    <b-form-group :label="_('gui.city')" label-for="city" class="registerLabel">
+                        <b-input id="city" v-model="form.mesto" class="registerInput"></b-input>
                         <span v-if="errors.mesto" class="text-danger">{{ errors.mesto}}</span>
                     </b-form-group>
                 </b-col>
             </b-row>
 
-            <b-form-checkbox v-model="form.isTeacher" :value="true">{{ _('gui.registerAsTeacher') }}</b-form-checkbox>
+            <b-form-checkbox v-model="form.isTeacher" :value="true" class="registerLabel">{{ _('gui.registerAsTeacher') }}</b-form-checkbox>
             <div v-if="form.isTeacher">
                 <b-row>
                     <b-col>
-                        <b-form-group :label="_('gui.institutionType')" label-for="institution_type">
-                            <b-form-select v-model="form.institutionType" id="institution_type" :options="institutionTypes" @change="filtrirajSkole"></b-form-select>
+                        <b-form-group :label="_('gui.institutionType')" label-for="institution_type" class="registerLabel">
+                            <b-form-select v-model="form.institutionType" id="institution_type" :options="institutionTypes" @change="filtrirajSkole" class="registerInput"></b-form-select>
                         </b-form-group>
                     </b-col>
                     <b-col>
-                        <b-form-group :label="_('gui.municipality')" label-for="township">
-                            <b-form-select v-model="form.township" id="township" :options="opstine" @change="filtrirajSkole"></b-form-select>
+                        <b-form-group :label="_('gui.municipality')" label-for="township" class="registerLabel">
+                            <b-form-select v-model="form.township" id="township" :options="opstine" @change="filtrirajSkole" class="registerInput"></b-form-select>
                         </b-form-group>
                     </b-col>
                 </b-row>
 
-                <b-form-group :label="_('gui.school')" label-for="school">
-                    <b-form-select v-model="form.skola" id="school" :options="schools"></b-form-select>
+                <b-form-group :label="_('gui.school')" label-for="school" class="registerLabel">
+                    <b-form-select v-model="form.skola" id="school" :options="schools" class="registerInput"></b-form-select>
                     <span v-if="errors.skola" class="text-danger">{{ errors.skola}}</span>
                 </b-form-group>
                 <!-- <h5 class="mb-0">{{ _('gui.subjects') }}</h5> -->
@@ -98,8 +98,8 @@
                     </b-form-checkbox>
                 </div> -->
 
-                <b-form-group :label="_('gui.subjects')" label-for="subjects">
-                    <b-form-select v-model="form.predmeti" :options="predmeti" multiple :select-size="6"></b-form-select>
+                <b-form-group :label="_('gui.subjects')" label-for="subjects" class="registerLabel">
+                    <b-form-select v-model="form.predmeti" :options="predmeti" multiple :select-size="6" class="registerInput"></b-form-select>
                     <span v-if="errors.predmeti" class="text-danger">{{ errors.predmeti}}</span>
                 </b-form-group>
 
@@ -129,7 +129,6 @@
                 <b-form-input v-model="form.captcha" name="captcha" style="width: 200px; margin: 5px" placeholder="Unesite tekst sa slike" />
                 <span v-if="errors.captcha" class="text-danger">{{ errors.captcha }}</span>
             </div>
-`
         </b-form>
     </div>
 </template>

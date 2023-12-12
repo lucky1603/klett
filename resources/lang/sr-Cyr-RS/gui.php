@@ -31,7 +31,7 @@ return [
      */
     'firstName' => 'Име',
     'lastName' => 'Презиме',
-    'email' => 'Имејл',
+    'email' => 'Имејл адреса',
     'contactPhone' => 'Контакт телефон',
     'city' => 'Место',
     'country' => 'Држава',

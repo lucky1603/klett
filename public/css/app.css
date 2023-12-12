@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
 @charset "UTF-8";
 /*!
  * Bootstrap v4.6.2 (https://getbootstrap.com/)
@@ -17093,4 +17094,25 @@ a.text-dark:hover, a.text-dark:focus {
 .mainframe .login-frame .right-pane {
   background-image: url("/images/background1.png");
   width: 100%;
+}
+
+.applyform {
+  background-image: url("/images/Main_Slider_Bckg.jpg");
+  background-repeat: repeat;
+}
+
+.registerInput {
+  background-color: #e6f0f4 !important;
+}
+
+.registerLabel {
+  font-weight: 700 !important;
+  font-family: "Roboto", sans-serif !important;
+}
+
+.formEntryText {
+  font-family: "Roboto", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 300;
 }
