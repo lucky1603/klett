@@ -30,7 +30,7 @@
             <img src="/images/eucionica.png" style="height: 60px; margin: 20px"/>
             <img src="/images/eknjizaralogo.svg" style="height: 60px; margin: 20px"/>
         </div> --}}
-        <div class="shadow-sm bg-light mx-4" style="width: 98%">
+        <div class="shadow bg-light mx-4" style="width: 98%">
             <div class="container-fluid px-0">
                 <div class="row w-100 mx-0" style="height: 100px; margin: auto 0;">
                     <div class="col">
