@@ -82,6 +82,10 @@
                 class="w-100 h-100"
                 @row-selected="onRowSelected"
                 >
+                <template #cell(klf_korisnik)="data">
+                    <span v-if="data.item.klf_korisnik == '0'">NE</span>
+                    <span v-else>DA</span>
+                </template>
                 <template #cell(enabled)="data">
                     <div class="d-flex align-items-center justify-content-center">
                         <img v-if="data.item.enabled" src="/images/greenuser.png" height="15" />
@@ -227,6 +231,14 @@ export default {
                     label: "KLF",
                     thStyle: {
                         width: "5%",
+                    }
+                },
+                {
+                    key: 'createdAt',
+                    sortable: true,
+                    label: "Kreiran",
+                    thStyle: {
+                        width: '5%'
                     }
                 },
                 {

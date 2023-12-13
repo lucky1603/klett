@@ -46,7 +46,7 @@ class RemoteUserController extends AbstractUserController
                 "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : "Nije podeseno",
                 "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
                 'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
-
+                'createdAt' => date('d.m.Y', substr($user['createdTimestamp'], 0, 10)) 
             ];
         }
 
@@ -289,8 +289,8 @@ class RemoteUserController extends AbstractUserController
             $userData[] = [
                 "id" => $user['id'],
                 "username" => $user['username'],
-                "firstName" => $user['firstName'],
-                "lastName" => $user['lastName'],
+                "firstName" => $user['firstName'] ?? '',
+                "lastName" => $user['lastName'] ?? '',
                 "email" => $user['email'],
                 "enabled" => $user['enabled'],
                 "role" => $user['attributes']['role'][0],
