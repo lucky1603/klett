@@ -31,7 +31,7 @@
                     <div class="col-12 col-sm-4" style="background-color: #efefef">
                         <img src="/images/Header_EEE-logotipi.svg" class="float-xl-left float-center my-4" style="width: 100%; "/>
                     </div>
-                    <div class="col-sm-2"></div>
+                    <div class="col-sm-2" style="background-color: #efefef"></div>
                 </div>
             </div>
 
