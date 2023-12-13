@@ -23,6 +23,19 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
+        DB::table("role_user")->delete();
+        DB::statement("ALTER TABLE role_user AUTO_INCREMENT = 0");
+        DB::table("ability_role")->delete();
+        DB::statement("ALTER TABLE ability_role AUTO_INCREMENT = 0");
+        DB::table("users")->delete();
+        DB::statement("ALTER TABLE users AUTO_INCREMENT = 0");
+        DB::table("roles")->delete();
+        DB::statement("ALTER TABLE roles AUTO_INCREMENT = 0");
+        DB::table("abilities")->delete();
+        DB::statement("ALTER TABLE abilities AUTO_INCREMENT = 0");
+
+
+
         // Abilities.
         if(Ability::whereName('add_platform_user')->first() == null) {
             Ability::create(['name' => 'add_platform_user', 'label' => 'Dodavanje korisnika platforme']);
@@ -39,6 +52,10 @@ class DatabaseSeeder extends Seeder
         // Super administrators
         if(Ability::whereName('manage_app_users')->first() == null) {
             Ability::create(['name' => 'manage_app_users', 'label' => 'Upravljanje korisnicima aplikacije']);
+        }
+
+        if(Ability::whereName('analyze_dashboard')->first() == null) {  
+            Ability::create(['name'=> 'analyze_dashboard', 'label'=> 'Pregledanje podataka kontrolne table']);
         }
 
 
