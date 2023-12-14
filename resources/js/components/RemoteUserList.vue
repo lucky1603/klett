@@ -8,7 +8,7 @@
                                 type="search"
                                 id="searchUsername"
                                 placeholder="Po korisničkom imenu ..."
-                                v-model="searchForm.username"/>
+                                v-model="searchForm.username" @update="submitFilter"/>
                             <template #append>
                                 <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
                             </template>
@@ -19,6 +19,7 @@
                                 id="searchFirstName"
                                 placeholder="Po imenu ..."
                                 v-model="searchForm.firstName"
+                                @update="submitFilter"
                             ></b-form-input>
                             <template #append>
                                 <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
@@ -30,6 +31,7 @@
                                 id="searchLastName"
                                 placeholder="Po prezimenu ..."
                                 v-model="searchForm.lastName"
+                                @update="submitFilter"
                             ></b-form-input>
                             <template #append>
                                 <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
@@ -41,29 +43,30 @@
                                 id="searchLastName"
                                 placeholder="Po email adresi ..."
                                 v-model="searchForm.email"
+                                @update="submitFilter"
                             ></b-form-input>
                             <template #append>
                                 <b-input-group-text><b-icon-zoom-in></b-icon-zoom-in></b-input-group-text>
                             </template>
                         </b-input-group>
                         <b-input-group size="sm" class="m-1">
-                            <b-form-select v-model="searchForm.status" :options="statuses"/>
+                            <b-form-select v-model="searchForm.status" :options="statuses" @change="submitFilter"/>
                         </b-input-group>
                         <b-input-group size="sm" class="m-1">
-                            <b-form-select v-model="searchForm.role" :options="roles"/>
+                            <b-form-select v-model="searchForm.role" :options="roles" @change="submitFilter"/>
                         </b-input-group>
                         <b-input-group size="sm" class="m-1">
-                            <b-form-select v-model="searchForm.source" :options="sources"/>
+                            <b-form-select v-model="searchForm.source" :options="sources" @change="submitFilter"/>
                         </b-input-group>
                         <b-input-group size="sm" class="m-1">
-                            <b-form-select v-model="searchForm.klf" :options="klfs"/>
+                            <b-form-select v-model="searchForm.klf" :options="klfs" @change="submitFilter"/>
                         </b-input-group>
 
                     </b-form>
                 </b-col>
                 <b-col lg="2">
-                    <div class="d-flex align-items-center justify-content-end justify-content-right flex-row w-100 h-100">
-                        <b-button variant="outline-secondary" size="sm" class="m-1" title="Filtriraj" @click="submitFilter"><i class="bi bi-filter"></i></b-button>
+                    <div class="d-flex align-items-center justify-content-end flex-row w-100 h-100">
+                        <b-button v-if="false" variant="outline-secondary" size="sm" class="m-1" title="Filtriraj" @click="submitFilter"><i class="bi bi-filter"></i></b-button>
                         <b-button variant="success" size="sm" title="Resetuj filter" @click="cancelFilter"><i class="bi bi-arrow-repeat"></i></b-button>
                     </div>
                 </b-col>
@@ -358,6 +361,7 @@ export default {
          * Filter submitted from the search form
          */
         async submitFilter() {
+            document.body.style.cursor = 'wait';
             this.isFilter = true;
             if(this.currentPosition != 0) {
                 this.currentPosition = 0;
@@ -365,6 +369,7 @@ export default {
                 await this.getFilter();
             }
             this.$refs.nav.start();
+            document.body.style.cursor = 'default';
         },
         /**
          * Reset filter
