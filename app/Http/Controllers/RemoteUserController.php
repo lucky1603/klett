@@ -46,7 +46,7 @@ class RemoteUserController extends AbstractUserController
                 "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : "Nije podeseno",
                 "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
                 'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
-                'createdAt' => date('d.m.Y', substr($user['createdTimestamp'], 0, 10)) 
+                'createdAt' => date('d.m.Y.', substr($user['createdTimestamp'], 0, 10)) 
             ];
         }
 
@@ -298,7 +298,7 @@ class RemoteUserController extends AbstractUserController
                 "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : "Nije podeseno",
                 "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
                 'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
-                'createdAt' => date('d.m.Y', substr($user['createdTimestamp'], 0, 10)) 
+                'createdAt' => date('d.m.Y.', substr($user['createdTimestamp'], 0, 10)) 
             ];
         }
 
