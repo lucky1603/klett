@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ScheduledEdit;
 use Illuminate\Support\Facades\Http;
 
 
@@ -194,7 +193,8 @@ class AbstractUserController extends Controller
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
                 'ext_Imekontakta@odata.bind' => '/contacts('.$crmContactId.")",
                 "ext_verified" => true,
-                "ext_keycloakidkorisnika" => $keycloakUserId
+                "ext_keycloakidkorisnika" => $keycloakUserId,
+                "ext_keycloakusername"=> $data['korisnickoIme']
             ]);
     }
 
@@ -213,7 +213,8 @@ class AbstractUserController extends Controller
                 'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['township'].")",
                 'ext_Nazivustanove@odata.bind' => "/accounts(".$data['skola'].")",
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
-                "ext_keycloakidkorisnika" => $keycloakUserId
+                "ext_keycloakidkorisnika" => $keycloakUserId,
+                "ext_keycloakusername"=> $data['korisnickoIme']
             ]);
     }
 
