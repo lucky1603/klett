@@ -653,8 +653,8 @@ export default {
             this.searchForm.email = '';
             this.searchForm.role = 0;
             this.searchForm.status = 0;
-            this.searchForm.source = 0;
-            this.searchForm.klf = 0;
+            this.searchForm.source = null;
+            this.searchForm.klf = -1;
             await this.getData();
             this.$refs.nav.start();
         },
