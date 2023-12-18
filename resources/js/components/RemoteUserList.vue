@@ -650,8 +650,11 @@ export default {
             this.searchForm.firstName = '';
             this.searchForm.lastName = '';
             this.searchForm.username = '';
+            this.searchForm.email = '';
             this.searchForm.role = 0;
             this.searchForm.status = 0;
+            this.searchForm.source = 0;
+            this.searchForm.klf = 0;
             await this.getData();
             this.$refs.nav.start();
         },
