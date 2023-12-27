@@ -18,7 +18,7 @@
                         <b-input id="email" v-model="form.email" :disabled="userId != 0"></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </div>
-                </b-col>
+                </b-col>                
             </b-row>
             <b-row class="p-2">
                 <b-col>
@@ -69,6 +69,10 @@
 
             <b-form-group label="Role">
                 <b-form-select v-model="form.rola" :options="role"></b-form-select>
+            </b-form-group>
+
+            <b-form-group v-if="enablePasswordEntry" label="Lozinka">
+            
             </b-form-group>
 
             <div v-if="form.rola == 'bab78444-87f6-45e9-86fc-fd1b1d5b6530'">
@@ -148,7 +152,7 @@ export default {
     props: {
         userId: {typeof: String, default: ''},
         anonimous: {typeof: Boolean, default: false},
-        superAdmin: {typeof: Boolean, default: false}
+        superAdmin: {typeof: Boolean, default: false},
     },
     data() {
         return {
@@ -174,8 +178,8 @@ export default {
                 rola: 'a32c8e1b-a442-458c-9889-3567e19797ea',
                 testomat: false,
                 pedagoska_sveska: false,
-                klf_korisnik: false
-
+                klf_korisnik: false,
+                password: null
             },
             accessToken: '',
             errors: {},

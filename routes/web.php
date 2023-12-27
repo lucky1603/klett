@@ -5,7 +5,7 @@ use App\Http\Controllers\AnonimousController;
 use App\Http\Controllers\AppUserController;
 use App\Http\Controllers\ChangeUserController;
 use App\Http\Controllers\CRMController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\RemoteUserController;
@@ -13,6 +13,8 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserImportController;
+use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -120,6 +122,13 @@ Route::get('changeusers/count', [ChangeUserController::class, 'getCount'])->name
 Route::get('changeusers/countDone', [ChangeUserController::class, 'getCountDone'])->name('changeUsers.countDone');
 Route::get('changeusers/setchanged/{user}', [ChangeUserController::class, 'setChanged'])->name('changeUsers.setSent');
 Route::post('changeusers/create', [ChangeUserController::class, 'store'])->name('changeUsers.store');
+
+// Exports
+Route::get('exports/list', [ExportController::class,'list'])->name('exports.list');
+Route::get('exports/deleteAll', [ExportController::class,'deleteAll'])->name('exports.deleteAll');
+Route::get('exports/export', [ExportController::class,'export'])->name('exports.export');
+Route::get('exports/delete/{export}', [ExportController::class,'delete'])->name('exports.delete');
+Route::post('exports/create', [ExportController::class,'store'])->name('exports.store');
 
 // Language-Localization.p
 Route::get('/lang-{lang}.js', [LanguageController::class, 'show'])->name('languages.show');

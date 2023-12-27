@@ -61,7 +61,6 @@
                         <b-input-group size="sm" class="m-1">
                             <b-form-select v-model="searchForm.klf" :options="klfs" @change="submitFilter"/>
                         </b-input-group>
-
                     </b-form>
                 </b-col>
                 <b-col lg="2">
@@ -115,7 +114,8 @@
                     <i class="bi bi-database-dash mr-1"></i>
                     {{ _('gui.DeleteAll') }}
                 </b-button>
-                <a class="btn btn-sm btn-primary float-right m-1" role="button" href="/remoteusers/export"><i class="bi bi-box-arrow-right mr-2"></i>Export</a>
+                <b-button variant="primary" size="sm" title="Izvesi selektovane" class="m-1" @click="exportSelected">Export</b-button>
+                
             </div>
         </div>
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
@@ -578,6 +578,37 @@ export default {
             })
 
         },
+
+        async exportSelected() {
+            if(this.selected.length == 0)
+                return;
+
+            // Fill the exports table.
+            for(let record of this.selected) {
+                let formData = new FormData();
+                for(let property in record) {
+                    formData.append(property, record[property]);
+                }
+
+                await axios.post('/exports/create', formData)
+                .then(response => {
+                    console.log(response.data);
+                });                
+            }      
+            
+            // Do the export
+            await axios.get('/exports/export')
+            .then(response => {
+                console.log(response.data);
+            });
+
+            // Clean the exports table.
+            await axios.get('/exports/deleteAll')
+            .then(response => {
+                console.log(response.data);
+            });
+        },
+
         /**
          * Afirmative callback from the deletion of the selected ones.
          */

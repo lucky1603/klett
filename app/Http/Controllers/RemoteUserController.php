@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RemoteUsersExport;
+use App\Http\Requests\AdminCreateUserRequest;
+use App\Http\Requests\AdminUpdateUserRequest;
 use App\Mail\NoCRMInfo;
 use App\Models\UserImport;
 use Illuminate\Http\Request;
-use App\Exports\RemoteUsersExport;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Requests\AdminCreateUserRequest;
-use App\Http\Requests\AdminUpdateUserRequest;
 
 class RemoteUserController extends AbstractUserController
 {
@@ -364,6 +365,13 @@ class RemoteUserController extends AbstractUserController
                     "source" => $data['source'],
                     "role" => $roles[$data['rola']],
                 ],
+                "credentials" => $data['password'] != 'null' ? [
+                    [
+                        "type" => "password",
+                        "value" => $data['password'],
+                        "temporary" => false, 
+                    ]
+                ] : []
         ]);
 
         /* test
@@ -397,11 +405,13 @@ class RemoteUserController extends AbstractUserController
 
             $this->setUserGroup($setGroupRequest);
 
-            // Send password reset link.
-            if($data['updatePassword'] == 'true') {
-                Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
-                    ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
-            }
+            if($data['password'] == 'null') {
+                // Send password reset link.
+                if($data['updatePassword'] == 'true') {
+                    Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                        ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+                }
+            }     
 
             return [
                 'status' => $response->status(),
