@@ -43,11 +43,8 @@ class ExportController extends Controller
         });
 
         // var_dump($exports->toArray());
-        Excel::download(new SelectedUsersExport($exports), 'userexport.xlsx');
-        return [
-            'code'=> 200,
-            'message'=> 'Success',
-        ];
+        return Excel::download(new RemoteUsersExport($exports), 'userexport.xlsx');
+        
     }
 
     public function delete($id) {

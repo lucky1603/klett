@@ -114,7 +114,10 @@
                     <i class="bi bi-database-dash mr-1"></i>
                     {{ _('gui.DeleteAll') }}
                 </b-button>
-                <b-button variant="primary" size="sm" title="Izvesi selektovane" class="m-1" @click="exportSelected">Export</b-button>
+                <b-button variant="primary" size="sm" title="Izvesi selektovane" class="m-1" @click="exportSelected">
+                    <b-spinner v-if="showSpinner" small class="me-1"></b-spinner>
+                    Export
+                </b-button>
                 
             </div>
         </div>
@@ -176,6 +179,7 @@ export default {
     },
     data() {
         return {
+            showSpinner: false,
             isFilter: false,
             deleteDialogMessage: '',
             deleteMode: 1,
@@ -580,6 +584,7 @@ export default {
         },
 
         async exportSelected() {
+            this.showSpinner = true;
             if(this.selected.length == 0)
                 return;
 
@@ -590,23 +595,19 @@ export default {
                     formData.append(property, record[property]);
                 }
 
-                await axios.post('/exports/create', formData)
-                .then(response => {
-                    console.log(response.data);
-                });                
+                await axios.post('/exports/create', formData);
+                               
             }      
-            
-            // Do the export
-            await axios.get('/exports/export')
-            .then(response => {
-                console.log(response.data);
-            });
 
+            // Export should be called like this
+            // in order for the download to start.
+            location.href='/exports/export';
+            
             // Clean the exports table.
-            await axios.get('/exports/deleteAll')
-            .then(response => {
-                console.log(response.data);
-            });
+            await axios.get('/exports/deleteAll');
+
+            this.showSpinner = false;
+
         },
 
         /**
