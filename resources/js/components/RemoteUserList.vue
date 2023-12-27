@@ -603,8 +603,6 @@ export default {
             // in order for the download to start.
             location.href='/exports/export';
             
-            // Clean the exports table.
-            await axios.get('/exports/deleteAll');
 
             this.showSpinner = false;
 

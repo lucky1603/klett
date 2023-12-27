@@ -42,6 +42,8 @@ class ExportController extends Controller
             ];
         });
 
+        $this->deleteAll();
+
         // var_dump($exports->toArray());
         return Excel::download(new RemoteUsersExport($exports), 'userexport.xlsx');
         
