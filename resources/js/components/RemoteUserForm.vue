@@ -67,7 +67,7 @@
                 </b-col>
             </b-row>
 
-            <b-form-checkbox v-model="form.isTeacher" :value="true" class="registerLabel">{{ _('gui.registerAsTeacher') }}</b-form-checkbox>
+            <b-form-checkbox v-model="form.isTeacher" :value="true" class="registerLabel mb-4">{{ _('gui.registerAsTeacher') }}</b-form-checkbox>
             <div v-if="form.isTeacher">
                 <b-row>
                     <b-col>
@@ -82,10 +82,13 @@
                     </b-col>
                 </b-row>
 
-                <b-form-group :label="_('gui.school')" label-for="school" class="registerLabel">
+
+                <div class="form-group">
+                    <label for="school" class="registerLabel">{{ _('gui.school') }}</label>
                     <b-form-select v-model="form.skola" id="school" :options="schools" class="registerInput"></b-form-select>
                     <span v-if="errors.skola" class="text-danger">{{ errors.skola}}</span>
-                </b-form-group>
+                </div>
+
                 <!-- <h5 class="mb-0">{{ _('gui.subjects') }}</h5> -->
                 <!-- <small class="text-secondary mt-0">{{_('gui.subjectsSubtitle')}}</small> -->
                 <!-- <div class="d-flex flex-column flex-wrap" style="height:300px">
@@ -98,11 +101,11 @@
                     </b-form-checkbox>
                 </div> -->
 
-                <b-form-group :label="_('gui.subjects')" label-for="subjects" class="registerLabel">
-                    <b-form-select v-model="form.predmeti" :options="predmeti" multiple :select-size="6" class="registerInput"></b-form-select>
+                <div class="form-group">
+                    <label for="subjets" class="registerLabel">{{ _('gui.subjects') }}</label>
+                    <b-form-select v-model="form.predmeti" id="subjects" :options="predmeti" multiple :select-size="6" class="registerInput"></b-form-select>
                     <span v-if="errors.predmeti" class="text-danger">{{ errors.predmeti}}</span>
-                </b-form-group>
-
+                </div>
 
                 <!-- <h5 class="mt-3 mb-0">{{_('gui.professionalStatus')}}</h5>
                 <small class="text-secondary mt-0">{{_('gui.professionalStatusSubtitle')}}</small>
