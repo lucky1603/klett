@@ -15,7 +15,7 @@
                 <b-col>
                     <div class="form-input">
                         <label for="email">Imejl adresa</label>
-                        <b-input id="email" v-model="form.email" :disabled="userId != 0"></b-input>
+                        <b-input id="email" v-model="form.email" ></b-input>
                         <span v-if="errors.email" class="text-danger">{{ errors.email}}</span>
                     </div>
                 </b-col>                

@@ -478,7 +478,8 @@ export default {
             .then(response => {
                 console.log(response.data);
                 if(response.data.status == 201 || response.data.status == 204) {
-                    this.getData();
+                    if(this.isFilter) this.getFilter();
+                    else this.getData();
                     this.closeForm();
                 } else {
                     alert(response.data.message);
