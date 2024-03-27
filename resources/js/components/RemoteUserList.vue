@@ -96,7 +96,7 @@
                 </template>
                 <template #cell(activity)="data">
                     <div class="d-flex align-items-center justify-content-center">
-                        <a href="#" @click.prevent="editClicked(data.item.id)" class="mx-1"><b-icon icon="pencil"></b-icon></a>
+                        <a href="#" @click.prevent="editClicked(data.item.id, data.item.email)" class="mx-1"><b-icon icon="pencil"></b-icon></a>
                         <a href="#" @click.prevent="deleteClicked(data.item.id, data.item.username)" class="mx-1"><b-icon icon="trash"></b-icon></a>
                     </div>
                 </template>
@@ -121,14 +121,17 @@
                 
             </div>
         </div>
+        <!-- USER FORM DIALOG -->
         <b-modal ref="userFormDialog" size="lg" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>{{ userDialogTitle }}</template>
             <user-admin-form ref="remoteUserForm" :user-id="selectedUserId" :super-admin="superAdmin"></user-admin-form>
             <template #modal-footer>
                 <b-button type="button" variant="primary" @click="onOk">{{ _('gui.Accept')}}</b-button>
                 <b-button type="button" @click="onCancel">{{ _('gui.Cancel')}}</b-button>
+                <b-button type="button" variant="danger" @click="checkCRMUser(selectedUserEmail)">Sync CRM</b-button>
             </template>
         </b-modal>
+        <!-- DELETE DIALOG -->
         <b-modal ref="deleteDialog" header-bg-variant="dark" header-text-variant="light">
             <template #modal-header>Brisanje korisnika</template>
             <p>{{ deleteMessage }}</p>
@@ -137,6 +140,14 @@
                 <b-button v-if="!cancelMode" type="button" variant="primary" @click="onDelete">{{ _('gui.Yes')}}</b-button>
                 <b-button v-if="!cancelMode" type="button" @click="onCancelDelete">{{ _('gui.No')}}</b-button>
                 <b-button v-if="cancelMode" type="button" @click="onStopDelete">Stop</b-button>
+            </template>
+        </b-modal>
+        <!-- MESSAGE DIALOG -->
+        <b-modal ref="messageDialog" header-bg-variant="dark" header-text-variant="light">
+            <template #modal-header>{{ mbTitle }}</template>
+            <p>{{ mbMessage }}</p>
+            <template #modal-footer>
+                <b-button type="button" variant="primary" @click="closeMessageBox">Ok</b-button>
             </template>
         </b-modal>
     </div>
@@ -189,6 +200,10 @@ export default {
             rowsCount: 0,
             selectedUserId: '',
             selectedUsername: '',
+            selectedUserEmail: '',
+            selectedUserCRM: {
+                predmeti: []
+            },
             userDialogTitle: window.i18n.gui.addUser,
             items: [],
             fields: [
@@ -304,7 +319,10 @@ export default {
                 { value: -1, text: "Svi korisnici" },
                 { value: 0, text: "Nije KLF korisnik" },
                 { value: 1, text: "Jeste KLF korisnik" },
-            ]
+            ],
+            mbMessage: 'Test message',
+            mbTitle: "MB title",
+            mbVisible: false
         };
     },
 
@@ -507,8 +525,9 @@ export default {
         /**
          * Edit icon clicked
          */
-        editClicked(id)  {
+        editClicked(id,email)  {
             this.selectedUserId = id;
+            this.selectedUserEmail = email;
             this.userDialogTitle = window.i18n.gui.changeUser;
             this.showForm();
         },
@@ -759,8 +778,26 @@ export default {
             this.requestingUserIds = false;
             console.log(this.userIds);
 
-        }
+        },
 
+        async checkCRMUser(email) {
+            await this.$refs.remoteUserForm.checkCRMUser(email)
+            .then(resolve => {
+                this.showMessageBox("INFO", resolve.data.message);
+            })
+            .catch(error => {
+                this.showMessageBox('GRESKA', error.message);
+            });
+        },
+
+        showMessageBox(title, message) {
+            this.mbTitle = title;
+            this.mbMessage = message;
+            this.$refs.messageDialog.show();
+        },
+        closeMessageBox() {
+            this.$refs.messageDialog.hide();
+        }
     },
 };
 </script>

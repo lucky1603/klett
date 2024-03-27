@@ -197,7 +197,8 @@ export default {
             captchaImg: null,
             role: [
 
-            ]
+            ],
+            crm: null
         };
     },
 
@@ -259,6 +260,60 @@ export default {
                     alert("Not in CRM");
                 }
             })
+        },
+
+        checkCRMUser(email) {
+            return new Promise((resolve, reject) => {
+                axios.get('/crm/checkUser/' + email)
+                .then(response => {
+                    console.log(response.data);
+                    let nastavnik = response.data[0];
+
+                    if(nastavnik == null) {
+                        reject({
+                            message: "Nema CRM unosa sa tom email adresom!"
+                        })
+                    } else {
+                        console.log(nastavnik);
+
+                        this.form.email = nastavnik.emailaddress1;
+                        this.form.ime = nastavnik.firstname;
+                        this.form.prezime = nastavnik.lastname;
+                        this.form.postanskiBroj = nastavnik.ext_postanskibroj ?? null;
+                        this.form.telefon1 = nastavnik.mobilephone ?? null;
+                        this.form.adresa = nastavnik.address1_line1 ?? null;
+                        this.form.mesto = nastavnik._ext_grad_value ?? null;
+                        this.form.postanskiBroj = nastavnik.ext_postanskibroj ?? null;
+                        let korisnik = false;
+                        if(nastavnik.ext_Predmetprofila_Nastavnik_Contact.length > 0) {
+                            for(var i = 0; i < nastavnik.ext_Predmetprofila_Nastavnik_Contact.length; i++) {
+                                let profil = nastavnik.ext_Predmetprofila_Nastavnik_Contact[i];
+                                console.log('profil je ');
+                                console.log(profil);
+
+                                this.form.skola = profil._ext_skola_value;
+                                this.form.predmeti.push(profil._ext_predmet_value);
+                                // If any of profiles ext_korisnik value is true, the form 
+                                // will have the positive value.
+                                if(profil.ext_korisnik == true) {
+                                    korisnik = true;
+                                }
+                                
+                            }
+                        }
+
+                        this.form.klf_korisnik = korisnik;
+
+                        resolve({
+                            data: {
+                                message: "Sinhronizacija sa CRM uspešna!"
+                            }
+                        });
+                    }
+                    
+                });
+            });
+            
         },
 
         async getOpstine() {
@@ -429,7 +484,10 @@ export default {
                     if(property == 'predmeti') {
                         this.form['predmeti'] = resultObject['subjects'];
                     } else {
-                        this.form[property] = resultObject[property];
+                        if(resultObject[property] != null && resultObject[property] != undefined) {
+                            this.form[property] = resultObject[property];
+                        }
+                        
                     }
 
                 }
