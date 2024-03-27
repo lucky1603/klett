@@ -262,9 +262,15 @@ export default {
             })
         },
 
-        checkCRMUser(email) {
+        checkCRMUser() {
             return new Promise((resolve, reject) => {
-                axios.get('/crm/checkUser/' + email)
+                if(this.form.email == null || this.form.email == undefined || this.form.email == '') {
+                    reject({
+                        message: 'Polje za email ne može biti prazno!'
+                    });
+                }
+
+                axios.get('/crm/checkUser/' + this.form.email)
                 .then(response => {
                     console.log(response.data);
                     let nastavnik = response.data[0];
@@ -276,7 +282,7 @@ export default {
                     } else {
                         console.log(nastavnik);
 
-                        this.form.email = nastavnik.emailaddress1;
+                        // this.form.email = nastavnik.emailaddress1;
                         this.form.ime = nastavnik.firstname;
                         this.form.prezime = nastavnik.lastname;
                         this.form.postanskiBroj = nastavnik.ext_postanskibroj ?? null;

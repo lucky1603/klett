@@ -780,8 +780,8 @@ export default {
 
         },
 
-        async checkCRMUser(email) {
-            await this.$refs.remoteUserForm.checkCRMUser(email)
+        async checkCRMUser() {
+            await this.$refs.remoteUserForm.checkCRMUser()
             .then(resolve => {
                 this.showMessageBox("INFO", resolve.data.message);
             })
