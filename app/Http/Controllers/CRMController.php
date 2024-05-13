@@ -12,7 +12,7 @@ class CRMController extends Controller
             ->post('https://login.microsoftonline.com/570b0e1b-60ff-4adf-8b73-5a3dab04aa93/oauth2/v2.0/token', [
             "grant_type" => 'Client_Credentials',
             "client_id" => '2f9027fe-9597-46bc-818b-d7af10d52016',
-            'client_secret' => '1XF8Q~wu33em.rttsbXVPr9r5IYri32I79VHdaDq',
+            'client_secret' => env('CRM_SECRET'),
             'scope' => 'https://klf.crm4.dynamics.com/.default',
         ]);
     }
