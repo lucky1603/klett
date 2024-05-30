@@ -11,7 +11,7 @@ class CRMController extends Controller
         return Http::asForm()
             ->post('https://login.microsoftonline.com/570b0e1b-60ff-4adf-8b73-5a3dab04aa93/oauth2/v2.0/token', [
             "grant_type" => 'Client_Credentials',
-            "client_id" => '2f9027fe-9597-46bc-818b-d7af10d52016',
+            "client_id" => env('CRM_APP_ID'),
             'client_secret' => env('CRM_SECRET'),
             'scope' => 'https://klf.crm4.dynamics.com/.default',
         ]);

@@ -71,10 +71,6 @@
                 <b-form-select v-model="form.rola" :options="role"></b-form-select>
             </b-form-group>
 
-            <b-form-group v-if="enablePasswordEntry" label="Lozinka">
-            
-            </b-form-group>
-
             <div v-if="form.rola == 'bab78444-87f6-45e9-86fc-fd1b1d5b6530'">
                 <b-row>
                     <b-col>

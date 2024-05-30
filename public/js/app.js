@@ -8979,11 +8979,7 @@ var render = function render() {
       },
       expression: "form.rola"
     }
-  })], 1), _vm._v(" "), _vm.enablePasswordEntry ? _c("b-form-group", {
-    attrs: {
-      label: "Lozinka"
-    }
-  }) : _vm._e(), _vm._v(" "), _vm.form.rola == "bab78444-87f6-45e9-86fc-fd1b1d5b6530" ? _c("div", [_c("b-row", [_c("b-col", [_c("b-form-group", {
+  })], 1), _vm._v(" "), _vm.form.rola == "bab78444-87f6-45e9-86fc-fd1b1d5b6530" ? _c("div", [_c("b-row", [_c("b-col", [_c("b-form-group", {
     attrs: {
       label: _vm._("gui.institutionType"),
       "label-for": "institution_type"
