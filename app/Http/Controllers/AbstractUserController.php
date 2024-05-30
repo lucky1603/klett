@@ -152,8 +152,8 @@ class AbstractUserController extends Controller
         return Http::asForm()
             ->post('https://login.microsoftonline.com/570b0e1b-60ff-4adf-8b73-5a3dab04aa93/oauth2/v2.0/token', [
             "grant_type" => 'Client_Credentials',
-            "client_id" => '2f9027fe-9597-46bc-818b-d7af10d52016',
-            'client_secret' => '5tJ8Q~3ZSQgSb1aGN8e2rv7opFqUdkhKgmOwbbWH',
+            "client_id" => env('CRM_APP_ID'),
+            'client_secret' => env('CRM_SECRET'),
             'scope' => 'https://klf.crm4.dynamics.com/.default',
         ]);
     }
@@ -173,8 +173,11 @@ class AbstractUserController extends Controller
 
         $response = Http::withToken($token)
             ->get($requestUrl);
+        
         return $response->json("value");
     }
+
+    
 
     public function ackCRMPositive($data, $crmContactId, $keycloakUserId) {
         $response = $this->connectCRM();
@@ -193,7 +196,7 @@ class AbstractUserController extends Controller
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
                 'ext_Imekontakta@odata.bind' => '/contacts('.$crmContactId.")",
                 "ext_verified" => true,
-                "ext_keycloakidkorisnika" => $keycloakUserId,
+                "c" => $keycloakUserId,
                 "ext_keycloakusername"=> $data['korisnickoIme']
             ]);
     }
@@ -203,6 +206,7 @@ class AbstractUserController extends Controller
         $token = $response->json('access_token');
 
         $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
+        
         return Http::withToken($token)
             ->post($requestUrl, [
                 'ext_ime' => $data['ime'],
@@ -218,6 +222,65 @@ class AbstractUserController extends Controller
             ]);
     }
 
+    public function syncCRMPositive($data, $crmContactId, $keycloakUserId) {
+        $response = $this->connectCRM();
+        $token = $response->json('access_token');
+
+        $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
+
+        $crmData = [
+            'ext_ime' => $data['firstName'],
+            'ext_prezime' => $data['lastName'],
+            'ext_emailadresa' => $data['email'],
+            'ext_kontakttelefon' => $data['attributes']['billing_phone'][0],
+            'ext_Tipustanove@odata.bind' => "/ext_tipposlovnogkontaktas(".$data['attributes']['institution_type'][0].")",
+            'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['attributes']['township'][0].")",
+            'ext_Nazivustanove@odata.bind' => "/accounts(".$data['attributes']['institution'][0].")",
+            'ext_Imekontakta@odata.bind' => '/contacts('.$crmContactId.")",
+            "ext_verified" => true,
+            "ext_keycloakidkorisnika" => $keycloakUserId,
+            "ext_keycloakusername"=> $data['username']
+        ];
+
+        if(isset($data['attributes']['subjects']) ) {
+            $predmeti = $data['attributes']['subjects'];
+            if(count($predmeti) > 0) {
+                $crmData['ext_Predmet@odata.bind'] = "/ext_predmets(".$predmeti[0].")";
+            }
+        }
+
+        return Http::withToken($token)
+            ->post($requestUrl, $crmData);
+    }
+
+    public function syncCRMNegative($data, $keycloakUserId) {
+        $response = $this->connectCRM();
+        $token = $response->json('access_token');
+
+        $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
+        $crmData = [
+            'ext_ime' => $data['firstName'],
+            'ext_prezime' => $data['lastName'],
+            'ext_emailadresa' => $data['email'],
+            'ext_kontakttelefon' => $data['attributes']['billing_phone'][0],
+            'ext_Tipustanove@odata.bind' => "/ext_tipposlovnogkontaktas(".$data['attributes']['institution_type'][0].")",
+            'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['attributes']['township'][0].")",
+            'ext_Nazivustanove@odata.bind' => "/accounts(".$data['attributes']['institution'][0].")",
+            "ext_verified" => true,
+            "ext_keycloakidkorisnika" => $keycloakUserId,
+            "ext_keycloakusername"=> $data['username']
+        ];
+
+        if(isset($data['attributes']['subjects']) ) {
+            $predmeti = $data['attributes']['subjects'];
+            if(count($predmeti) > 0) {
+                $crmData['ext_Predmet@odata.bind'] = "/ext_predmets(".$predmeti[0].")";
+            }
+        }
+
+        return Http::withToken($token)
+            ->post($requestUrl, $crmData);
+    }
     
 
 }

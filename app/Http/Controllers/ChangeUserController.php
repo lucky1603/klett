@@ -56,7 +56,8 @@ class ChangeUserController extends Controller
             'role' => $data['role'],
             'klf_korisnik' => $data['klfKorisnik'] == '0' ? false : true,
             'pedagoska_sveska' => $data['pedagoskaSveska'] == '0' ? false : true,
-            'testomat' => $data['testomat'] == '0' ? false : true
+            'testomat' => $data['testomat'] == '0' ? false : true,
+            'created_at' => $data['created']
         ]);
 
         return $changeUser->id;

@@ -9,6 +9,7 @@
                     <b-form-select v-model="searchForm.status" :options="statuses" class="ml-1"></b-form-select>
                     <b-form-select v-model="searchForm.source" :options="sources" class="ml-1"></b-form-select>
                     <b-form-select v-model="searchForm.klf" :options="klfs" class="ml-1"></b-form-select>
+                    <b-form-datepicker v-model="searchForm.from" class="ml-1"/>
                     <b-button variant="primary" class="ml-2" @click="setTable">Kreiraj tabelu</b-button>
                 </b-form>
                 <b-progress v-if="showImport" :value="imported" :max="count" show-progress class="my-2"></b-progress>
@@ -70,7 +71,8 @@ export default {
                 role: 0,
                 status: 0,
                 source: null,
-                klf: -1
+                klf: -1,
+                from: null
             },
             rows: [],
             roles: [],
@@ -152,7 +154,7 @@ export default {
                 await axios.post('/remoteusers/filterUsers', fData)
                 .then(response => {
                     console.log(response.data);
-                    for(let property in response.data) {
+                    for(let property in response.data) {                        
                         users.push(response.data[property]);
                     }
                 });
@@ -170,6 +172,7 @@ export default {
                     changeUserData.append('klfKorisnik', user.klf_korisnik);
                     changeUserData.append('pedagoskaSveska', user.pedagoska_sveska);
                     changeUserData.append('testomat', user.testomat);
+                    changeUserData.append('created', user.createdAt);
 
                     await axios.post('/changeusers/create', changeUserData);
                     this.imported ++;

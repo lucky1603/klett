@@ -2250,7 +2250,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         role: 0,
         status: 0,
         source: null,
-        klf: -1
+        klf: -1,
+        from: null
       },
       rows: [],
       roles: [],
@@ -2381,7 +2382,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       j = 0;
                     case 11:
                       if (!(j < users.length)) {
-                        _context2.next = 30;
+                        _context2.next = 31;
                         break;
                       }
                       user = users[j];
@@ -2396,15 +2397,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       changeUserData.append('klfKorisnik', user.klf_korisnik);
                       changeUserData.append('pedagoskaSveska', user.pedagoska_sveska);
                       changeUserData.append('testomat', user.testomat);
-                      _context2.next = 26;
+                      changeUserData.append('created', user.createdAt);
+                      _context2.next = 27;
                       return axios__WEBPACK_IMPORTED_MODULE_0___default().post('/changeusers/create', changeUserData);
-                    case 26:
-                      _this2.imported++;
                     case 27:
+                      _this2.imported++;
+                    case 28:
                       j++;
                       _context2.next = 11;
                       break;
-                    case 30:
+                    case 31:
                     case "end":
                       return _context2.stop();
                   }
@@ -4611,14 +4613,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               }
               _context6.next = 9;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post('/remoteusers/filtercount', formData).then(function (response) {
-                console.log("rows count...");
-                console.log(response.data);
                 _this6.rowsCount = response.data;
               });
             case 9:
               _context6.next = 11;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post('/remoteusers/filterUsers', formData).then(function (response) {
-                console.log(response.data);
                 _this6.items = [];
                 for (var _property in response.data) {
                   _this6.items.push(response.data[_property]);
@@ -6735,6 +6734,15 @@ var render = function render() {
         _vm.$set(_vm.searchForm, "klf", $$v);
       },
       expression: "searchForm.klf"
+    }
+  }), _vm._v(" "), _c("b-form-datepicker", {
+    staticClass: "ml-1",
+    model: {
+      value: _vm.searchForm.from,
+      callback: function callback($$v) {
+        _vm.$set(_vm.searchForm, "from", $$v);
+      },
+      expression: "searchForm.from"
     }
   }), _vm._v(" "), _c("b-button", {
     staticClass: "ml-2",

@@ -287,20 +287,43 @@ class RemoteUserController extends AbstractUserController
         $users = $response->json();
         $userData = [];
         foreach($users as $user) {
-            $userData[] = [
-                "id" => $user['id'],
-                "username" => $user['username'],
-                "firstName" => $user['firstName'] ?? '',
-                "lastName" => $user['lastName'] ?? '',
-                "email" => $user['email'],
-                "enabled" => $user['enabled'],
-                "role" => $user['attributes']['role'][0],
-                "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : "Nije podeseno",
-                "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : "Nije podeseno",
-                "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
-                'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
-                'createdAt' => date('d.m.Y.', substr($user['createdTimestamp'], 0, 10)) 
-            ];
+            if(isset($data['from']) && !in_array($data['from'], ['null', 'undefined'])) {                
+                $timestamp = strtotime($data['from']);                
+                if(substr($user['createdTimestamp'], 0, 10) > $timestamp) {
+                    $userData[] = [
+                        "id" => $user['id'],
+                        "username" => $user['username'],
+                        "firstName" => $user['firstName'] ?? '',
+                        "lastName" => $user['lastName'] ?? '',
+                        "email" => $user['email'],
+                        "enabled" => $user['enabled'],
+                        "role" => $user['attributes']['role'][0],
+                        "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : "Nije podeseno",
+                        "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : "Nije podeseno",
+                        "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
+                        'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
+                        'createdAt' => date('d.m.Y.', substr($user['createdTimestamp'], 0, 10)),
+                        'createdTimestamp' => $user['createdTimestamp']
+                    ];
+                }
+            } else {
+                $userData[] = [
+                    "id" => $user['id'],
+                    "username" => $user['username'],
+                    "firstName" => $user['firstName'] ?? '',
+                    "lastName" => $user['lastName'] ?? '',
+                    "email" => $user['email'],
+                    "enabled" => $user['enabled'],
+                    "role" => $user['attributes']['role'][0],
+                    "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : "Nije podeseno",
+                    "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : "Nije podeseno",
+                    "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
+                    'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
+                    'createdAt' => date('d.m.Y.', substr($user['createdTimestamp'], 0, 10)),
+                    'createdTimestamp' => $user['createdTimestamp']
+                ];
+            }
+            
         }
 
         return $userData;
@@ -513,7 +536,8 @@ class RemoteUserController extends AbstractUserController
         $klfMember = false;
         $crmUser = null;
         if($user['attributes']['role'][0] == 'Teacher') {
-            $response = $this->checkUser($user['email']);
+            // $response = $this->checkUser($user['email']);
+            $response = $this->syncUser($user);
             if(count($response) > 0) {
                 $crmUser = $response[0];
                 $predmeti = $crmUser['ext_Predmetprofila_Nastavnik_Contact'];
@@ -526,7 +550,6 @@ class RemoteUserController extends AbstractUserController
                 }
             }
         }
-
 
         // test
         //$klfMember = true;
@@ -571,6 +594,117 @@ class RemoteUserController extends AbstractUserController
         ]);
 
         return $response->status();
+
+    }
+
+    public function proofKeycloakUser($userId) {
+        $response = $this->connectKeyCloak();
+        $token = $response->json('access_token');
+
+        $response = Http::withToken($token)
+            ->get(env('KEYCLOAK_API_USERS_URL').$userId);
+
+        if($response->status() >= 400) {
+            return $response->json();
+        }
+
+        $user = $response->json();
+
+        //check crm
+        $klfMember = false;
+        $crmUser = null;
+        if($user['attributes']['role'][0] == 'Teacher') {
+            // $response = $this->checkUser($user['email']);
+            $response = $this->syncUser($user);
+            if(count($response) > 0) {
+                $crmUser = $response[0];
+                $predmeti = $crmUser['ext_Predmetprofila_Nastavnik_Contact'];
+                if(count($predmeti) > 0) {
+                    foreach($predmeti as $predmet) {
+                        if(!$klfMember && $predmet['ext_korisnik'] == true) {
+                            $klfMember = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // test
+        //$klfMember = true;
+        // end test
+
+        if($klfMember) {
+            $user['attributes']['klf_korisnik'][0] = 1;
+            $user['attributes']['pedagoska_sveska'][0] = 1;
+            $user['attributes']['testomat'][0] = 1;
+        } else {
+            $user['attributes']['klf_korisnik'][0] = 0;
+            $user['attributes']['pedagoska_sveska'][0] = 0;
+            $user['attributes']['testomat'][0] = 0;
+        }
+
+        $response = Http::withToken($token)
+            ->asJson()
+            // ->withOptions(['verify' => false])
+            ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
+                "username" => $user['username'],
+                "firstName" => $user['firstName'],
+                "lastName" => $user['lastName'],
+                "email" => $user["email"],
+                "enabled" => $user['enabled'],
+                "attributes" => [
+                    "subjects" => isset($user['attributes']['subjects'][0]) ? $user['attributes']['subjects'][0] : '',
+                    "township" => isset($user['attributes']['township']) ?  $user['attributes']['township'][0] : '',
+                    "institution_type" => isset($user['attributes']['institution_type'][0]) ? $user['attributes']['institution_type'][0] : '',
+                    "institution" => isset($user['attributes']['institution']) ? $user['attributes']['institution'][0] : '',
+                    "billing_first_name" => isset($user['attributes']['billing_first_name']) ? $user['attributes']['billing_first_name'][0] : '',
+                    "billing_last_name" => isset($user['attributes']['billing_last_name']) ? $user['attributes']['billing_last_name'][0] : '',
+                    "billing_address_1" => isset($user['attributes']['billing_address_1']) ? $user['attributes']['billing_address_1'][0] : '',
+                    'billing_city' => isset($user['attributes']['billing_city']) ?  $user['attributes']['billing_city'][0] : '',
+                    "billing_postcode" => isset($user['attributes']['billing_postcode']) ? $user['attributes']['billing_postcode'][0] : '',
+                    "billing_phone" => isset($user['attributes']['billing_phone']) ? $user['attributes']['billing_phone'][0] : '',
+                    "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : '',
+                    "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : '',
+                    "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : '',
+                    "source" => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : '',
+                    "role" => isset($user['attributes']['role']) ? $user['attributes']['role'][0] : '',
+                ],
+        ]);
+
+        return $response->status();
+    }
+
+    public function syncUser($data) {
+        $userEmail = $data['email'];
+
+        $response = $this->connectCRM();
+        $token = $response->json('access_token');
+
+        $select = "contactid,ext_cmslogin,emailaddress1,firstname,lastname,address1_line1,ext_postanskibroj,_ext_opstina_value,_ext_grad_value,_ext_drzava_value,mobilephone,telephone1,_ext_funkcijatip_value";
+        $expand = "ext_Predmetprofila_Nastavnik_Contact(\$select=ext_klfprocenat,ext_korisnik,ext_poslednjipreracunkorisnika,_ext_predmet_value,ext_razred,_ext_skola_value)";
+        $filter = "(emailaddress1 eq '".$userEmail."' and (parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a754452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a654452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a954452c-b664-ec11-8f8f-6045bd888602))";
+
+        $requestUrl = "https://klf.crm4.dynamics.com/api/data/v9.2/contacts";
+        $requestUrl .= "?\$select=".$select;
+        $requestUrl .= "&\$expand=".$expand;
+        $requestUrl .= "&\$filter=".$filter;
+
+        
+        $response = Http::withToken($token) 
+            ->get($requestUrl);
+        $crmUsers = $response->json('value');
+       
+        if(count($crmUsers) > 0) {
+            $crmUser = $crmUsers[0];
+
+            // POSITIVE UPDATE
+            $this->syncCRMPositive($data, $crmUser['contactid'],$data['id']);
+        } else {
+            // NEGATIVE UPDATE
+            $this->syncCRMNegative($data, $data['id']);
+        }
+
+        return $crmUsers;
 
     }
 

@@ -288,7 +288,7 @@ export default {
                 username: '',
                 status: 0,
                 source: null,
-                klf: -1
+                klf: -1,
             },
             selected: [],
             busy: false,
@@ -423,14 +423,11 @@ export default {
 
             await axios.post('/remoteusers/filtercount', formData)
             .then(response => {
-                console.log("rows count...");
-                console.log(response.data);
                 this.rowsCount = response.data;
             });
 
             await axios.post('/remoteusers/filterUsers', formData)
             .then(response => {
-                console.log(response.data);
                 this.items = [];
                 for(let property in response.data) {
                     this.items.push(response.data[property]);
