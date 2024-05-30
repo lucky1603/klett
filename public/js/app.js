@@ -2301,7 +2301,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         value: 1,
         text: "KLF korisnik"
-      }]
+      }],
+      componentKey: 1
     };
   },
   mounted: function mounted() {
@@ -2382,7 +2383,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       j = 0;
                     case 11:
                       if (!(j < users.length)) {
-                        _context2.next = 31;
+                        _context2.next = 30;
                         break;
                       }
                       user = users[j];
@@ -2401,12 +2402,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                       _context2.next = 27;
                       return axios__WEBPACK_IMPORTED_MODULE_0___default().post('/changeusers/create', changeUserData);
                     case 27:
-                      _this2.imported++;
-                    case 28:
                       j++;
                       _context2.next = 11;
                       break;
-                    case 31:
+                    case 30:
+                      _this2.imported += 100;
+                      _this2.componentKey++;
+                    case 32:
                     case "end":
                       return _context2.stop();
                   }
@@ -6764,6 +6766,7 @@ var render = function render() {
       id: "tablePanel"
     }
   }, [_c("b-table", {
+    key: _vm.componentKey,
     ref: "table",
     staticClass: "shadow mt-2",
     style: _vm.tableStyle,

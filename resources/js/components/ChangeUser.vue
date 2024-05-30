@@ -24,7 +24,7 @@
                 :currentPage="currentPage"
                 :per-page="pageSize"
                 :style="tableStyle"
-                class="shadow mt-2">
+                class="shadow mt-2" :key="componentKey">
             </b-table>
             <div class="d-flex align-items-center justify-content-center">
                 <b-pagination
@@ -103,7 +103,8 @@ export default {
                 { value: -1, text: "Svi korisnici" },
                 { value: 0, text: "Nije KLF korisnik" },
                 { value: 1, text: "KLF korisnik" },
-            ]
+            ],
+            componentKey: 1
 
         };
     },
@@ -175,8 +176,11 @@ export default {
                     changeUserData.append('created', user.createdAt);
 
                     await axios.post('/changeusers/create', changeUserData);
-                    this.imported ++;
+                    // this.imported ++;
                 }
+
+                this.imported += 100;
+                this.componentKey ++;
             }
             this.showImport = false;
             this.getTableData();
