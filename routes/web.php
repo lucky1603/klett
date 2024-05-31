@@ -121,6 +121,7 @@ Route::get('changeusers/deleteall', [ChangeUserController::class, 'deleteAll'])-
 Route::get('changeusers/count', [ChangeUserController::class, 'getCount'])->name('changeUsers.count');
 Route::get('changeusers/countDone', [ChangeUserController::class, 'getCountDone'])->name('changeUsers.countDone');
 Route::get('changeusers/setchanged/{user}', [ChangeUserController::class, 'setChanged'])->name('changeUsers.setSent');
+Route::get('changeusers/export', [ChangeUserController::class, 'export']);
 Route::post('changeusers/create', [ChangeUserController::class, 'store'])->name('changeUsers.store');
 
 // Exports

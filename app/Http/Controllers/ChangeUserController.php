@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ScheduledChangesExport;
 use App\Models\ChangeUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ChangeUserController extends Controller
 {
@@ -80,5 +82,9 @@ class ChangeUserController extends Controller
 
     public function deleteAll() {
         return DB::table('change_users')->delete();
+    }
+
+    public function export() {
+        return Excel::download(new ScheduledChangesExport('Izvoz korisnika za sinhronizaciju', ChangeUser::all()), 'schedule.xlsx');
     }
 }

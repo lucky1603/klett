@@ -39,6 +39,7 @@
             <b-progress v-if="showActionProgress" :value="itemsChanged" :max="count" show-progress class="my-2"></b-progress>
             <div id="sendMailPanel" class="d-flex align-items-center justify-content-center p-2">
                 <b-button variant="primary" @click="executeAction">{{ buttonTitle }}</b-button>
+                <b-button variant="success" class="ml-1" @click="executeExport">Export</b-button>
             </div>
         </b-card>
 
@@ -201,6 +202,9 @@ export default {
 
             this.showActionProgress = false;
             this.$refs.table.refresh();
+        },
+        executeExport() {
+            window.location.href = '/changeusers/export';
         },
         async getCountToSend() {
             console.log('getting count');

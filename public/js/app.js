@@ -2484,6 +2484,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
+    executeExport: function executeExport() {
+      window.location.href = '/changeusers/export';
+    },
     getCountToSend: function getCountToSend() {
       var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
@@ -6816,7 +6819,15 @@ var render = function render() {
     on: {
       click: _vm.executeAction
     }
-  }, [_vm._v(_vm._s(_vm.buttonTitle))])], 1)], 1)], 1);
+  }, [_vm._v(_vm._s(_vm.buttonTitle))]), _vm._v(" "), _c("b-button", {
+    staticClass: "ml-1",
+    attrs: {
+      variant: "success"
+    },
+    on: {
+      click: _vm.executeExport
+    }
+  }, [_vm._v("Export")])], 1)], 1)], 1);
 };
 var staticRenderFns = [];
 render._withStripped = true;
