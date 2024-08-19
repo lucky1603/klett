@@ -5695,6 +5695,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         testomat: false,
         pedagoska_sveska: false,
         klf_korisnik: false,
+        klf_sajtovi: false,
         password: null
       },
       accessToken: '',
@@ -9093,6 +9094,18 @@ var render = function render() {
       expression: "form.klf_korisnik"
     }
   }, [_vm._v("KLF Korisnik")]), _vm._v(" "), _c("b-form-checkbox", {
+    attrs: {
+      value: true,
+      disabled: !_vm.superAdmin
+    },
+    model: {
+      value: _vm.form.klf_sajtovi,
+      callback: function callback($$v) {
+        _vm.$set(_vm.form, "klf_sajtovi", $$v);
+      },
+      expression: "form.klf_sajtovi"
+    }
+  }, [_vm._v("KLF Sajtovi")]), _vm._v(" "), _c("b-form-checkbox", {
     attrs: {
       value: true
     },
