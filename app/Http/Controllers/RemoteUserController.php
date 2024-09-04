@@ -160,6 +160,22 @@ class RemoteUserController extends AbstractUserController
                 $requestUrl .= 'klf_korisnik:'.$data['klf'];
             }
 
+            if($data['pedagoskaSveska'] != -1) {
+                if($data['role'] != 0 || $data['source'] != 'null' || $data['klf'] != -1) {
+                    $requestUrl .= ' ';
+                }
+
+                $requestUrl .= 'pedagoska_sveska:'.$data['pedagoskaSveska'];
+            }
+
+            if($data['testomat'] != -1) {
+                if($data['role'] != 0 || $data['source'] != 'null' || $data['klf'] != -1 || $data['pedagoskaSveska'] != -1) {
+                    $requestUrl .= ' ';
+                }
+
+                $requestUrl .= 'testomat:'.$data['testomat'];
+            }
+
             // $requestUrl .= "q=role:".$roles[$data['role']];
         }
 
@@ -239,7 +255,7 @@ class RemoteUserController extends AbstractUserController
 
         }
 
-        if($data['role'] != '0' || $data['source'] != 'null' || $data['klf'] != '-1') {
+        if($data['role'] != '0' || $data['source'] != 'null' || $data['klf'] != '-1' || $data['pedagoskaSveska'] != '-1' || $data['testomat'] != -1 ) {
             if(!str_contains($requestUrl, "?")) {
                 $requestUrl .= "?";
             } else {
@@ -266,6 +282,22 @@ class RemoteUserController extends AbstractUserController
                 }
 
                 $requestUrl .= 'klf_korisnik:'.$data['klf'];
+            }
+
+            if($data['pedagoskaSveska'] != -1) {
+                if($data['role'] != 0 || $data['source'] != 'null' || $data['klf'] != -1) {
+                    $requestUrl .= ' ';
+                }
+
+                $requestUrl .= 'pedagoska_sveska:'.$data['pedagoskaSveska'];
+            }
+
+            if($data['testomat'] != -1) {
+                if($data['role'] != 0 || $data['source'] != 'null' || $data['klf'] != -1 || $data['pedagoskaSveska'] != -1) {
+                    $requestUrl .= ' ';
+                }
+
+                $requestUrl .= 'testomat:'.$data['testomat'];
             }
 
             // $requestUrl .= "q=role:".$roles[$data['role']];

@@ -61,6 +61,14 @@
                         <b-input-group size="sm" class="m-1">
                             <b-form-select v-model="searchForm.klf" :options="klfs" @change="submitFilter"/>
                         </b-input-group>
+                        <!-- <span>PEDAGOŠKA SVESKA</span>
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-select v-model="searchForm.pedagoskaSveska" :options="sveskas" @change="submitFilter"/>
+                        </b-input-group>
+                        <span>TESTOMAT</span>
+                        <b-input-group size="sm" class="m-1">
+                            <b-form-select v-model="searchForm.testomat" :options="testomats" @change="submitFilter"/>
+                        </b-input-group> -->
                     </b-form>
                 </b-col>
                 <b-col lg="2">
@@ -289,6 +297,8 @@ export default {
                 status: 0,
                 source: null,
                 klf: -1,
+                pedagoskaSveska: -1,
+                testomat: -1
             },
             selected: [],
             busy: false,
@@ -319,6 +329,16 @@ export default {
                 { value: -1, text: "Svi korisnici" },
                 { value: 0, text: "Nije KLF korisnik" },
                 { value: 1, text: "Jeste KLF korisnik" },
+            ],
+            sveskas: [
+                { value: -1, text: "Svi korisnici" },
+                { value: 0, text: "Nema svesku" },
+                { value: 1, text: "Ima svesku" },
+            ],
+            testomats: [    
+                { value: -1, text: "Svi korisnici" },
+                { value: 0, text: "Ne" },
+                { value: 1, text: "Da" },
             ],
             mbMessage: 'Test message',
             mbTitle: "MB title",

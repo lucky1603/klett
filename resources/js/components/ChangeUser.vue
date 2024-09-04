@@ -2,16 +2,22 @@
     <div class="container-fluid">
         <b-card bg-variant="white" header="Pošalji E-Mail" header-bg-variant="dark" header-text-variant="white">
             <div id="searchFormPanel">
-                <b-form inline>
-                    <b-form-input v-model="searchForm.username" placeholder="Korisničko ime ..." class="ml-1"/>
-                    <b-form-input v-model="searchForm.email" placeholder="Email ..." class="ml-1"/>
-                    <b-form-select v-model="searchForm.role" :options="roles" class="ml-1"></b-form-select>
-                    <b-form-select v-model="searchForm.status" :options="statuses" class="ml-1"></b-form-select>
-                    <b-form-select v-model="searchForm.source" :options="sources" class="ml-1"></b-form-select>
-                    <b-form-select v-model="searchForm.klf" :options="klfs" class="ml-1"></b-form-select>
-                    <b-form-datepicker v-model="searchForm.from" class="ml-1"/>
-                    <b-button variant="primary" class="ml-2" @click="setTable">Kreiraj tabelu</b-button>
-                </b-form>
+                <div class="d-flex justify-content-between mb-2">
+                    <b-form inline>
+                        <b-form-input v-model="searchForm.username" placeholder="Korisničko ime ..." class="ml-1"/>
+                        <b-form-input v-model="searchForm.email" placeholder="Email ..." class="ml-1"/>
+                        <b-form-select v-model="searchForm.role" :options="roles" class="ml-1"></b-form-select>
+                        <b-form-select v-model="searchForm.status" :options="statuses" class="ml-1"></b-form-select>
+                        <b-form-select v-model="searchForm.source" :options="sources" class="ml-1"></b-form-select>
+                        <b-form-select v-model="searchForm.klf" :options="klfs" class="ml-1"></b-form-select>
+                        <b-form-select v-model="searchForm.pedagoskaSveska" :options="sveskas" class="ml-1"></b-form-select>
+                        <b-form-select v-model="searchForm.testomat" :options="testomats" class="ml-1"></b-form-select>
+                        <b-form-datepicker v-model="searchForm.from" class="ml-1"/>
+                        <b-button variant="primary" class="ml-2" @click="setTable">Kreiraj tabelu</b-button>
+                    </b-form>
+                    <b-checkbox v-model="deleteTable" class="ml-1">Briši pre pretrage</b-checkbox>
+                </div>
+                
                 <b-progress v-if="showImport" :value="imported" :max="count" show-progress class="my-2"></b-progress>
             </div>
             <div id="tablePanel">
@@ -73,8 +79,11 @@ export default {
                 status: 0,
                 source: null,
                 klf: -1,
+                pedagoskaSveska: -1,
+                testomat: -1,
                 from: null
             },
+            deleteTable: true,
             rows: [],
             roles: [],
             count: 0,
@@ -105,6 +114,16 @@ export default {
                 { value: 0, text: "Nije KLF korisnik" },
                 { value: 1, text: "KLF korisnik" },
             ],
+            sveskas: [
+                { value: -1, text: "Sa i bez sveske" },   
+                { value: 0, text: "Nema" },
+                { value: 1, text: "Ima" },       
+            ],
+            testomats: [
+                { value: -1, text: "Sa i bez testomata" },
+                { value: 0, text: "Nema" },
+                { value: 1, text: "Ima" },  
+            ],
             componentKey: 1
 
         };
@@ -116,9 +135,11 @@ export default {
 
     methods: {
         async setTable() {
-            await axios.get('/changeusers/deleteall');
+            if(this.deleteTable) {
+                await axios.get('/changeusers/deleteall');
+            }
+            
             this.imported = 0;
-
             this.showImport = true;
             let formData = new FormData();
             for(let property in this.searchForm) {
@@ -129,9 +150,10 @@ export default {
             formData.append('lastName', '');
 
             if(this.accessToken == '') {
-                await this.getToken();
-                formData.append('token', this.accessToken);
+                await this.getToken();                
             }
+
+            formData.append('token', this.accessToken);
 
             // Get count first.
             await axios.post('/remoteusers/filtercount', formData)

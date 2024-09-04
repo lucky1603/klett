@@ -2251,8 +2251,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         status: 0,
         source: null,
         klf: -1,
+        pedagoskaSveska: -1,
+        testomat: -1,
         from: null
       },
+      deleteTable: true,
       rows: [],
       roles: [],
       count: 0,
@@ -2302,6 +2305,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         value: 1,
         text: "KLF korisnik"
       }],
+      sveskas: [{
+        value: -1,
+        text: "Sa i bez sveske"
+      }, {
+        value: 0,
+        text: "Nema"
+      }, {
+        value: 1,
+        text: "Ima"
+      }],
+      testomats: [{
+        value: -1,
+        text: "Sa i bez testomata"
+      }, {
+        value: 0,
+        text: "Nema"
+      }, {
+        value: 1,
+        text: "Ima"
+      }],
       componentKey: 1
     };
   },
@@ -2328,9 +2351,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return _regeneratorRuntime().wrap(function _callee2$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.next = 2;
+              if (!_this2.deleteTable) {
+                _context3.next = 3;
+                break;
+              }
+              _context3.next = 3;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().get('/changeusers/deleteall');
-            case 2:
+            case 3:
               _this2.imported = 0;
               _this2.showImport = true;
               formData = new FormData();
@@ -2343,17 +2370,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context3.next = 12;
                 break;
               }
-              _context3.next = 11;
+              _context3.next = 12;
               return _this2.getToken();
-            case 11:
-              formData.append('token', _this2.accessToken);
             case 12:
-              _context3.next = 14;
+              formData.append('token', _this2.accessToken);
+
+              // Get count first.
+              _context3.next = 15;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post('/remoteusers/filtercount', formData).then(function (response) {
                 console.log(response.data);
                 _this2.count = response.data;
               });
-            case 14:
+            case 15:
               1;
               _loop = /*#__PURE__*/_regeneratorRuntime().mark(function _loop() {
                 var fData, _property, users, j, user, changeUserData;
@@ -2415,20 +2443,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }, _loop);
               });
               i = 0;
-            case 17:
+            case 18:
               if (!(i < _this2.count)) {
-                _context3.next = 22;
+                _context3.next = 23;
                 break;
               }
-              return _context3.delegateYield(_loop(), "t0", 19);
-            case 19:
+              return _context3.delegateYield(_loop(), "t0", 20);
+            case 20:
               i += 100;
-              _context3.next = 17;
+              _context3.next = 18;
               break;
-            case 22:
+            case 23:
               _this2.showImport = false;
               _this2.getTableData();
-            case 24:
+            case 25:
             case "end":
               return _context3.stop();
           }
@@ -4394,7 +4422,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         username: '',
         status: 0,
         source: null,
-        klf: -1
+        klf: -1,
+        pedagoskaSveska: -1,
+        testomat: -1
       },
       selected: [],
       busy: false,
@@ -4444,6 +4474,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         value: 1,
         text: "Jeste KLF korisnik"
+      }],
+      sveskas: [{
+        value: -1,
+        text: "Svi korisnici"
+      }, {
+        value: 0,
+        text: "Nema svesku"
+      }, {
+        value: 1,
+        text: "Ima svesku"
+      }],
+      testomats: [{
+        value: -1,
+        text: "Svi korisnici"
+      }, {
+        value: 0,
+        text: "Ne"
+      }, {
+        value: 1,
+        text: "Da"
       }],
       mbMessage: 'Test message',
       mbTitle: "MB title",
@@ -6664,6 +6714,8 @@ var render = function render() {
     attrs: {
       id: "searchFormPanel"
     }
+  }, [_c("div", {
+    staticClass: "d-flex justify-content-between mb-2"
   }, [_c("b-form", {
     attrs: {
       inline: ""
@@ -6740,6 +6792,30 @@ var render = function render() {
       },
       expression: "searchForm.klf"
     }
+  }), _vm._v(" "), _c("b-form-select", {
+    staticClass: "ml-1",
+    attrs: {
+      options: _vm.sveskas
+    },
+    model: {
+      value: _vm.searchForm.pedagoskaSveska,
+      callback: function callback($$v) {
+        _vm.$set(_vm.searchForm, "pedagoskaSveska", $$v);
+      },
+      expression: "searchForm.pedagoskaSveska"
+    }
+  }), _vm._v(" "), _c("b-form-select", {
+    staticClass: "ml-1",
+    attrs: {
+      options: _vm.testomats
+    },
+    model: {
+      value: _vm.searchForm.testomat,
+      callback: function callback($$v) {
+        _vm.$set(_vm.searchForm, "testomat", $$v);
+      },
+      expression: "searchForm.testomat"
+    }
   }), _vm._v(" "), _c("b-form-datepicker", {
     staticClass: "ml-1",
     model: {
@@ -6757,7 +6833,16 @@ var render = function render() {
     on: {
       click: _vm.setTable
     }
-  }, [_vm._v("Kreiraj tabelu")])], 1), _vm._v(" "), _vm.showImport ? _c("b-progress", {
+  }, [_vm._v("Kreiraj tabelu")])], 1), _vm._v(" "), _c("b-checkbox", {
+    staticClass: "ml-1",
+    model: {
+      value: _vm.deleteTable,
+      callback: function callback($$v) {
+        _vm.deleteTable = $$v;
+      },
+      expression: "deleteTable"
+    }
+  }, [_vm._v("Briši pre pretrage")])], 1), _vm._v(" "), _vm.showImport ? _c("b-progress", {
     staticClass: "my-2",
     attrs: {
       value: _vm.imported,
