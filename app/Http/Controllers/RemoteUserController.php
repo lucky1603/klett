@@ -417,6 +417,7 @@ class RemoteUserController extends AbstractUserController
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
                     "klf_korisnik" => $data["klf_korisnik"] == "true" ? 1 : 0,
+                    "klf_sajtovi" => $data['klf_sajtovi'] == "true" ? 1 : 0,
                     "source" => $data['source'],
                     "role" => $roles[$data['rola']],
                 ],
@@ -548,6 +549,7 @@ class RemoteUserController extends AbstractUserController
             'testomat' => isset($retObject->attributes) && isset($retObject->attributes->testomat) ? ($retObject->attributes->testomat[0] == 1 ? true : false) : false,
             'pedagoska_sveska' => isset($retObject->attributes) && isset($retObject->attributes->pedagoska_sveska) ? ($retObject->attributes->pedagoska_sveska[0] == 1 ? true : false) : false,
             'klf_korisnik' => isset($retObject->attributes) && isset($retObject->attributes->klf_korisnik) ? ($retObject->attributes->klf_korisnik[0] == 1 ? true : false) : false,
+            'klf_sajtovi' => isset($retObject->attributes) && isset($retObject->attributes->klf_sajtovi) ? ($retObject->attributes->klf_sajtovi[0] == 1 ? true : false) : false,
         ];
     }
 
@@ -779,6 +781,7 @@ class RemoteUserController extends AbstractUserController
                     "testomat" => $data['testomat'] == "true" ? 1 : 0,
                     "pedagoska_sveska" => $data["pedagoska_sveska"] == "true" ? 1 : 0,
                     "klf_korisnik" => $data["klf_korisnik"] == "true" ? 1 : 0,
+                    "klf_sajtovi" => $data['klf_sajtovi'] == "true" ? 1 : 0,
                     "source" => $data['source'],
                     "role" => $roles[$data['rola']],
                 ],
