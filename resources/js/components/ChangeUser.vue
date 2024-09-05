@@ -210,6 +210,7 @@ export default {
         },
         async executeAction() {
             this.changeCount = await this.getCount();
+            this.count = this.changeCount;
             this.itemsChanged = await this.getCountDone();
             this.showActionProgress = true;
             console.log(this.rows);

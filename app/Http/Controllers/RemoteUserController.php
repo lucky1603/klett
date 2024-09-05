@@ -599,8 +599,9 @@ class RemoteUserController extends AbstractUserController
         //     $user['attributes']['testomat'][0] = 0;
         // }
 
+        $klfsajtovi = 0;
         if($user['attributes']['pedagoska_sveska'][0] == 1 && $user['attributes']['testomat'][0] == 1) {
-            $user['attributes']['klf_sajtovi'][0] = 1;
+            $klfsajtovi = 1;
         }
 
         $response = Http::withToken($token)
@@ -626,6 +627,7 @@ class RemoteUserController extends AbstractUserController
                     "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : '',
                     "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : '',
                     "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : '',
+                    "klf_sajtovi" => $klfsajtovi,
                     "source" => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : '',
                     "role" => isset($user['attributes']['role']) ? $user['attributes']['role'][0] : '',
                 ],
