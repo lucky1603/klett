@@ -566,37 +566,41 @@ class RemoteUserController extends AbstractUserController
 
         $user = $response->json();
 
-        //check crm
-        $klfMember = false;
-        $crmUser = null;
-        if($user['attributes']['role'][0] == 'Teacher') {
-            // $response = $this->checkUser($user['email']);
-            $response = $this->syncUser($user);
-            if(count($response) > 0) {
-                $crmUser = $response[0];
-                $predmeti = $crmUser['ext_Predmetprofila_Nastavnik_Contact'];
-                if(count($predmeti) > 0) {
-                    foreach($predmeti as $predmet) {
-                        if(!$klfMember && $predmet['ext_korisnik'] == true) {
-                            $klfMember = true;
-                        }
-                    }
-                }
-            }
-        }
+        // //check crm
+        // $klfMember = false;
+        // $crmUser = null;
+        // if($user['attributes']['role'][0] == 'Teacher') {
+        //     // $response = $this->checkUser($user['email']);
+        //     $response = $this->syncUser($user);
+        //     if(count($response) > 0) {
+        //         $crmUser = $response[0];
+        //         $predmeti = $crmUser['ext_Predmetprofila_Nastavnik_Contact'];
+        //         if(count($predmeti) > 0) {
+        //             foreach($predmeti as $predmet) {
+        //                 if(!$klfMember && $predmet['ext_korisnik'] == true) {
+        //                     $klfMember = true;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         // test
         //$klfMember = true;
         // end test
 
-        if($klfMember) {
-            $user['attributes']['klf_korisnik'][0] = 1;
-            $user['attributes']['pedagoska_sveska'][0] = 1;
-            $user['attributes']['testomat'][0] = 1;
-        } else {
-            $user['attributes']['klf_korisnik'][0] = 0;
-            $user['attributes']['pedagoska_sveska'][0] = 0;
-            $user['attributes']['testomat'][0] = 0;
+        // if($klfMember) {
+        //     $user['attributes']['klf_korisnik'][0] = 1;
+        //     $user['attributes']['pedagoska_sveska'][0] = 1;
+        //     $user['attributes']['testomat'][0] = 1;
+        // } else {
+        //     $user['attributes']['klf_korisnik'][0] = 0;
+        //     $user['attributes']['pedagoska_sveska'][0] = 0;
+        //     $user['attributes']['testomat'][0] = 0;
+        // }
+
+        if($user['attributes']['pedagoska_sveska'][0] == 1 && $user['attributes']['testomat'][0] == 1) {
+            $user['attributes']['klf_sajtovi'][0] = 1;
         }
 
         $response = Http::withToken($token)
