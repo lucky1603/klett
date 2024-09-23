@@ -299,7 +299,7 @@ export default {
                                 this.form.predmeti.push(profil._ext_predmet_value);
                                 // If any of profiles ext_korisnik value is true, the form 
                                 // will have the positive value.
-                                if(profil.ext_korisnik == true) {
+                                if(profil.ext_korisnik == true && profil.statuscode == 1) {
                                     korisnik = true;
                                 }
                                 

@@ -23,7 +23,7 @@ class CRMController extends Controller
 
 
         $select = "contactid,ext_cmslogin,emailaddress1,firstname,lastname,address1_line1,ext_postanskibroj,_ext_opstina_value,_ext_grad_value,_ext_drzava_value,mobilephone,telephone1,_ext_funkcijatip_value";
-        $expand = "ext_Predmetprofila_Nastavnik_Contact(\$select=ext_klfprocenat,ext_korisnik,ext_poslednjipreracunkorisnika,_ext_predmet_value,ext_razred,_ext_skola_value)";
+        $expand = "ext_Predmetprofila_Nastavnik_Contact(\$select=ext_klfprocenat,ext_korisnik,statuscode,ext_poslednjipreracunkorisnika,_ext_predmet_value,ext_razred,_ext_skola_value)";
         $filter = "(emailaddress1 eq '".$userEmail."' and (parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a754452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a654452c-b664-ec11-8f8f-6045bd888602 or parentcustomerid_account/_ext_tipposlovnogkontakta_value eq a954452c-b664-ec11-8f8f-6045bd888602))";
 
         $requestUrl = "https://klf.crm4.dynamics.com/api/data/v9.2/contacts";
