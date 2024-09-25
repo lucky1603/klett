@@ -94,6 +94,8 @@ class AnonimousController extends AbstractUserController
     }
 
     public function requestEditProfile($username) {
+        $this->authorize('change_platform_user_data');
+
         // Get user from database
         $response = $this->connectKeyCloak();
         $accessToken = $response->json('access_token');
