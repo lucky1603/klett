@@ -44,8 +44,8 @@ Route::post('anonimous/password', [AnonimousController::class, 'password'])->nam
 Route::get('/refreshCaptcha', [AnonimousController::class, 'refreshCaptcha'])->name('anonimous.refreshCaptcha');
 // Route::get('/testRequestEdit/{username}', [AnonimousController::class, 'testRequestEdit'])->name('anonimous.testrequestedit');
 Route::get('/requestEditProfile/{username}', [AnonimousController::class, 'requestEditProfile'])->name('anonimous.requesteditprofile');
-Route::post('anonimous/edit', [AnonimousController::class, 'update'])->name('anonimoua.update');
-Route::post('anonimous/create', [AnonimousController::class, 'store'])->name('anonimoua.store');
+Route::post('anonimous/edit', [AnonimousController::class, 'update'])->name('anonimous.update');
+Route::post('anonimous/create', [AnonimousController::class, 'store'])->name('anonimous.store');
 Route::get('anonimous/scheduledEdit/{token}', [AnonimousController::class, 'editScheduled'])->name('anonimous.scheduledEdit');
 
 Auth::routes();
