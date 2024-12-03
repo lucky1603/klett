@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\RemoteUsersExport;
 use App\Http\Requests\AdminCreateUserRequest;
 use App\Http\Requests\AdminUpdateUserRequest;
+use App\Mail\FetchUsernames;
 use App\Mail\NoCRMInfo;
 use App\Models\UserImport;
 use Illuminate\Http\Request;

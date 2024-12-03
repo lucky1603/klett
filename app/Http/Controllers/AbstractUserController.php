@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\FetchUsernames;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 
 class AbstractUserController extends Controller
@@ -280,6 +282,48 @@ class AbstractUserController extends Controller
 
         return Http::withToken($token)
             ->post($requestUrl, $crmData);
+    }
+
+    public function getUserNames(Request $request) {
+        $data = $request->post();
+        $email = $data['email'];
+
+        // Get access token.
+        $token = '';
+        if(isset($data['token']) && $data['token'] != '') {
+            $token = $data['token'];
+        } else {
+            $response = $this->connectKeyCloak();
+            $token = $response->json('access_token');
+        }
+
+        $requestUrl = env('KEYCLOAK_API_USERS_URL');
+        if($data['email'] != '') {
+            if(!str_contains($requestUrl, "?")) {
+                $requestUrl .= "?";
+            } else {
+                $requestUrl .= "&&";
+            }
+
+            $requestUrl .= "email=".$data['email'];
+        }
+
+        $response = Http::withToken($token)
+            ->get($requestUrl);
+
+        $users = $response->json();
+        $usernames = [];
+        foreach($users as $user) {
+            $usernames[] = $user['username'];
+        }
+
+        $poruka = "Nažalost, nismo u bazi našli nijedno korisničko image koje odgovara vašoj adresi!";
+        if(count($usernames) > 0) {
+            $poruka = "U dole navedenoj listi se nalaze sva vaša korisnička imena:";
+        }
+        
+        return Mail::to($email)
+            ->send(new FetchUsernames($email, $poruka, $usernames));
     }
     
 

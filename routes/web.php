@@ -52,6 +52,8 @@ Auth::routes();
 
 Route::get('/home',[ HomeController::class, 'index'])->name('home');
 Route::get('apply', [AppUserController::class, 'register'])->name('appusers.register');
+Route::get('retrieveusernames', [AppUserController::class, 'retrieveUsernames'])->name('appusers.retrieveusernames');
+Route::post('retrieveusernames', [AbstractUserController::class, 'getUserNames']);
 Route::get('register', [AppUserController::class, 'register'])->name('appusers.register');
 
 // App users
@@ -88,6 +90,7 @@ Route::get('remoteusers/deleteall', [RemoteUserController::class, 'deleteAll'])-
 Route::get('remoteusers/importall', [RemoteUserController::class, 'importAllUsers'])->name('remoteusers.importAll');
 Route::get('remoteusers/unimporteduserids', [RemoteUserController::class, 'getUnimportedUserIds'])->name('remoteusers.unimporteduserids');
 Route::get('remoteusers/importuserbyid/{user}', [RemoteUserController::class, 'importUserById'])->name('remoteusers.importeduserbyid');
+
 // CRM
 Route::post('crm/token', [CRMController::class, 'connectCRM'])->name('crm.token');
 Route::get('crm/checkUser/{email}', [CRMController::class, 'checkUser'])->name('crm.checkUser');

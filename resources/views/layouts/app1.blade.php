@@ -12,6 +12,7 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -19,7 +20,7 @@
     <!-- Localization -->
     <script src="/lang-{{ app()->getLocale() }}.js"></script>
 </head>
-<body class="applyform w-100">
+<body class="applyform w-100 h-100">
     <div id="app">
         <!-- Header with logos -->
         <div class="shadow bg-light" style="width: 100%">
@@ -38,7 +39,7 @@
         </div>
 
 
-        <main class="py-4">
+        <main class="py-4  h-100">
             @yield('content')
         </main>
     </div>
