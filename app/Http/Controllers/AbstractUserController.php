@@ -317,9 +317,9 @@ class AbstractUserController extends Controller
             $usernames[] = $user['username'];
         }
 
-        $poruka = "Nažalost, nismo u bazi našli nijedno korisničko image koje odgovara vašoj adresi!";
+        $poruka = "Nažalost, nismo u bazi našli nijedno korisničko image koje odgovara adresi - ".$email;
         if(count($usernames) > 0) {
-            $poruka = "U dole navedenoj listi se nalaze sva vaša korisnička imena:";
+            $poruka = "Po Vašem zahtevu, dostavljamo Vam listu svih korisničkih imena povezanih sa email adresom - ".$email.":";
         }
         
         return Mail::to($email)

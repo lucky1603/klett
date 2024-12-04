@@ -8634,7 +8634,7 @@ var render = function render() {
     staticClass: "shadow bg-white p-4"
   }, [_c("p", {
     staticClass: "h4 open-sans text-center"
-  }, [_vm._v("Zaboravili ste korisničko ime?")]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm.sending == 0 ? _c("b-form", {
+  }, [_vm._v("Заборавили сте корисничко име?")]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm.sending == 0 ? _c("b-form", {
     on: {
       submit: function submit($event) {
         $event.preventDefault();
@@ -8646,11 +8646,11 @@ var render = function render() {
     staticStyle: {
       "font-size": "14px"
     }
-  }, [_vm._v("Pošaljite nam Vašu email adresu i na nju će Vam stići sva korisnička imena sa kojima ste registrovani u našem sistemu.")]), _vm._v(" "), _c("b-form-group", [_c("b-form-input", {
+  }, [_vm._v("Молимо Вас унесите имејл адресу за коју желите да Вам пошаљемо корисничка имена:")]), _vm._v(" "), _c("b-form-group", [_c("b-form-input", {
     attrs: {
       id: "email",
       type: "email",
-      placeholder: "Unesite Vašu email adresu"
+      placeholder: "Унесите Вашу имејл адресу овде ..."
     },
     model: {
       value: _vm.form.email,
@@ -8666,11 +8666,11 @@ var render = function render() {
     attrs: {
       type: "submit"
     }
-  }, [_vm._v("Pošalji")])])], 1) : _vm._e(), _vm._v(" "), _vm.sending == 1 ? _c("div", {
+  }, [_vm._v("Пошаљи")])])], 1) : _vm._e(), _vm._v(" "), _vm.sending == 1 ? _c("div", {
     staticClass: "d-flex flex-column align-items-center justify-content-center"
   }, [_c("p", {
     staticClass: "open-sans text-center w-100"
-  }, [_vm._v("Sačekajte par sekundi, email se šalje!")]), _vm._v(" "), _c("b-spinner", {
+  }, [_vm._v("Сачекајте пар секунди, имејл се шаље!")]), _vm._v(" "), _c("b-spinner", {
     staticStyle: {
       "z-index": "1000"
     },
@@ -8682,16 +8682,16 @@ var render = function render() {
     staticClass: "shadow bg-white p-4 d-flex flex-column align-items-center justify-content-center"
   }, [_c("p", {
     staticClass: "h4 open-sans text-center"
-  }, [_vm._v("POTVRDA")]), _vm._v(" "), _c("hr", {
+  }, [_vm._v("ПОТВРДА")]), _vm._v(" "), _c("hr", {
     staticClass: "my-1"
   }), _vm._v(" "), _c("p", {
     staticClass: "open-sans text-center"
-  }, [_vm._v("Poslat vam je email na adresu koju ste naveli.")]), _vm._v(" "), _c("a", {
+  }, [_vm._v("Послат Вам је имејл на адресу - " + _vm._s(_vm.form.email) + ".")]), _vm._v(" "), _c("a", {
     staticClass: "btn btn-primary",
     attrs: {
       href: "https://klett.rs"
     }
-  }, [_vm._v("Na glavnu stranu")])]) : _vm._e()]);
+  }, [_vm._v("На главну страну")])]) : _vm._e()]);
 };
 var staticRenderFns = [];
 render._withStripped = true;

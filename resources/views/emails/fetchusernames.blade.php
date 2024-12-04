@@ -9,10 +9,13 @@
             @php
                 $counter = 1;
             @endphp
+            <p>
             @foreach ($usernames as $username)
-                <p>{{ $counter++ }}. {{ $username }}</p>
-            @endforeach        
+                {{ $counter++ }}. {{ $username }}<br />
+            @endforeach     
+            </p>   
         @endif
+        <p>Ovo je automatski generisana poruka. Za tehničku podršku pišite nam na <a href="mailto:tehnicka.podrska@klett.rs" target="_blank">tehnicka.podrska@klett.rs</a>.</p>
         <p>Srdačno,<br/>Vaš Klett Srbija tim</p>        
     </div>
 @endsection
