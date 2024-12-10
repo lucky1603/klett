@@ -34,7 +34,8 @@ class FetchUsernames extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.fetchusernames', ['email' => $this->email,'poruka' => $this->message, 'usernames' => $this->usernames])
+        return $this->view('emails.fetchusernames', ['email' => $this->email,'poruka' => $this->message, 'usernames' => $this->usernames])   
+            ->replyTo("tehnicka.podrska@klett.rs")         
             ->subject("Korisnička imena");
     }
 }
