@@ -126,9 +126,9 @@
                 <b-form-checkbox v-model="form.klf_sajtovi" :value="true">KLF Sajtovi</b-form-checkbox>
                 <b-form-checkbox v-model="form.pedagoska_sveska" :value="true">Pedagoška sveska</b-form-checkbox>
                 <b-form-checkbox v-model="form.testomat" :value="true">Testomat</b-form-checkbox>
+                <b-form-checkbox v-model="form.edirector" :value="true">eDirector</b-form-checkbox>
                 <b-form-checkbox v-model="form.enabled" :value="true">{{ _('gui.enabled') }}</b-form-checkbox>
                 <b-form-checkbox v-model="form.updatePassword" :value="true">{{ _('gui.updatePassword') }}</b-form-checkbox>
-                <b-form-checkbox v-model="form.edirector" :value="true">eDirector</b-form-checkbox>
             </div>
             <div v-else class="d-flex align-items-center justify-content-center flex-column">
                 <div class="d-flex flex-row align-items-center m-2">
