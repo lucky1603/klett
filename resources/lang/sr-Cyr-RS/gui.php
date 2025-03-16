@@ -78,6 +78,7 @@ return [
     'enabled' => "Омогућен",
     'verifyEmail' => "Верификуј имејл",
     "updatePassword" => "Промени лозинку",
+    'edirector' => 'eDirector',
 
     /**
      * School form

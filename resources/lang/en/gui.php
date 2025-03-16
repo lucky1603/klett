@@ -78,6 +78,7 @@ return [
     'enabled' => "Enabled",
     'verifyEmail' => "Verify Email",
     "updatePassword" => "Update Password",
+    'edirector' => 'eDirector',
 
     /**
      * School form
