@@ -198,7 +198,7 @@ class AbstractUserController extends Controller
                 'ext_Predmet@odata.bind' => "/ext_predmets(".$data['subjects'][0].")",
                 'ext_Imekontakta@odata.bind' => '/contacts('.$crmContactId.")",
                 "ext_verified" => true,
-                "c" => $keycloakUserId,
+                "ext_keycloakidkorisnika" => $keycloakUserId,
                 "ext_keycloakusername"=> $data['korisnickoIme']
             ]);
     }
