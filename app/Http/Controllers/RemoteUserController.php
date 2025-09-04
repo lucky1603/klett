@@ -387,11 +387,12 @@ class RemoteUserController extends AbstractUserController
         if($data['rola'] == array_search('Teacher', $roles) /* Teacher */) {
             // Check CRM
             $value = $this->checkUser($data['email']);
+
             if(is_array($value) && count($value) > 0) {
                 $inCRM = true;
 
                 // TODO: Call positive CRM
-                $crmContactId = $value['contactid'];
+                $crmContactId = $value[0]['contactid'];
             }
         }
 
