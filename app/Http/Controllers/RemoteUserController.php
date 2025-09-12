@@ -679,12 +679,12 @@ class RemoteUserController extends AbstractUserController
 
         if($klfMember) {
             $user['attributes']['klf_korisnik'][0] = 1;
-            $user['attributes']['pedagoska_sveska'][0] = 1;
-            $user['attributes']['testomat'][0] = 1;
+            // $user['attributes']['pedagoska_sveska'][0] = 1;
+            // $user['attributes']['testomat'][0] = 1;
         } else {
             $user['attributes']['klf_korisnik'][0] = 0;
-            $user['attributes']['pedagoska_sveska'][0] = 0;
-            $user['attributes']['testomat'][0] = 0;
+            // $user['attributes']['pedagoska_sveska'][0] = 0;
+            // $user['attributes']['testomat'][0] = 0;
         }
 
         $response = Http::withToken($token)
