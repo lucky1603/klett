@@ -288,9 +288,10 @@ export default {
                         this.form.postanskiBroj = nastavnik.ext_postanskibroj ?? null;
                         this.form.telefon1 = nastavnik.mobilephone ?? null;
                         this.form.adresa = nastavnik.address1_line1 ?? null;
-                        this.form.mesto = nastavnik._ext_grad_value ?? null;
+                        //this.form.mesto = nastavnik._ext_grad_value ?? null;
                         this.form.postanskiBroj = nastavnik.ext_postanskibroj ?? null;
                         let korisnik = false;
+                        this.form.predmeti = [];
                         if(nastavnik.ext_Predmetprofila_Nastavnik_Contact.length > 0) {
                             for(var i = 0; i < nastavnik.ext_Predmetprofila_Nastavnik_Contact.length; i++) {
                                 let profil = nastavnik.ext_Predmetprofila_Nastavnik_Contact[i];
