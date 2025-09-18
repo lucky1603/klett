@@ -47,20 +47,27 @@ class ChangeUserController extends Controller
 
     public function store(Request $request) {
         $data = $request->post();
+        if(!isset($data['user_id']) || in_array($data['user_id'],['null', 'undefined'])) {
+            return null;
+        }
 
-        $changeUser = ChangeUser::create([
-            'user_id' => $data['userId'],
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'firstName' => $data['firstName'],
-            'lastName' => $data['lastName'],
-            'source' => $data['source'],
-            'role' => $data['role'],
-            'klf_korisnik' => $data['klfKorisnik'] == '0' ? false : true,
-            'pedagoska_sveska' => $data['pedagoskaSveska'] == '0' ? false : true,
-            'testomat' => $data['testomat'] == '0' ? false : true,
-            'created_at' => $data['created']
-        ]);
+        $changeUser = ChangeUser::where('user_id', $data['userId'])->first();
+        if($changeUser == null) {
+            $changeUser = ChangeUser::create([
+                'user_id' => $data['userId'],
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'firstName' => $data['firstName'],
+                'lastName' => $data['lastName'],
+                'source' => $data['source'],
+                'role' => $data['role'],
+                'klf_korisnik' => $data['klfKorisnik'] == '0' ? false : true,
+                'pedagoska_sveska' => $data['pedagoskaSveska'] == '0' ? false : true,
+                'testomat' => $data['testomat'] == '0' ? false : true,
+                'created_at' => $data['created']
+            ]);
+        }
+        
 
         return $changeUser->id;
     }

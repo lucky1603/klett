@@ -321,6 +321,12 @@ class RemoteUserController extends AbstractUserController
         $users = $response->json();
         $userData = [];
         foreach($users as $user) {
+            
+            if(!is_array($user)) {
+                var_dump($user);
+                continue;
+            }
+
             if(isset($data['from']) && !in_array($data['from'], ['null', 'undefined'])) {                
                 $timestamp = strtotime($data['from']);                
                 if(substr($user['createdTimestamp'], 0, 10) > $timestamp) {
