@@ -198,7 +198,13 @@ export default {
                     changeUserData.append('testomat', user.testomat);
                     changeUserData.append('created', user.createdAt);
 
-                    await axios.post('/changeusers/create', changeUserData);
+                    await axios.post('/changeusers/create', changeUserData)
+                    .then(response => {
+                        console.log(response.data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
                     // this.imported ++;
                 }
 

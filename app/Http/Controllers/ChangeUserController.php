@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ScheduledChangesExport;
 use App\Models\ChangeUser;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -47,29 +48,35 @@ class ChangeUserController extends Controller
 
     public function store(Request $request) {
         $data = $request->post();
-        if(!isset($data['user_id']) || in_array($data['user_id'],['null', 'undefined'])) {
-            return null;
-        }
+        // if(!isset($data['user_id']) || in_array($data['user_id'],['null', 'undefined'])) {
+        //     return null;
+        // }
 
         $changeUser = ChangeUser::where('user_id', $data['userId'])->first();
         if($changeUser == null) {
-            $changeUser = ChangeUser::create([
-                'user_id' => $data['userId'],
-                'username' => $data['username'],
-                'email' => $data['email'],
-                'firstName' => $data['firstName'],
-                'lastName' => $data['lastName'],
-                'source' => $data['source'],
-                'role' => $data['role'],
-                'klf_korisnik' => $data['klfKorisnik'] == '0' ? false : true,
-                'pedagoska_sveska' => $data['pedagoskaSveska'] == '0' ? false : true,
-                'testomat' => $data['testomat'] == '0' ? false : true,
-                'created_at' => $data['created']
-            ]);
+            try {
+                $changeUser = ChangeUser::create([
+                    'user_id' => $data['userId'],
+                    'username' => $data['username'],
+                    'email' => $data['email'],
+                    'firstName' => $data['firstName'],
+                    'lastName' => $data['lastName'],
+                    'source' => $data['source'],
+                    'role' => $data['role'],
+                    'klf_korisnik' => $data['klfKorisnik'] == '0' ? false : true,
+                    'pedagoska_sveska' => $data['pedagoskaSveska'] == '0' ? false : true,
+                    'testomat' => $data['testomat'] == '0' ? false : true,
+                    'created_at' => $data['created']
+                ]);
+
+                return ['id' => $changeUser->id, 'nacin' => 'dodavanje'];
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
         }
         
 
-        return $changeUser->id;
+        return ['id' => $changeUser->id, 'nacin' => 'promena'];
     }
 
     public function setChanged($userId) {
