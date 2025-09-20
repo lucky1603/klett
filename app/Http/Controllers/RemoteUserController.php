@@ -698,8 +698,8 @@ class RemoteUserController extends AbstractUserController
             // ->withOptions(['verify' => false])
             ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
                 "username" => $user['username'],
-                "firstName" => $user['firstName'],
-                "lastName" => $user['lastName'],
+                "firstName" => $user['firstName'] ?? '',
+                "lastName" => $user['lastName'] ?? '',
                 "email" => $user["email"],
                 "enabled" => $user['enabled'],
                 "attributes" => [
