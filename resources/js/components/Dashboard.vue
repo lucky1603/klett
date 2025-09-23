@@ -33,7 +33,7 @@
                 <change-user
                     :table-height="500"
                     :fields="changeKLFUserFields"
-                    action="remoteusers/proofuser">
+                    action="remoteusers/proofKeycloakUser">
                 </change-user>
             </b-tab>
         </b-tabs>

@@ -697,14 +697,14 @@ class RemoteUserController extends AbstractUserController
             ->asJson()
             // ->withOptions(['verify' => false])
             ->put(env("KEYCLOAK_API_USERS_URL").$userId,[
-                "username" => $user['username'],
-                "firstName" => $user['firstName'],
-                "lastName" => $user['lastName'],
+                "username" => $user['username'] ,
+                "firstName" => $user['firstName'] ?? '',
+                "lastName" => $user['lastName'] ?? '',
                 "email" => $user["email"],
                 "enabled" => $user['enabled'],
                 "attributes" => [
                     "subjects" => isset($user['attributes']['subjects'][0]) ? $user['attributes']['subjects'][0] : '',
-                    "township" => isset($user['attributes']['township']) ?  $user['attributes']['township'][0] : '',
+                    "township" => isset($user['attributes']['township'][0]) ?  $user['attributes']['township'][0] : '',
                     "institution_type" => isset($user['attributes']['institution_type'][0]) ? $user['attributes']['institution_type'][0] : '',
                     "institution" => isset($user['attributes']['institution']) ? $user['attributes']['institution'][0] : '',
                     "billing_first_name" => isset($user['attributes']['billing_first_name']) ? $user['attributes']['billing_first_name'][0] : '',
@@ -712,7 +712,7 @@ class RemoteUserController extends AbstractUserController
                     "billing_address_1" => isset($user['attributes']['billing_address_1']) ? $user['attributes']['billing_address_1'][0] : '',
                     'billing_city' => isset($user['attributes']['billing_city']) ?  $user['attributes']['billing_city'][0] : '',
                     "billing_postcode" => isset($user['attributes']['billing_postcode']) ? $user['attributes']['billing_postcode'][0] : '',
-                    "billing_phone" => isset($user['attributes']['billing_phone']) ? $user['attributes']['billing_phone'][0] : '',
+                    "billing_phone" => isset($user['attributes']['billing_phone'][0]) ? $user['attributes']['billing_phone'][0] : '',
                     "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : '',
                     "pedagoska_sveska" => isset($user['attributes']['pedagoska_sveska']) ? $user['attributes']['pedagoska_sveska'][0] : '',
                     "klf_korisnik" => isset($user['attributes']['klf_korisnik']) ? $user['attributes']['klf_korisnik'][0] : '',

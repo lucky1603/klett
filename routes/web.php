@@ -73,6 +73,7 @@ Route::get("remoteusers/keycloak", [RemoteUserController::class, 'connectKeyCloa
 Route::get("remoteusers/create", [RemoteUserController::class, 'create'])->name('remoteusers.create');
 Route::post("remoteusers/userData", [RemoteUserController::class, 'userData'])->name('remoteusers.userData');
 Route::get("remoteusers/proofuser/{user}", [RemoteUserController::class, 'proofKeycloakUser'])->name('remoteusers.proofUser');
+Route::get("remoteusers/proofKeycloakUser/{user}", [RemoteUserController::class, 'proofKeycloakUser'])->name('remoteusers.proofUser');
 Route::post("remoteusers/data", [RemoteUserController::class, 'getData'])->name("remoteusers.data");
 Route::get("remoteusers/{user}/updatePassword", [RemoteUserController::class, 'sendUpdatePasswordNotice']);
 Route::post("remoteusers/delete", [RemoteUserController::class, 'delete'])->name('remoteusers.delete');

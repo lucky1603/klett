@@ -171,6 +171,12 @@ export default {
                 fData.append('max', 100);
                 fData.append('firstName', '');
                 fData.append('lastName', '');
+                
+                // Na svakih hiljadu resetuj token.
+                if(i % 1000 == 0) {
+                    await this.getToken();
+                }
+
                 fData.append('token', this.accessToken);
 
                 // Get items for table.

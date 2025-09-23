@@ -231,18 +231,34 @@ class AbstractUserController extends Controller
         $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
 
         $crmData = [
-            'ext_ime' => $data['firstName'],
-            'ext_prezime' => $data['lastName'],
+            // 'ext_ime' => $data['firstName'],
+            // 'ext_prezime' => $data['lastName'],
             'ext_emailadresa' => $data['email'],
             'ext_kontakttelefon' => $data['attributes']['billing_phone'][0],
             'ext_Tipustanove@odata.bind' => "/ext_tipposlovnogkontaktas(".$data['attributes']['institution_type'][0].")",
-            'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['attributes']['township'][0].")",
-            'ext_Nazivustanove@odata.bind' => "/accounts(".$data['attributes']['institution'][0].")",
+            // 'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['attributes']['township'][0].")",
+            // 'ext_Nazivustanove@odata.bind' => "/accounts(".$data['attributes']['institution'][0].")",
             'ext_Imekontakta@odata.bind' => '/contacts('.$crmContactId.")",
             "ext_verified" => true,
             "ext_keycloakidkorisnika" => $keycloakUserId,
             "ext_keycloakusername"=> $data['username']
         ];
+
+        if(isset($data['attributes']['township'])) {
+            $crmData['ext_Opstinaustanove@odata.bind'] = "/ext_opstinas(".$data['attributes']['township'][0].")";
+        }
+
+        if(isset($data['attributes']['institution'])) {
+            $crmData['ext_Nazivustanove@odata.bind'] = "/ext_opstinas(".$data['attributes']['institution'][0].")";
+        }
+
+        if(isset($data['firstName']) && $data['firstName'] != '') {
+            $crmData['ext_ime'] = $data['firstName'];
+        }
+
+        if(isset($data['lastName']) && $data['lastName'] != '') {
+            $crmData['ext_prezime'] = $data['lastName'];
+        }
 
         if(isset($data['attributes']['subjects']) ) {
             $predmeti = $data['attributes']['subjects'];
@@ -261,17 +277,33 @@ class AbstractUserController extends Controller
 
         $requestUrl = env('CRM_URL').'/api/data/v9.2/ext_webupits';
         $crmData = [
-            'ext_ime' => $data['firstName'],
-            'ext_prezime' => $data['lastName'],
+            // 'ext_ime' => $data['firstName'],
+            // 'ext_prezime' => $data['lastName'],
             'ext_emailadresa' => $data['email'],
             'ext_kontakttelefon' => $data['attributes']['billing_phone'][0],
             'ext_Tipustanove@odata.bind' => "/ext_tipposlovnogkontaktas(".$data['attributes']['institution_type'][0].")",
-            'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['attributes']['township'][0].")",
-            'ext_Nazivustanove@odata.bind' => "/accounts(".$data['attributes']['institution'][0].")",
+            // 'ext_Opstinaustanove@odata.bind' => "/ext_opstinas(".$data['attributes']['township'][0].")",
+            // 'ext_Nazivustanove@odata.bind' => "/accounts(".$data['attributes']['institution'][0].")",
             "ext_verified" => true,
             "ext_keycloakidkorisnika" => $keycloakUserId,
             "ext_keycloakusername"=> $data['username']
         ];
+
+        if(isset($data['attributes']['township'])) {
+            $crmData['ext_Opstinaustanove@odata.bind'] = "/ext_opstinas(".$data['attributes']['township'][0].")";
+        }
+
+        if(isset($data['attributes']['institution'])) {
+            $crmData['ext_Nazivustanove@odata.bind'] = "/ext_opstinas(".$data['attributes']['institution'][0].")";
+        }
+
+        if(isset($data['firstName']) && $data['firstName'] != '') {
+            $crmData['ext_ime'] = $data['firstName'];
+        }
+
+        if(isset($data['lastName']) && $data['lastName'] != '') {
+            $crmData['ext_prezime'] = $data['lastName'];
+        }
 
         if(isset($data['attributes']['subjects']) ) {
             $predmeti = $data['attributes']['subjects'];
