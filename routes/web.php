@@ -46,12 +46,14 @@ Route::get('/refreshCaptcha', [AnonimousController::class, 'refreshCaptcha'])->n
 Route::get('/requestEditProfile/{username}', [AnonimousController::class, 'requestEditProfile'])->name('anonimous.requesteditprofile');
 Route::post('anonimous/edit', [AnonimousController::class, 'update'])->name('anonimous.update');
 Route::post('anonimous/create', [AnonimousController::class, 'store'])->name('anonimous.store');
+Route::post('anonimous/create3', [AnonimousController::class, 'store3'])->name('anonimous.store3');
 Route::get('anonimous/scheduledEdit/{token}', [AnonimousController::class, 'editScheduled'])->name('anonimous.scheduledEdit');
 
 Auth::routes();
 
 Route::get('/home',[ HomeController::class, 'index'])->name('home');
 Route::get('apply', [AppUserController::class, 'register'])->name('appusers.register');
+Route::get('apply3', [AppUserController::class, 'register3'])->name('appusers.register3');
 Route::get('retrieveusernames', [AppUserController::class, 'retrieveUsernames'])->name('appusers.retrieveusernames');
 Route::post('retrieveusernames', [AbstractUserController::class, 'getUserNames']);
 Route::get('register', [AppUserController::class, 'register'])->name('appusers.register');

@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\Recaptcha;
 
-class CreateRemoteUserRequest extends FormRequest
+class CreateRemoteUserRecaptchaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,8 +30,8 @@ class CreateRemoteUserRequest extends FormRequest
             'korisnickoIme' => 'required',
             'email' => 'email|required',
             'telefon1' => 'required',
-            "captcha" => 'sometimes|required|captcha',            
-        ];
+            'recaptcha_token' => ['required', new Recaptcha()],            
+        ];   
     }
 
     public function withValidator($validator) {

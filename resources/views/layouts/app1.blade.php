@@ -19,6 +19,13 @@
 
     <!-- Localization -->
     <script src="/lang-{{ app()->getLocale() }}.js"></script>
+
+    <!-- reCAPTCHA v.3 related code -->
+    <script>
+        window.RECAPTCHA_SITE_KEY = "{{ config('services.recaptcha.site_key') }}";
+    </script>
+    
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config('services.recaptcha.site_key') }}"></script>
 </head>
 <body class="applyform w-100 h-100">
     <div id="app">

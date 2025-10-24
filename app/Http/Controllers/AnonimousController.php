@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\CreateRemoteUserRequest;
+use App\Http\Requests\CreateRemoteUserRecaptchaRequest;
 
 class AnonimousController extends AbstractUserController
 {
@@ -132,6 +133,124 @@ class AnonimousController extends AbstractUserController
 
     /// create & update
     public function store(CreateRemoteUserRequest $request) {
+        $data = $request->post();
+
+        // Communicate with CRM
+        $inCRM = false;
+        $isUser = false;
+        $crmContactId = null;
+        if($data['isTeacher'] == "true") {
+            // Check CRM
+            $value = $this->checkUser($data['email']);
+            if(is_array($value) && count($value) > 0) {
+                $inCRM = true;
+
+                // TODO: Call positive CRM
+                $crmContactId = $value[0]['contactid'];
+                $predmetiProfila = $value[0]['ext_Predmetprofila_Nastavnik_Contact'];
+                if(is_array($predmetiProfila) && count($predmetiProfila) > 0) {
+                    foreach($predmetiProfila as $predmetProfila) {
+                        // Kada je podešeno na tačno, ne može više ići nazad.
+                        // Ovo je važno jer korisnik može imati više predmetnih
+                        // profila, a samo na jednom da je označen kao KLF korisnik.
+                        // I taj jedan put je dovoljan.
+                        if(!$isUser) {
+                            $isUser = $predmetProfila['ext_korisnik'];
+                        }
+                    }
+                }
+
+                // $isUser = $value[0]['ext_Predmetprofila_Nastavnik_Contact'][0]['ext_korisnik'];
+            }
+        }
+        // End of communication with CRM
+
+        $response = Http::withToken($data['token'])
+            ->asJson()
+            // ->withOptions(['verify' => false])
+            ->post(env("KEYCLOAK_API_USERS_URL"), [
+                "username" => $data['korisnickoIme'],
+                "firstName" => $data['ime'],
+                "lastName" => $data['prezime'],
+                "email" => $data["email"],
+                "enabled" => $data['enabled'] == "true" && (($inCRM == true && $data['isTeacher'] == 'true') || $data['isTeacher'] == 'false')  ? true : false,
+                "attributes" => [
+                    "subjects" => isset($data['subjects']) ? serialize($data['subjects']) : null,
+                    // "professions" => isset($data['professions']) ? serialize($data['professions']) : null,
+                    "township" => isset($data['township']) ?  $data['township'] : null,
+                    "institution_type" => isset($data['institutionType']) ? $data['institutionType'] : null,
+                    "institution" => isset($data['skola']) ? $data['skola'] : null,
+                    "billing_first_name" => $data['ime'],
+                    "billing_last_name" => $data['prezime'],
+                    "billing_address_1" => $data['adresa'],
+                    'billing_city' => $data['mesto'],
+                    "billing_postcode" => $data['postanskiBroj'],
+                    "billing_phone" => $data['telefon1'],
+                    "testomat" => $inCRM && $isUser ? 1 : 0,
+                    "pedagoska_sveska" => $inCRM && $isUser ? 1 : 0,
+                    "klf_korisnik" => $isUser ? 1 : 0,
+                    "source" => $data['source'],
+                    "role" => $data['isTeacher'] == "true" ? "Teacher" : "Student"
+                ],
+        ]);
+
+        // $inCRM = false;
+        if($response->status() == 201 /* Created */) {
+            $items = explode("/", $response->header("Location"));
+            $userId = $items[count($items) - 1];
+
+            // Communicate with CRM
+            if($data['isTeacher'] == "true") {
+                // Check CRM
+                if($crmContactId != null) {
+                    $this->ackCRMPositive($data, $crmContactId, $userId);
+
+                } else {
+                    // TODO: Call negative CRM
+                    $this->ackCRMNegative($data, $userId);
+                    // send email
+                    Mail::to($data['email'])->send(new NoCRMInfo($data));
+                }
+            }
+            // End of communication with CRM
+
+            if($data['isTeacher'] == "true") {
+                $groupId = $this->getGroupIdByName("Teacher");
+            } else {
+                $groupId = $this->getGroupIdByName('Student');
+            }
+
+            $setGroupRequest = new Request([],[
+                'groupId' => $groupId,
+                'userId' => $userId,
+                'token' => $data['token']
+            ], [], [], [], [], null);
+
+            $this->setUserGroup($setGroupRequest);
+
+            if(($data['isTeacher'] == "true" && $inCRM == true) || $data['isTeacher'] == "false") {
+                // Send password reset link.
+                if($data['updatePassword'] == 'true') {
+                    Http::withToken($data['token'])->withBody('["UPDATE_PASSWORD"]', 'application/json')
+                        ->put(env("KEYCLOAK_API_USERS_URL").$userId."/execute-actions-email");
+                }
+            }
+
+            return [
+                'status' => $response->status(),
+                'message' => "Success!!!"
+            ];
+        }
+
+
+        // $response->status() = 209 - Failed.
+        return [
+            'status' => $response->status(),
+            'message' => $response->json('errorMessage')
+        ];
+    }
+
+    public function store3(CreateRemoteUserRecaptchaRequest $request) {
         $data = $request->post();
 
         // Communicate with CRM

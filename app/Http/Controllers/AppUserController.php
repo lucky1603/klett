@@ -16,7 +16,12 @@ class AppUserController extends Controller
 {
 
     public function register() {
-        return view('appusers.register');
+        // return view('appusers.register');
+        return view('appusers.register3');
+    }
+
+    public function register3() {
+        return view('appusers.register3');
     }
 
     public function retrieveUsernames() {

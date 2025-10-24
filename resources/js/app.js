@@ -53,6 +53,8 @@ Vue.component('update-user-form', require('./components/UpdateUserForm.vue').def
 Vue.component('send-mail', require('./components/SendMail.vue').default);
 Vue.component('change-user', require('./components/ChangeUser.vue').default);
 Vue.component('request-username-form', require('./components/RequestUsernameForm.vue').default);
+Vue.component('register-user-form-3', require('./components/RegisterUserForm3.vue').default);
+Vue.component('remote-user-form-3', require('./components/RemoteUserForm3.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
