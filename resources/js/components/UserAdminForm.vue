@@ -283,6 +283,7 @@ export default {
                         console.log(nastavnik);
 
                         // this.form.email = nastavnik.emailaddress1;
+                        
                         this.form.ime = nastavnik.firstname;
                         this.form.prezime = nastavnik.lastname;
                         this.form.postanskiBroj = nastavnik.ext_postanskibroj ?? null;
@@ -302,7 +303,7 @@ export default {
                                 this.form.predmeti.push(profil._ext_predmet_value);
                                 // If any of profiles ext_korisnik value is true, the form 
                                 // will have the positive value.
-                                if(profil.ext_korisnik == true && profil.statuscode == 1) {
+                                if(profil.ext_korisnik == true /* && profil.statuscode == 1*/) {
                                     korisnik = true;
                                 }
                                 
@@ -310,7 +311,6 @@ export default {
                         }
 
                         this.form.klf_korisnik = korisnik;
-
                         resolve({
                             data: {
                                 message: "Sinhronizacija sa CRM uspešna!"
