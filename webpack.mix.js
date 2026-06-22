@@ -1,3 +1,8 @@
+const crypto = require('crypto');
+const _createHash = crypto.createHash;
+crypto.createHash = algo =>
+    _createHash(['md4', 'xxhash64'].includes(algo) ? 'sha256' : algo);
+
 const mix = require('laravel-mix');
 
 /*
