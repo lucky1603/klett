@@ -113,6 +113,13 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'crm_sync' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/crm_sync.log'),
+            'level'  => 'debug',
+            'days'   => 30,
+        ],
     ],
 
 ];
