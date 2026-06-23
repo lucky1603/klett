@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('crm:check-users --reset')
+        $schedule->command('crm:check-users --reset --batch=100 --delay=200')
                  ->weeklyOn(1, '01:00')
                  ->withoutOverlapping()
                  ->runInBackground();
