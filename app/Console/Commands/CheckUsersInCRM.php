@@ -17,6 +17,7 @@ class CheckUsersInCRM extends Command
     protected $description = 'Prolazi kroz sve Keycloak korisnike i poziva checkUser za svaki';
 
     private const PROGRESS_FILE = 'crm_check_progress.json';
+    private const REPORT_FILE   = 'crm_check_report.log';
     private const CRM_TOKEN_URL = 'https://login.microsoftonline.com/570b0e1b-60ff-4adf-8b73-5a3dab04aa93/oauth2/v2.0/token';
     private const CRM_API_URL   = 'https://klf.crm4.dynamics.com/api/data/v9.2/contacts';
 
@@ -29,6 +30,7 @@ class CheckUsersInCRM extends Command
     {
         $batchSize = (int) $this->option('batch');
         $delayMs   = (int) $this->option('delay');
+        $startTime = microtime(true);
 
         // Učitaj ili resetuj checkpoint
         if ($this->option('reset') || !Storage::exists(self::PROGRESS_FILE)) {
@@ -154,6 +156,23 @@ class CheckUsersInCRM extends Command
         } else {
             $this->warn("Prekinuto na poziciji {$progress['offset']}. Pokrenite ponovo da nastavite.");
         }
+
+        $elapsed  = microtime(true) - $startTime;
+        $minutes  = (int) ($elapsed / 60);
+        $seconds  = (int) ($elapsed % 60);
+        $status   = $progress['offset'] >= $total ? 'OK' : 'PREKINUTO';
+        $line     = sprintf(
+            "[%s] %s | Obrađeno: %d | Pronađeno u CRM: %d | Nije pronađeno: %d | Greške: %d | Trajanje: %dm %ds\n",
+            now()->format('Y-m-d H:i:s'),
+            $status,
+            $progress['processed'],
+            $progress['found'],
+            $progress['not_found'],
+            $progress['errors'],
+            $minutes,
+            $seconds
+        );
+        Storage::append(self::REPORT_FILE, rtrim($line));
 
         return self::SUCCESS;
     }
