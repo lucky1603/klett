@@ -87,7 +87,7 @@ export default {
                 } else {
                     // alert(response.data.message);
                     if(response.data.status == 409) {
-                        this.showMessage("Već postoji korisnik sa tim korisničkim imenom!");
+                        this.showMessage("Korisničko ime je zauzeto, molimo Vas da se registrujete sa drugim korisničkim imenom!");
                     } else {
                         this.showMessage(response.data.message + " status - " + response.data.status);
                     }
