@@ -343,7 +343,8 @@ class RemoteUserController extends AbstractUserController
                         "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
                         'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
                         'createdAt' => date('d.m.Y.', substr($user['createdTimestamp'], 0, 10)),
-                        'createdTimestamp' => $user['createdTimestamp']
+                        'createdTimestamp' => $user['createdTimestamp'],
+                        'edirector' => isset($user['attributes']['edirector']) ? $user['attributes']['edirector'][0] : "Nije podeseno",
                     ];
                 }
             } else {
@@ -360,7 +361,8 @@ class RemoteUserController extends AbstractUserController
                     "testomat" => isset($user['attributes']['testomat']) ? $user['attributes']['testomat'][0] : "Nije podeseno",
                     'source' => isset($user['attributes']['source']) ? $user['attributes']['source'][0] : "Nije podeseno",
                     'createdAt' => date('d.m.Y.', substr($user['createdTimestamp'], 0, 10)),
-                    'createdTimestamp' => $user['createdTimestamp']
+                    'createdTimestamp' => $user['createdTimestamp'],
+                    'edirector' => isset($user['attributes']['edirector']) ? $user['attributes']['edirector'][0] : "Nije podeseno",
                 ];
             }
             
@@ -560,6 +562,7 @@ class RemoteUserController extends AbstractUserController
             'pedagoska_sveska' => isset($retObject->attributes) && isset($retObject->attributes->pedagoska_sveska) ? ($retObject->attributes->pedagoska_sveska[0] == 1 ? true : false) : false,
             'klf_korisnik' => isset($retObject->attributes) && isset($retObject->attributes->klf_korisnik) ? ($retObject->attributes->klf_korisnik[0] == 1 ? true : false) : false,
             'klf_sajtovi' => isset($retObject->attributes) && isset($retObject->attributes->klf_sajtovi) ? ($retObject->attributes->klf_sajtovi[0] == 1 ? true : false) : false,
+            'edirector' => isset($retObject->attributes) && isset($retObject->attributes->edirector) ? ($retObject->attributes->edirector[0] == 1 ? true : false) : false,
         ];
     }
 
